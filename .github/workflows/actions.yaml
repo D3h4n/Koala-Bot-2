@@ -95,6 +95,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Koala-Bot-2
-          path: |
-            dist/
-            node_modules/
+          path: dist/
