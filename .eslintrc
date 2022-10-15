@@ -11,5 +11,20 @@
       "eslint:recommended",
       "plugin:@typescript-eslint/eslint-recommended",
       "plugin:@typescript-eslint/recommended"
-   ]
+   ],
+  "env": {
+    "jest/globals": true
+  },
+  "overrides": [
+    {
+      "files": ["*.test.ts"],
+      "plugins": ["@typescript-eslint", "jest"],
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:jest/recommended"
+      ]
+    }
+  ]
 }

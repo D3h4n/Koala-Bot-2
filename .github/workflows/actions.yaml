@@ -1,0 +1,108 @@
+name: Koala Bot 2 CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+    NODE_VERSION: 18.10.0
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node_version: ${{ env.NODE_VERSION }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node_version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node_version }}
+
+      - name: Restore Node Modules Cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: package-lock.json
+
+      - name: Install ESLint
+        run: npm i
+
+      - name: Run linters
+        uses: wearerequired/lint-action@v2
+        with:
+          eslint: true
+
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node_version: ${{ env.NODE_VERSION }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node_version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node_version }}
+
+      - name: Restore Node Modules Cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: package-lock.json
+
+      - name: Install Packages
+        run: npm i
+
+      - name: Test
+        run: npm test -- --ci --reporters=default --reporters=jest-junit
+
+      - name: Report Test Results
+        uses: IgnusG/jest-report-action@v2.3.3
+        if: always()
+        with:
+          access-token: ${{ secrets.GITHUB_TOKEN }}
+          junit-file: junit.xml
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        - node_version: ${{ env.NODE_VERSION }}
+    steps:
+      - name: Restore Node Modules Cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: package-lock.json
+
+      - name: Use Node.js ${{ matrix.node_version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node_version }}
+
+      - name: Install Packages
+        run: npm i
+
+      - name: Build
+        run: npm run build --if-present
+
+      - name: Archive Koala Bot Build
+        uses: actions/upload-artifact@v2
+        with:
+          name: Koala-Bot-2
+          path: dist
