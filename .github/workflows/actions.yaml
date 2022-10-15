@@ -9,23 +9,19 @@ on:
       - main
 
 env:
-    NODE_VERSION: 18.10.0
+  NODE_VERSION: 18.10.0
 
 jobs:
   lint:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        node_version: ${{ env.NODE_VERSION }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Use Node.js ${{ matrix.node_version }}
-        uses: actions/setup-node@v1
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node_version }}
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Restore Node Modules Cache
         uses: actions/cache@v3
@@ -44,18 +40,14 @@ jobs:
   test:
     needs: lint
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        node_version: ${{ env.NODE_VERSION }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Use Node.js ${{ matrix.node_version }}
-        uses: actions/setup-node@v1
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node_version }}
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Restore Node Modules Cache
         uses: actions/cache@v3
@@ -79,10 +71,6 @@ jobs:
   build:
     needs: test
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        - node_version: ${{ env.NODE_VERSION }}
     steps:
       - name: Restore Node Modules Cache
         uses: actions/cache@v3
@@ -90,10 +78,10 @@ jobs:
           path: node_modules
           key: package-lock.json
 
-      - name: Use Node.js ${{ matrix.node_version }}
-        uses: actions/setup-node@v1
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node_version }}
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Install Packages
         run: npm i
