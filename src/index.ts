@@ -4,6 +4,7 @@ import {
   ActivityType
 } from 'discord.js'
 import dotenv from 'dotenv'
+import {handleCommand} from "./interactions";
 
 
 (async function main() {
@@ -21,10 +22,19 @@ import dotenv from 'dotenv'
       }]
     }
   });
-  client.on("interactionCreate", (interaction) => {
-    if (!interaction.isChatInputCommand()) return;
-    interaction.reply("Hello World");
-  })
-  await client.login(process.env.DISCORD_BOT_TOKEN);
+
+  await client
+      .on("interactionCreate", (interaction) => {
+        if (interaction.isChatInputCommand()) {
+          const name = interaction.command?.name || "no name";
+          const data = {};
+
+          interaction.options.data.forEach((option) => {
+            data[option.name] = option.value;
+          })
+          handleCommand(name, data, interaction)
+        }
+      })
+      .login(process.env.DISCORD_BOT_TOKEN);
 })()
 
