@@ -1,0 +1,24 @@
+{
+  "name": "koala-bot-2",
+  "version": "0.0.0",
+  "description": "Redesign effort for Koala Bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/D3h4n/Koala-Bot-2.git"
+  },
+  "keywords": [
+    "Discord",
+    "Bot",
+    "Automation"
+  ],
+  "author": "D3h4n",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/D3h4n/Koala-Bot-2/issues"
+  },
+  "homepage": "https://github.com/D3h4n/Koala-Bot-2#readme"
+}
