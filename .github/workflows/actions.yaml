@@ -55,18 +55,18 @@ jobs:
         run: npm i
 
       - name: Run Tests with Coverage Report
-        uses: ziishaned/jest-reporter-action@v0.0.1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          test-command: "npm run coverage"
+        run: npm run coverage
 
       - name: Report Test Results
         uses: dorny/test-reporter@v1
         if: success() || failure()
         with:
           name: Test Results
-          path: ./reports/jest-*.xml
+          path: ./reports/jest-junit.xml
           reporter: jest-junit
+
+      - name: Report Coverage
+        uses: romeovs/lcov-reporter-action@v0.2.19
 
   build:
     needs: test
