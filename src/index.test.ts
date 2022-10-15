@@ -1,8 +1,8 @@
-import { returnInput } from "./index";
+import {returnInput} from "./index";
 
 describe("This is a test suite", () => {
-  it("This is a test", () => {
-    const value = 15;
+  it.each([15, "hello", true])
+  ("This is a test", (value) => {
     expect(returnInput(value)).toEqual(value);
   })
 })
