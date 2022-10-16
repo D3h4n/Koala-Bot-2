@@ -4,11 +4,11 @@
   "description": "Upgraded bot, specifically designed for AKK",
   "main": "dist/index.js",
   "scripts": {
-    "lint": "eslint . --ext .ts",
-    "test": "jest --ci --reporters=default --reporters=jest-junit --",
-    "coverage": "jest --collectCoverage --ci --reporters=default --reporters=jest-junit --",
-    "build": "tsc --removeComments --strict --pretty",
-    "start": "node dist/index.js"
+    "lint": "eslint . --ext .ts --",
+    "test": "jest --ci --reporters=default --reporters=jest-junit",
+    "coverage": "npm test -- --collectCoverage --",
+    "build": "tsc --removeComments --strict --pretty --",
+    "start": "node dist/index.js --"
   },
   "repository": {
     "type": "git",
