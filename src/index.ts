@@ -26,7 +26,7 @@ import {handleCommand} from "./interactions";
   await client
       .on("interactionCreate", (interaction) => {
         if (interaction.isChatInputCommand()) {
-          const name = interaction.command?.name || "no name";
+          const name = interaction.commandName;
           const data = {};
 
           interaction.options.data.forEach((option) => {

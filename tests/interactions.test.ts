@@ -1,29 +1,19 @@
 import {handleCommand} from "../src/interactions";
 
-describe("When receiving a command", () => {
+describe("When receiving the echo command", () => {
   it.each([
-    {
-      name: "Choose",
-      options: {
-        "option1": "Hello",
-        "option2": "World"
-      }
-    },
-    {
-      name: "Play",
-      options: {
-        "song": "tylko jedno w głowie mam",
-      }
-    }
-  ])("replies with hello world", ({ name, options }) => {
+    "Hello World", "Dance",
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
+  ])("replies with the correct message", (message) => {
     const replier = {
       reply: jest.fn()
     }
 
     // Act
-    handleCommand(name, options, replier)
+    handleCommand("echo", {message}, replier)
 
     // Assert
-    expect(replier.reply).toBeCalledWith("Hello, World");
+    expect(replier.reply).toBeCalledWith(message)
   })
 })
+
