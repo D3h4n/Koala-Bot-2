@@ -4,7 +4,7 @@ import {
   ActivityType
 } from 'discord.js'
 import dotenv from 'dotenv'
-import {handleCommand} from "./interactions";
+import {executeCommand} from "./interactions";
 
 
 (async function main() {
@@ -32,7 +32,7 @@ import {handleCommand} from "./interactions";
           interaction.options.data.forEach((option) => {
             data[option.name] = option.value;
           })
-          handleCommand(name, data, interaction)
+          executeCommand(name, data, interaction)
         }
       })
       .login(process.env.DISCORD_BOT_TOKEN);
