@@ -12,18 +12,24 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
   ],
+  "env": {
+    "es6": true,
+    "node": true
+  },
   "ignorePatterns": [
-    "dist/*",
-    ".github/*",
-    "*.test.ts"
+    "dist/*"
   ],
   "overrides": [
     {
       "files": [
-        "*.test.ts"
+        "tests/*"
       ],
+      "parserOptions": {
+        "project": "tests-tsconfig.json"
+      },
       "plugins": [
         "@typescript-eslint",
         "jest"
@@ -32,6 +38,7 @@
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
+        "plugin:prettier/recommended",
         "plugin:jest/recommended"
       ],
       "env": {

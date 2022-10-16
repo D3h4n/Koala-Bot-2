@@ -1,40 +1,35 @@
-import {
-  Client,
-  IntentsBitField,
-  ActivityType
-} from 'discord.js'
+import { Client, IntentsBitField, ActivityType } from 'discord.js'
 import dotenv from 'dotenv'
-import {executeCommand} from "./interactions";
-
-
-(async function main() {
-  dotenv.config();
+import { executeCommand } from './interactions'
+;(async function main() {
+  dotenv.config()
   const client = new Client({
     intents: [
       IntentsBitField.Flags.GuildMessages,
-      IntentsBitField.Flags.GuildMessageReactions
+      IntentsBitField.Flags.GuildMessageReactions,
     ],
     presence: {
-      status: "online",
-      activities: [{
-        name: "Making a new bot",
-        type: ActivityType.Playing
-      }]
-    }
-  });
+      status: 'online',
+      activities: [
+        {
+          name: 'Making a new bot',
+          type: ActivityType.Playing,
+        },
+      ],
+    },
+  })
 
   await client
-      .on("interactionCreate", (interaction) => {
-        if (interaction.isChatInputCommand()) {
-          const name = interaction.commandName;
-          const data = {};
+    .on('interactionCreate', (interaction) => {
+      if (interaction.isChatInputCommand()) {
+        const name = interaction.commandName
+        const data = {}
 
-          interaction.options.data.forEach((option) => {
-            data[option.name] = option.value;
-          })
-          executeCommand(name, data, interaction)
-        }
-      })
-      .login(process.env.DISCORD_BOT_TOKEN);
+        interaction.options.data.forEach((option) => {
+          data[option.name] = option.value
+        })
+        executeCommand(name, data, interaction)
+      }
+    })
+    .login(process.env.DISCORD_BOT_TOKEN)
 })()
-

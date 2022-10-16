@@ -12,10 +12,4 @@ tab_width = 2
 charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
-max_line_length = 100
-
-
-# Matches multiple files with brace expansion notation
-# Set default charset
-[*.ts]
-ij_continuation_indent_size = 4
+max_line_length = 80
