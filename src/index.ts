@@ -1,4 +1,4 @@
-import { Client, IntentsBitField, ActivityType, Interaction } from 'discord.js'
+import { ActivityType, Client, IntentsBitField, Interaction } from 'discord.js'
 import dotenv from 'dotenv'
 import { executeCommand, MessageReplier } from './interactions'
 import MusicAdapter, { MusicPlayer } from './adapters/MusicAdapter'
@@ -8,14 +8,12 @@ function getListener(musicAdapter: MusicAdapter) {
     if (!interaction.isChatInputCommand()) {
       return
     }
-
     await interaction.deferReply()
 
-    const name = interaction.commandName
-    const data = {}
-    interaction.options.data.map((option) => {
-      data[option.name] = option.value
-    })
+    const data = interaction.options.data.reduce((prev, option) => {
+      prev[option.name] = option.value
+      return prev
+    }, {})
 
     const replier: MessageReplier = {
       reply: (message) => interaction.editReply(message),
@@ -26,7 +24,7 @@ function getListener(musicAdapter: MusicAdapter) {
     }
 
     try {
-      executeCommand(name, data, replier, player)
+      executeCommand(interaction.commandName, data, replier, player)
     } catch (err) {
       console.log(err)
     }
