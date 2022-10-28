@@ -1,7 +1,11 @@
 import * as assert from 'assert'
 
-interface MessageReplier {
+export interface MessageReplier {
   reply: (string) => void
+}
+
+export interface MusicPlayer {
+  play: (string) => void
 }
 
 function echoCommand(
@@ -37,10 +41,18 @@ function chooseCommand(
   replier.reply(`\`${choices[idx]}\``)
 }
 
+function playCommand(
+  options: Record<string, string | undefined>,
+  player: MusicPlayer
+) {
+  player.play(options['song'])
+}
+
 export function executeCommand(
   name: string,
   options: Record<string, string | undefined>,
-  replier: MessageReplier
+  replier: MessageReplier,
+  player: MusicPlayer
 ) {
   switch (name) {
     case 'echo':
@@ -49,6 +61,10 @@ export function executeCommand(
 
     case 'choose':
       chooseCommand(options, replier)
+      break
+
+    case 'play':
+      playCommand(options, player)
       break
 
     case 'default':

@@ -1,5 +1,12 @@
-import { executeCommand } from '../src/interactions'
+import {
+  executeCommand,
+  MessageReplier,
+  MusicPlayer,
+} from '../src/interactions'
 import * as fc from 'fast-check'
+
+const nullReplier = null as unknown as MessageReplier
+const nullPlayer = null as unknown as MusicPlayer
 
 describe('On receiving a command', () => {
   describe('with the name echo', () => {
@@ -11,7 +18,7 @@ describe('On receiving a command', () => {
           }
 
           // Act
-          executeCommand('echo', { message }, replier)
+          executeCommand('echo', { message }, replier, nullPlayer)
 
           // Assert
           expect(replier.reply).toHaveBeenCalledWith(message)
@@ -38,7 +45,7 @@ describe('On receiving a command', () => {
         options[`choice${idx + 1}`] = choice
       })
 
-      executeCommand('choose', options, replier)
+      executeCommand('choose', options, replier, nullPlayer)
 
       // Assert
       expect(replies).toContain(replier.reply.mock.lastCall[0])
@@ -67,7 +74,7 @@ describe('On receiving a command', () => {
               options[`choice${idx + 1}`] = choice
             })
 
-            executeCommand('choose', options, replier)
+            executeCommand('choose', options, replier, nullPlayer)
 
             // Assert
             const expectedIndex = Math.floor(randomValue * choices.length)
@@ -78,5 +85,21 @@ describe('On receiving a command', () => {
         )
       )
     })
+  })
+})
+
+describe('with the name play', () => {
+  it('start playing a song in a voice channel', () => {
+    fc.assert(
+      fc.property(fc.string({ minLength: 1 }), (song) => {
+        const player = {
+          play: jest.fn(),
+        }
+
+        executeCommand('play', { song }, nullReplier, player)
+
+        expect(player.play).toHaveBeenCalledWith(song)
+      })
+    )
   })
 })
