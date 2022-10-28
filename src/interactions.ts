@@ -1,11 +1,8 @@
 import * as assert from 'assert'
+import { MusicPlayer } from './adapters/MusicAdapter'
 
 export interface MessageReplier {
   reply: (string) => void
-}
-
-export interface MusicPlayer {
-  play: (string) => void
 }
 
 function echoCommand(
@@ -41,13 +38,6 @@ function chooseCommand(
   replier.reply(`\`${choices[idx]}\``)
 }
 
-function playCommand(
-  options: Record<string, string | undefined>,
-  player: MusicPlayer
-) {
-  player.play(options['song'])
-}
-
 export function executeCommand(
   name: string,
   options: Record<string, string | undefined>,
@@ -64,7 +54,11 @@ export function executeCommand(
       break
 
     case 'play':
-      playCommand(options, player)
+      player.play(options['song'])
+      break
+
+    case 'stop':
+      player.stop()
       break
 
     case 'default':

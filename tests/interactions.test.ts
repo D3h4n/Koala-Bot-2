@@ -1,15 +1,12 @@
-import {
-  executeCommand,
-  MessageReplier,
-  MusicPlayer,
-} from '../src/interactions'
+import { executeCommand, MessageReplier } from '../src/interactions'
 import * as fc from 'fast-check'
+import { MusicPlayer } from '../src/adapters/MusicAdapter'
 
 const nullReplier = null as unknown as MessageReplier
 const nullPlayer = null as unknown as MusicPlayer
 
 describe('On receiving a command', () => {
-  describe('with the name echo', () => {
+  describe('named echo', () => {
     it('reply with the correct message', () => {
       fc.assert(
         fc.property(fc.string({ minLength: 1 }), (message) => {
@@ -27,7 +24,7 @@ describe('On receiving a command', () => {
     })
   })
 
-  describe('with the name choose', () => {
+  describe('named choose', () => {
     it.each([
       [['Hello World', '1234']],
       [['Flight', 'Invisibility', 'Invincibility', 'Super Genius']],
@@ -86,20 +83,34 @@ describe('On receiving a command', () => {
       )
     })
   })
-})
 
-describe('with the name play', () => {
-  it('start playing a song in a voice channel', () => {
-    fc.assert(
-      fc.property(fc.string({ minLength: 1 }), (song) => {
-        const player = {
-          play: jest.fn(),
-        }
+  describe('named play', () => {
+    it('play a song', () => {
+      fc.assert(
+        fc.property(fc.string({ minLength: 1 }), (song) => {
+          const player = {
+            play: jest.fn(),
+            stop: jest.fn(),
+          }
 
-        executeCommand('play', { song }, nullReplier, player)
+          executeCommand('play', { song }, nullReplier, player)
 
-        expect(player.play).toHaveBeenCalledWith(song)
-      })
-    )
+          expect(player.play).toHaveBeenCalledWith(song)
+        })
+      )
+    })
+  })
+
+  describe('named stop', () => {
+    it('stop playing a song', () => {
+      const player = {
+        play: jest.fn(),
+        stop: jest.fn(),
+      }
+
+      executeCommand('stop', {}, nullReplier, player)
+
+      expect(player.stop).toHaveBeenCalled()
+    })
   })
 })

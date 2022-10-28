@@ -1,16 +1,9 @@
-import {
-  Client,
-  IntentsBitField,
-  ActivityType,
-  GuildMember,
-  Interaction,
-  TextChannel,
-} from 'discord.js'
+import { Client, IntentsBitField, ActivityType, Interaction } from 'discord.js'
 import dotenv from 'dotenv'
-import { executeCommand, MessageReplier, MusicPlayer } from './interactions'
-import DisTube from 'distube'
+import { executeCommand, MessageReplier } from './interactions'
+import MusicAdapter, { MusicPlayer } from './adapters/MusicAdapter'
 
-function getListener(distube: DisTube) {
+function getListener(musicAdapter: MusicAdapter) {
   return async (interaction: Interaction) => {
     if (!interaction.isChatInputCommand()) {
       return
@@ -28,22 +21,8 @@ function getListener(distube: DisTube) {
       reply: (message) => interaction.editReply(message),
     }
     const player: MusicPlayer = {
-      play: (song: string) => {
-        const member = interaction.member as GuildMember
-        const voiceChannel = member.voice.channel
-
-        if (!voiceChannel) {
-          interaction.editReply('Join a voice channel.')
-          return
-        }
-
-        distube.play(voiceChannel, song, {
-          member: member,
-          textChannel: interaction.channel as TextChannel,
-        })
-
-        interaction.deleteReply()
-      },
+      play: musicAdapter.play(interaction),
+      stop: musicAdapter.stop(interaction),
     }
 
     try {
@@ -73,8 +52,11 @@ function getListener(distube: DisTube) {
       ],
     },
   })
-  const distube = new DisTube(client, { nsfw: false })
+  const musicAdapter = new MusicAdapter(client)
   await client
-    .on('interactionCreate', getListener(distube))
+    .on('ready', () => {
+      console.log('[SERVER] Ready!!!!!!')
+    })
+    .on('interactionCreate', getListener(musicAdapter))
     .login(process.env.DISCORD_BOT_TOKEN)
 })()
