@@ -1,14 +1,23 @@
 import * as assert from 'assert'
-import { MusicPlayer } from './adapters/MusicAdapter'
+import { EmbedAdapter } from './adapters/MessageAdapter'
+import Adapter from './adapters/Adapter'
 
-export interface MessageReplier {
-  reply: (string) => void
+type Options = Record<string, string | number | undefined>
+
+export interface MusicPlayer {
+  play: (string) => Promise<void>
+  stop: () => Promise<void>
+  queue: (int?) => Promise<void>
+  skip: () => Promise<void>
+  shuffle: () => Promise<void>
 }
 
-function echoCommand(
-  options: Record<string, string | undefined>,
-  replier: MessageReplier
-) {
+export interface MessageReplier {
+  reply: (message: string) => Promise<void>
+  replyWithEmbed: (embed: EmbedAdapter) => Promise<void>
+}
+
+function echoCommand(options: Options, replier: MessageReplier) {
   const message = options['message']
   assert.ok(message, 'ERROR: Echo command should always have message option')
   assert.equal(
@@ -16,13 +25,10 @@ function echoCommand(
     'string',
     'ERROR: Message option for echo command should always be a string'
   )
-  replier.reply(message)
+  replier.reply(message as string)
 }
 
-function chooseCommand(
-  options: Record<string, string | undefined>,
-  replier: MessageReplier
-) {
+function chooseCommand(options: Options, replier: MessageReplier) {
   const choices = Object.entries(options)
     .filter(
       ([key, value]) => key.match(/choice[1-9]/) && typeof value === 'string'
@@ -40,25 +46,36 @@ function chooseCommand(
 
 export function executeCommand(
   name: string,
-  options: Record<string, string | undefined>,
-  replier: MessageReplier,
-  player: MusicPlayer
+  options: Options,
+  adapter: Adapter
 ) {
   switch (name) {
     case 'echo':
-      echoCommand(options, replier)
+      echoCommand(options, adapter.messageReplier)
       break
 
     case 'choose':
-      chooseCommand(options, replier)
+      chooseCommand(options, adapter.messageReplier)
       break
 
     case 'play':
-      player.play(options['song'])
+      adapter.musicPlayer.play(options['song'])
       break
 
     case 'stop':
-      player.stop()
+      adapter.musicPlayer.stop()
+      break
+
+    case 'queue':
+      adapter.musicPlayer.queue(options['page'])
+      break
+
+    case 'skip':
+      adapter.musicPlayer.skip()
+      break
+
+    case 'shuffle':
+      adapter.musicPlayer.shuffle()
       break
 
     case 'default':

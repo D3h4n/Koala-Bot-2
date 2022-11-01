@@ -1,37 +1,16 @@
-import { ActivityType, Client, IntentsBitField, Interaction } from 'discord.js'
+import {
+  ActivityType,
+  Client,
+  EmbedBuilder,
+  IntentsBitField,
+  Interaction,
+} from 'discord.js'
 import dotenv from 'dotenv'
-import { executeCommand, MessageReplier } from './interactions'
-import MusicAdapter, { MusicPlayer } from './adapters/MusicAdapter'
+import { executeCommand } from './interactions'
+import Adapter from './adapters/Adapter'
+import DisTube from 'distube'
 
-function getListener(musicAdapter: MusicAdapter) {
-  return async (interaction: Interaction) => {
-    if (!interaction.isChatInputCommand()) {
-      return
-    }
-    await interaction.deferReply()
-
-    const data = interaction.options.data.reduce((prev, option) => {
-      prev[option.name] = option.value
-      return prev
-    }, {})
-
-    const replier: MessageReplier = {
-      reply: (message) => interaction.editReply(message),
-    }
-    const player: MusicPlayer = {
-      play: musicAdapter.play(interaction),
-      stop: musicAdapter.stop(interaction),
-    }
-
-    try {
-      executeCommand(interaction.commandName, data, replier, player)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-}
-
-;(async function main() {
+async function main() {
   dotenv.config()
   const client = new Client({
     intents: [
@@ -50,11 +29,77 @@ function getListener(musicAdapter: MusicAdapter) {
       ],
     },
   })
-  const musicAdapter = new MusicAdapter(client)
+
+  const distube = new DisTube(client, {
+    nsfw: false,
+    leaveOnEmpty: true,
+    leaveOnStop: true,
+  })
+    .on('playSong', async (queue, song) => {
+      const message = await queue.textChannel?.send({
+        embeds: [
+          new EmbedBuilder()
+            .setAuthor({
+              name:
+                song.member?.nickname ||
+                song.member?.displayName ||
+                'Anonymous',
+              iconURL: song.member?.displayAvatarURL(),
+            })
+            .setTitle(song.name || 'Unknown')
+            .setURL(song.url)
+            .setThumbnail(song.thumbnail || null)
+            .setDescription('Now Playing'),
+        ],
+      })
+
+      setTimeout(() => message?.delete(), 10000)
+    })
+    .on('addList', async (queue, playlist) => {
+      const message = await queue.textChannel?.send({
+        embeds: [
+          new EmbedBuilder()
+            .setAuthor({
+              name:
+                playlist.member?.nickname ||
+                playlist.member?.displayName ||
+                'Anonymous',
+              iconURL: playlist.member?.displayAvatarURL(),
+            })
+            .setTitle(playlist.name)
+            .setURL(playlist.url || null)
+            .setThumbnail(playlist.thumbnail || null)
+            .setDescription('New Playlist Inbound'),
+        ],
+      })
+
+      setTimeout(() => message?.delete(), 5000)
+    })
+
   await client
     .on('ready', () => {
-      console.log('[SERVER] Ready!!!!!!')
+      console.log('[INFO] Ready!!!!!!')
     })
-    .on('interactionCreate', getListener(musicAdapter))
+    .on('interactionCreate', async (interaction: Interaction) => {
+      if (!interaction.isChatInputCommand()) {
+        return
+      }
+      await interaction.deferReply()
+
+      try {
+        executeCommand(
+          interaction.commandName,
+          interaction.options.data.reduce((prev, option) => {
+            prev[option.name] = option.value
+            return prev
+          }, {}),
+          new Adapter(interaction, distube)
+        )
+      } catch (err) {
+        console.log(err)
+      }
+    })
     .login(process.env.DISCORD_BOT_TOKEN)
-})()
+}
+
+main()

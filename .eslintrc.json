@@ -25,7 +25,7 @@
   "overrides": [
     {
       "files": [
-        "tests/*"
+        "tests/**/*.test.ts"
       ],
       "parserOptions": {
         "project": "tests-tsconfig.json"
