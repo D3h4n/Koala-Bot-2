@@ -1,16 +1,16 @@
 import commands from '../src/commandHandler'
 import { mockCommandInfo } from './mocks'
 
-describe('On receiving a command', () => {
+describe('The command handler after receiving a command', () => {
   describe('that exists', () => {
-    it.each(['play', 'pick-a-game'])('call the action method', (name) => {
+    it.each(['play', 'pick-a-game'])('can run the command', (name) => {
       const command = { name, run: jest.fn() }
 
       // Arrange
       commands.set(name, command)
 
       // Act
-      const commandInfo = mockCommandInfo(name, new Map())
+      const commandInfo = mockCommandInfo(name)
       commands.run(commandInfo)
 
       // Assert
@@ -26,7 +26,7 @@ describe('On receiving a command', () => {
           ['num', 123],
         ]),
       },
-    ])('call the action method with options and the adapter', ({ commandName: name, options }) => {
+    ])('can run the command with options', ({ commandName: name, options }) => {
       const command = { name, run: jest.fn() }
       const commandInfo = mockCommandInfo(name, options)
 
@@ -42,7 +42,7 @@ describe('On receiving a command', () => {
   })
 
   describe('that does not exist', () => {
-    it('throw an error', () => {
+    it('throws an error', () => {
       const test = () => {
         const commandInfo = mockCommandInfo()
         commands.run(commandInfo)
