@@ -2,31 +2,10 @@ import DisTube, { Queue, Song } from 'distube'
 import { EmbeddedMessage, Message } from './messageAdapter'
 
 export interface MusicPlayer {
-  /**
-   * Play a song in discord
-   *
-   * @param query the query to search (text or song/playlist URL)
-   */
   play: (query: string) => Promise<void>
-
-  /**
-   * Display the song queue
-   */
   queue: (page?: number) => Promise<void>
-
-  /**
-   * Shuffle the songs in the queue
-   */
   shuffle: () => Promise<void>
-
-  /**
-   * Skip the song that is currently playing
-   */
   skip: () => Promise<void>
-
-  /**
-   * Stop playing songs in discord
-   */
   stop: () => Promise<void>
 }
 
