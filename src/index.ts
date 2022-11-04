@@ -1,14 +1,8 @@
-import {
-  ActivityType,
-  Client,
-  EmbedBuilder,
-  IntentsBitField,
-  Interaction,
-} from 'discord.js'
+import { ActivityType, Client, EmbedBuilder, IntentsBitField } from 'discord.js'
 import dotenv from 'dotenv'
-import { executeCommand } from './interactions'
-import Adapter from './adapters/Adapter'
 import DisTube from 'distube'
+import commands from './commandHandler'
+import { CommandAdapter } from './adapters/commandAdapter'
 
 async function main() {
   dotenv.config()
@@ -40,10 +34,7 @@ async function main() {
         embeds: [
           new EmbedBuilder()
             .setAuthor({
-              name:
-                song.member?.nickname ||
-                song.member?.displayName ||
-                'Anonymous',
+              name: song.member?.nickname || song.member?.displayName || 'Anonymous',
               iconURL: song.member?.displayAvatarURL(),
             })
             .setTitle(song.name || 'Unknown')
@@ -55,15 +46,33 @@ async function main() {
 
       setTimeout(() => message?.delete(), 10000)
     })
+    .on('addSong', async (queue, song) => {
+      const position = queue.songs.indexOf(song)
+
+      if (position === 0) return
+
+      const message = await queue.textChannel?.send({
+        embeds: [
+          new EmbedBuilder()
+            .setAuthor({
+              name: song.member?.nickname || song.member?.displayName || 'Anonymous',
+              iconURL: song.member?.displayAvatarURL(),
+            })
+            .setTitle(song.name || 'Unknown')
+            .setURL(song.url)
+            .setThumbnail(song.thumbnail || null)
+            .setDescription(`Added Song\nPosition: ${position}`),
+        ],
+      })
+
+      setTimeout(() => message?.delete(), 10000)
+    })
     .on('addList', async (queue, playlist) => {
       const message = await queue.textChannel?.send({
         embeds: [
           new EmbedBuilder()
             .setAuthor({
-              name:
-                playlist.member?.nickname ||
-                playlist.member?.displayName ||
-                'Anonymous',
+              name: playlist.member?.nickname || playlist.member?.displayName || 'Anonymous',
               iconURL: playlist.member?.displayAvatarURL(),
             })
             .setTitle(playlist.name)
@@ -80,24 +89,10 @@ async function main() {
     .on('ready', () => {
       console.log('[INFO] Ready!!!!!!')
     })
-    .on('interactionCreate', async (interaction: Interaction) => {
-      if (!interaction.isChatInputCommand()) {
-        return
-      }
+    .on('interactionCreate', async (interaction) => {
+      if (!interaction.isChatInputCommand()) return
       await interaction.deferReply()
-
-      try {
-        executeCommand(
-          interaction.commandName,
-          interaction.options.data.reduce((prev, option) => {
-            prev[option.name] = option.value
-            return prev
-          }, {}),
-          new Adapter(interaction, distube)
-        )
-      } catch (err) {
-        console.log(err)
-      }
+      await commands.run(new CommandAdapter(interaction, distube))
     })
     .login(process.env.DISCORD_BOT_TOKEN)
 }
