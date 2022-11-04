@@ -29,7 +29,7 @@ describe('The command handler after receiving a command', () => {
       // Arrange
       const command = { name, run: jest.fn() }
       commands.add(command)
-      
+
       // Act
       const commandInfo = mockCommandInfo(name, options)
       commands.run(commandInfo)
