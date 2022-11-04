@@ -4,10 +4,9 @@ import { mockCommandInfo } from './mocks'
 describe('The command handler after receiving a command', () => {
   describe('that exists', () => {
     it.each(['play', 'pick-a-game'])('can run the command', (name) => {
-      const command = { name, run: jest.fn() }
-
       // Arrange
-      commands.set(name, command)
+      const command = { name, run: jest.fn() }
+      commands.add(command)
 
       // Act
       const commandInfo = mockCommandInfo(name)
@@ -27,13 +26,12 @@ describe('The command handler after receiving a command', () => {
         ]),
       },
     ])('can run the command with options', ({ commandName: name, options }) => {
-      const command = { name, run: jest.fn() }
-      const commandInfo = mockCommandInfo(name, options)
-
       // Arrange
-      commands.set(name, command)
-
+      const command = { name, run: jest.fn() }
+      commands.add(command)
+      
       // Act
+      const commandInfo = mockCommandInfo(name, options)
       commands.run(commandInfo)
 
       // Assert

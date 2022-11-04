@@ -15,8 +15,8 @@ class CommandHandler {
     this.commands = new Map()
   }
 
-  public set(commandName: string, command: Command) {
-    this.commands.set(commandName, command)
+  public add(command: Command) {
+    this.commands.set(command.name, command)
   }
 
   public run(commandAdapter: CommandInfo) {
@@ -38,9 +38,8 @@ export default (() => {
     StopCommand,
   ]
 
-  commands.forEach((constructor) => {
-    const command = new constructor()
-    handler.set(command.name, command)
+  commands.forEach((command) => {
+    handler.add(new command())
   })
 
   return handler
