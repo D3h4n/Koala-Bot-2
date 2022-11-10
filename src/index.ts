@@ -6,6 +6,7 @@ import { CommandAdapter } from './adapters/commandAdapter'
 
 async function main() {
   dotenv.config()
+
   const client = new Client({
     intents: [
       IntentsBitField.Flags.Guilds,
@@ -28,7 +29,11 @@ async function main() {
     nsfw: false,
     leaveOnEmpty: true,
     leaveOnStop: true,
+    leaveOnFinish: true,
+    youtubeIdentityToken: process.env.YOUTUBE_API_KEY,
   })
+
+  distube
     .on('playSong', async (queue, song) => {
       const message = await queue.textChannel?.send({
         embeds: [
@@ -65,7 +70,7 @@ async function main() {
         ],
       })
 
-      setTimeout(() => message?.delete(), 10000)
+      setTimeout(() => message?.delete(), 5000)
     })
     .on('addList', async (queue, playlist) => {
       const message = await queue.textChannel?.send({
@@ -83,6 +88,9 @@ async function main() {
       })
 
       setTimeout(() => message?.delete(), 5000)
+    })
+    .on('error', (_, error) => {
+      console.error(error)
     })
 
   await client
