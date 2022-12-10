@@ -1,5 +1,6 @@
 import { Command } from './common'
 import { CommandInfo } from '../adapters/commandAdapter'
+import assert from 'assert'
 
 export default class QueueCommand extends Command {
   constructor() {
@@ -8,8 +9,10 @@ export default class QueueCommand extends Command {
 
   async run(commandAdapter: CommandInfo) {
     const page = commandAdapter.options.get('page')
-    if (page != undefined && typeof page !== 'number')
-      throw new Error('ERROR: if page is defined it should be a number')
+    assert(
+      page === undefined || typeof page === 'number',
+      'if page is defined it should be a number'
+    )
     await commandAdapter.music.queue(page)
   }
 }

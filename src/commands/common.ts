@@ -1,7 +1,5 @@
 import { CommandInfo } from '../adapters/commandAdapter'
 
-export type Option = string | number | boolean | undefined
-
 export abstract class Command {
   readonly name: string
 

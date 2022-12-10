@@ -1,5 +1,5 @@
-import { Command, Option } from './common'
-import { CommandInfo } from '../adapters/commandAdapter'
+import { Command } from './common'
+import { CommandInfo, Option } from '../adapters/commandAdapter'
 
 export default class ChooseCommand extends Command {
   constructor() {

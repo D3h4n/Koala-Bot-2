@@ -1,5 +1,4 @@
-import { Option } from '../src/commands/common'
-import { CommandInfo } from '../src/adapters/commandAdapter'
+import { CommandInfo, Option } from '../src/adapters/commandAdapter'
 
 export function mockCommandInfo(name = '', options: Map<string, Option> = new Map()): CommandInfo {
   return {

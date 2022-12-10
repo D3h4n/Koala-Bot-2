@@ -1,5 +1,6 @@
 import { Command } from './common'
 import { CommandInfo } from '../adapters/commandAdapter'
+import assert from 'assert'
 
 export default class PlayCommand extends Command {
   constructor() {
@@ -8,7 +9,7 @@ export default class PlayCommand extends Command {
 
   async run(commandAdapter: CommandInfo) {
     const song = commandAdapter.options.get('song')
-    if (typeof song !== 'string') throw new Error('ERROR: song should always be a string')
+    assert(typeof song === 'string', 'song should always be a string')
     await commandAdapter.music.play(song)
   }
 }

@@ -1,8 +1,9 @@
-import { Option } from '../commands/common'
 import { ChatInputCommandInteraction } from 'discord.js'
 import DisTube from 'distube'
 import MessageAdapter, { Message } from './messageAdapter'
 import MusicAdapter, { MusicPlayer } from './musicAdapter'
+
+export type Option = string | number | boolean | undefined
 
 export interface CommandInfo {
   name: string
