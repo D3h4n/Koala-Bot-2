@@ -37,8 +37,12 @@ export default class MessageAdapter implements Message {
 }
 
 interface EmbedOptions {
+  author?: string
+  icon?: string
   title?: string
+  url?: string
   description?: string
+  thumbnail?: string
   footer?: string
 }
 
@@ -47,8 +51,18 @@ export class EmbeddedMessage {
 
   constructor(options: EmbedOptions) {
     this._builder = new EmbedBuilder()
+      .setAuthor({
+        name: options.author || '',
+        iconURL: options.icon,
+      })
       .setTitle(options.title || null)
+      .setURL(options.url || null)
       .setDescription(options.description || null)
+      .setThumbnail(options.thumbnail || null)
       .setFooter({ text: options.footer || ' ' })
+  }
+
+  async send(channel: TextChannel) {
+    return await channel.send({ embeds: [this._builder] })
   }
 }

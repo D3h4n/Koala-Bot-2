@@ -19,12 +19,12 @@ export class CommandAdapter implements CommandInfo {
 
   constructor(interaction: ChatInputCommandInteraction, distube: DisTube) {
     this.name = interaction.commandName
-    this.options = this.getOptions(interaction)
+    this.options = CommandAdapter.getOptions(interaction)
     this.message = new MessageAdapter(interaction)
     this.music = new MusicAdapter(distube, this.message)
   }
 
-  getOptions(interaction: ChatInputCommandInteraction) {
+  static getOptions(interaction: ChatInputCommandInteraction) {
     const options = new Map()
 
     interaction.options.data.forEach((option) => {
