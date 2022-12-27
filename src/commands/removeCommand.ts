@@ -9,6 +9,7 @@ export default class RemoveCommand extends Command {
   async run(commandAdapter: CommandInfo) {
     const position = commandAdapter.options.get('position')
     assert(typeof position === 'number', 'position should always be a number')
-    await commandAdapter.music.remove(position)
+    const song = await commandAdapter.music.remove(position)
+    await commandAdapter.message.reply(`Removed \`${song}\` at position ${position}`)
   }
 }

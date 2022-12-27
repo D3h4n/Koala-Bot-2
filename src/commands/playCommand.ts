@@ -11,5 +11,6 @@ export default class PlayCommand extends Command {
     const song = commandAdapter.options.get('song')
     assert(typeof song === 'string', 'song should always be a string')
     await commandAdapter.music.play(song)
+    await commandAdapter.message.noReply()
   }
 }

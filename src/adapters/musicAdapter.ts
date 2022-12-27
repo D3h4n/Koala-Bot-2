@@ -7,7 +7,7 @@ export interface MusicPlayer {
   shuffle: () => Promise<void>
   skip: () => Promise<void>
   stop: () => Promise<void>
-  remove: (position: number) => Promise<void>
+  remove: (position: number) => Promise<string>
 }
 
 export default class MusicAdapter implements MusicPlayer {
@@ -28,20 +28,16 @@ export default class MusicAdapter implements MusicPlayer {
     const member = this.message.member
     const voiceChannel = member?.voice.channel
 
-    if (!voiceChannel) {
-      await this.message.reply('Join a voice channel')
-      return
-    }
+    if (!voiceChannel) throw new Error('Error: Member not in voice channel')
 
     await this.distube.play(voiceChannel, query, {
       member,
       textChannel: this.message.channel,
     })
-    await this.message.noReply()
   }
 
   async queue(page = 1) {
-    if (!this.songQueue) return this.message.reply('No songs are playing')
+    if (!this.songQueue) throw new Error('Error: No queues')
     await this.message.replyWithEmbeddedMessage(this.getQueuePage(page))
   }
 
@@ -108,13 +104,11 @@ export default class MusicAdapter implements MusicPlayer {
 
   async shuffle() {
     await this.songQueue?.shuffle()
-    await this.message.reply('Shuffled queue')
   }
 
   async skip() {
     if (this.songQueue && this.songQueue.songs.length > 1) {
       await this.songQueue.skip()
-      return await this.message.noReply()
     }
 
     await this.stop()
@@ -122,16 +116,14 @@ export default class MusicAdapter implements MusicPlayer {
 
   async stop() {
     await this.songQueue?.stop()
-    await this.message.noReply()
   }
 
   async remove(position: number) {
     if (!this.songQueue || this.songQueue.songs.length < position + 1) {
-      await this.message.reply('Not that many songs')
-      return
+      throw new Error('ERROR: Not enough songs in queue')
     }
 
     const [song] = this.songQueue.songs.splice(position, 1)
-    await this.message.reply(`Removed \`${song.name}\` at position ${position}`)
+    return song.name || 'Unnamed Song'
   }
 }

@@ -8,5 +8,6 @@ export default class StopCommand extends Command {
 
   async run(commandAdapter: CommandInfo) {
     await commandAdapter.music.stop()
+    await commandAdapter.message.noReply()
   }
 }

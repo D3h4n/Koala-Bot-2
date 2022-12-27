@@ -8,5 +8,6 @@ export default class ShuffleCommand extends Command {
 
   async run(commandAdapter: CommandInfo) {
     await commandAdapter.music.shuffle()
+    await commandAdapter.message.reply('Shuffled Queue')
   }
 }
