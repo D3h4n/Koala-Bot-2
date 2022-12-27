@@ -7,6 +7,7 @@ import SkipCommand from './commands/skipCommand'
 import StopCommand from './commands/stopCommand'
 import { Command } from './commands/common'
 import { CommandInfo } from './adapters/commandAdapter'
+import RemoveCommand from './commands/removeCommand'
 
 class CommandHandler {
   private commands: Map<string, Command>
@@ -33,6 +34,7 @@ export default (() => {
     EchoCommand,
     PlayCommand,
     QueueCommand,
+    RemoveCommand,
     ShuffleCommand,
     SkipCommand,
     StopCommand,

@@ -10,6 +10,7 @@ export function mockCommandInfo(name = '', options: Map<string, Option> = new Ma
       queue: jest.fn(),
       shuffle: jest.fn(),
       skip: jest.fn(),
+      remove: jest.fn(),
     },
     message: {
       reply: jest.fn(),

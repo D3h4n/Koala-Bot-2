@@ -7,6 +7,7 @@ export interface MusicPlayer {
   shuffle: () => Promise<void>
   skip: () => Promise<void>
   stop: () => Promise<void>
+  remove: (position: number) => Promise<void>
 }
 
 export default class MusicAdapter implements MusicPlayer {
@@ -122,5 +123,15 @@ export default class MusicAdapter implements MusicPlayer {
   async stop() {
     await this.songQueue?.stop()
     await this.message.noReply()
+  }
+
+  async remove(position: number) {
+    if (!this.songQueue || this.songQueue.songs.length < position + 1) {
+      await this.message.reply('Not that many songs')
+      return
+    }
+
+    const [song] = this.songQueue.songs.splice(position, 1)
+    await this.message.reply(`Removed \`${song.name}\` at position ${position}`)
   }
 }
