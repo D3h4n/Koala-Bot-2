@@ -1,5 +1,5 @@
 import commands from '../src/commandHandler'
-import { mockCommandInfo } from './mocks.test'
+import { mockCommandInfo } from './mocks'
 
 describe('The command handler after receiving a command', () => {
   describe('that exists', () => {

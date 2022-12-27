@@ -1,6 +1,6 @@
 import EchoCommand from '../../src/commands/echoCommand'
 import * as fc from 'fast-check'
-import { mockCommandInfo } from '../mocks.test'
+import { mockCommandInfo } from '../mocks'
 
 describe('The echo command', () => {
   it('can reply with the correct message', () => {

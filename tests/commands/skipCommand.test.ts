@@ -1,5 +1,5 @@
 import SkipCommand from '../../src/commands/skipCommand'
-import { mockCommandInfo } from '../mocks.test'
+import { mockCommandInfo } from '../mocks'
 
 describe('The skip command', () => {
   it('can skip a song', () => {

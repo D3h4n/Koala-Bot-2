@@ -1,6 +1,6 @@
 import ChooseCommand from '../../src/commands/chooseCommand'
 import * as fc from 'fast-check'
-import { mockCommandInfo } from '../mocks.test'
+import { mockCommandInfo } from '../mocks'
 
 describe('The choose command', () => {
   it.each([
