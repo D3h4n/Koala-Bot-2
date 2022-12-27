@@ -99,7 +99,13 @@ function generateInteractionListener(distube: DisTube) {
   return async (interaction: Interaction) => {
     if (!interaction.isChatInputCommand()) return
     await interaction.deferReply()
-    await commands.run(new CommandAdapter(interaction, distube))
+
+    try {
+      await commands.run(new CommandAdapter(interaction, distube))
+    } catch (error) {
+      console.error(error)
+      await interaction.editReply('Whoops, something went wrong!')
+    }
   }
 }
 
