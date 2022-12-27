@@ -37,7 +37,7 @@ export default class MusicAdapter implements MusicPlayer {
   }
 
   async queue(page = 1) {
-    if (!this.songQueue) throw new Error('Error: No queues')
+    if (!this.songQueue) throw new Error('Error: No songs in queue')
     await this.message.replyWithEmbeddedMessage(this.getQueuePage(page))
   }
 

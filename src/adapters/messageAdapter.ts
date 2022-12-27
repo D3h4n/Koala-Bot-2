@@ -51,15 +51,19 @@ export class EmbeddedMessage {
 
   constructor(options: EmbedOptions) {
     this._builder = new EmbedBuilder()
-      .setAuthor({
-        name: options.author || '',
-        iconURL: options.icon,
-      })
+      .setAuthor(
+        !options.author
+          ? null
+          : {
+              name: options.author,
+              iconURL: options.icon,
+            }
+      )
       .setTitle(options.title || null)
       .setURL(options.url || null)
       .setDescription(options.description || null)
       .setThumbnail(options.thumbnail || null)
-      .setFooter({ text: options.footer || ' ' })
+      .setFooter(!options.footer ? null : { text: options.footer })
   }
 
   async send(channel: TextChannel) {
