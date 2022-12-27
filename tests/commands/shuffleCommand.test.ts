@@ -1,5 +1,5 @@
 import ShuffleCommand from '../../src/commands/shuffleCommand'
-import { mockCommandInfo } from '../mocks'
+import { mockCommandInfo } from '../mocks.test'
 
 describe('The shuffle command', () => {
   it('can shuffle a song', () => {

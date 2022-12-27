@@ -1,5 +1,5 @@
 import StopCommand from '../../src/commands/stopCommand'
-import { mockCommandInfo } from '../mocks'
+import { mockCommandInfo } from '../mocks.test'
 
 describe('The stop command', () => {
   it('can stop playing a song', () => {

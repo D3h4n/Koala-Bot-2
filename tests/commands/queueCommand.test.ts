@@ -1,5 +1,5 @@
 import QueueCommand from '../../src/commands/queueCommand'
-import { mockCommandInfo } from '../mocks'
+import { mockCommandInfo } from '../mocks.test'
 import * as fc from 'fast-check'
 
 describe('The queue command', () => {

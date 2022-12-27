@@ -1,6 +1,6 @@
 import * as fc from 'fast-check'
 import PlayCommand from '../../src/commands/playCommand'
-import { mockCommandInfo } from '../mocks'
+import { mockCommandInfo } from '../mocks.test'
 
 describe('The play command', () => {
   it('can play a song', () => {

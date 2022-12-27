@@ -1,5 +1,5 @@
 import RemoveCommand from '../../src/commands/removeCommand'
-import { mockCommandInfo } from '../mocks'
+import { mockCommandInfo } from '../mocks.test'
 import * as fc from 'fast-check'
 
 describe('The remove command', () => {
