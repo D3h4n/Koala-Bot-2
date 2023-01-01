@@ -103,7 +103,8 @@ function generateInteractionListener(distube: DisTube) {
       await commands.run(command)
     } catch (error) {
       console.error(error)
-      await command.message.reply(error.message)
+
+      if (error instanceof Error) await command.message.reply(error.message)
     }
   }
 }
