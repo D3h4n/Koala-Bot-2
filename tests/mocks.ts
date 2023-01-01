@@ -15,7 +15,6 @@ export function mockCommandInfo(name = '', options: Map<string, Option> = new Ma
     },
     message: {
       reply: jest.fn(),
-      replyWithEmbeddedMessage: jest.fn(),
       deferReply: jest.fn(),
       noReply: jest.fn(),
     },
