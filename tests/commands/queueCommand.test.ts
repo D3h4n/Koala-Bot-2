@@ -16,13 +16,17 @@ describe('The queue command', () => {
   it('can display the queue at a page', () => {
     fc.assert(
       fc.property(fc.nat(), (page) => {
-        // Act
+        // Arrange
         const queue = new QueueCommand()
         const commandInfo = mockCommandInfo('', new Map([['page', page]]))
-        queue.run(commandInfo)
 
-        // Assert
-        expect(commandInfo.music.queue).toHaveBeenCalledWith(page)
+        // Act
+        // Note: for consistency, need to wait on async command to run completely before
+        // assertions but can't use async await with fast-check
+        queue.run(commandInfo).then(() => {
+          // Assert
+          expect(commandInfo.music.queue).toHaveBeenCalledWith(page)
+        })
       })
     )
   })

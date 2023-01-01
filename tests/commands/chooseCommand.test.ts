@@ -6,7 +6,7 @@ describe('The choose command', () => {
   it.each([
     [['Hello World', '1234']],
     [['Flight', 'Invisibility', 'Invincibility', 'Super Genius']],
-  ])('reply with a correctly formatted choice', (choices) => {
+  ])('reply with a correctly formatted choice', async (choices) => {
     const options = new Map()
     choices.forEach((choice, idx) => {
       options.set(`choice${idx + 1}`, choice)
@@ -17,7 +17,7 @@ describe('The choose command', () => {
     // Act
     const choose = new ChooseCommand()
     const commandInfo = mockCommandInfo('', options)
-    choose.run(commandInfo)
+    await choose.run(commandInfo)
 
     // Assert
     expect(replies).toContain((commandInfo.message.reply as jest.Mock).mock.lastCall?.[0])
@@ -39,15 +39,17 @@ describe('The choose command', () => {
 
           // Arrange
           jest.spyOn(global.Math, 'random').mockReturnValue(randomValue)
-
-          // Act
           const choose = new ChooseCommand()
           const commandInfo = mockCommandInfo('', options)
-          choose.run(commandInfo)
 
-          // Assert
-          const expectedIndex = Math.floor(randomValue * choices.length)
-          expect(commandInfo.message.reply).toHaveBeenCalledWith(`\`${choices[expectedIndex]}\``)
+          // Act
+          // Note: for consistency, need to wait on async command to run completely before
+          // assertions but can't use async await with fast-check
+          choose.run(commandInfo).then(() => {
+            // Assert
+            const expectedIndex = Math.floor(randomValue * choices.length)
+            expect(commandInfo.message.reply).toHaveBeenCalledWith(`\`${choices[expectedIndex]}\``)
+          })
         }
       )
     )

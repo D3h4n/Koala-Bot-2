@@ -1,4 +1,10 @@
-import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, TextChannel } from 'discord.js'
+import {
+  ChatInputCommandInteraction,
+  EmbedBuilder,
+  GuildMember,
+  InteractionReplyOptions,
+  TextChannel,
+} from 'discord.js'
 
 export interface Message {
   member?: GuildMember
@@ -7,6 +13,7 @@ export interface Message {
 
   reply: (message: string) => Promise<void>
   replyWithEmbeddedMessage: (embed: EmbeddedMessage) => Promise<void>
+  deferReply: () => Promise<void>
   noReply: () => Promise<void>
 }
 
@@ -14,6 +21,7 @@ export default class MessageAdapter implements Message {
   readonly interaction: ChatInputCommandInteraction
   readonly member: GuildMember | undefined
   readonly channel: TextChannel | undefined
+  deferred: boolean
 
   constructor(interaction: ChatInputCommandInteraction) {
     this.interaction = interaction
@@ -21,18 +29,32 @@ export default class MessageAdapter implements Message {
     this.channel = interaction.channel?.isTextBased()
       ? (interaction.channel as TextChannel)
       : undefined
+    this.deferred = false
   }
 
   async reply(message: string) {
-    await this.interaction.editReply(message)
+    await this.sendReply(message)
   }
 
   async replyWithEmbeddedMessage(message: EmbeddedMessage) {
-    await this.interaction.editReply({ embeds: [message._builder] })
+    await this.sendReply({ embeds: [message._builder] })
+  }
+
+  async deferReply() {
+    this.deferred = true
+    await this.interaction.deferReply()
   }
 
   async noReply() {
     await this.interaction.deleteReply()
+  }
+
+  private async sendReply(options: InteractionReplyOptions | string) {
+    if (this.deferred) {
+      await this.interaction.editReply(options)
+    } else {
+      await this.interaction.reply(options)
+    }
   }
 }
 
