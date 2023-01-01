@@ -22,7 +22,7 @@ class CommandHandler {
 
   public run(commandAdapter: CommandInfo) {
     const command = this.commands.get(commandAdapter.name)
-    if (!command) throw new Error(`ERROR: Command ${commandAdapter.name} was not found`)
+    if (!command) throw new Error(`${commandAdapter.name} command is not implemented`)
     return command.run(commandAdapter)
   }
 }

@@ -7,7 +7,7 @@ import {
 
 export interface Message {
   reply: (message: string | EmbeddedMessage) => Promise<void>
-  deferReply: () => Promise<void>
+  defer: () => Promise<void>
   noReply: () => Promise<void>
 }
 
@@ -28,7 +28,7 @@ export default class MessageAdapter implements Message {
   }
 
   private async sendReply(options: InteractionReplyOptions | string) {
-    if (this.interaction.replied) {
+    if (this.interaction.replied || this.interaction.deferred) {
       await this.interaction.editReply(options)
       return
     }
@@ -36,12 +36,12 @@ export default class MessageAdapter implements Message {
     await this.interaction.reply(options)
   }
 
-  async deferReply() {
+  async defer() {
     await this.interaction.deferReply()
   }
 
   async noReply() {
-    if (!this.interaction.replied) {
+    if (!this.interaction.replied && !this.interaction.deferred) {
       await this.interaction.deferReply()
     }
 

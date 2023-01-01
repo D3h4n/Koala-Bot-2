@@ -15,7 +15,7 @@ describe('The play command', () => {
         // assertions but can't use async await with fast-check
         play.run(commandInfo).then(() => {
           // Assert
-          expect(commandInfo.message.deferReply).toHaveBeenCalled()
+          expect(commandInfo.message.defer).toHaveBeenCalled()
           expect(commandInfo.music.play).toHaveBeenCalledWith(song)
           expect(commandInfo.message.noReply).toHaveBeenCalled()
         })

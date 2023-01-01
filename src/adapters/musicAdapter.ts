@@ -31,7 +31,7 @@ export default class MusicAdapter implements MusicPlayer {
     const member = this.member
     const voiceChannel = member?.voice.channel
 
-    if (!voiceChannel) throw new Error('Error: Member not in voice channel')
+    if (!voiceChannel) throw new Error('Member not in voice channel')
 
     await this.distube.play(voiceChannel, query, {
       member,
@@ -40,7 +40,7 @@ export default class MusicAdapter implements MusicPlayer {
   }
 
   queue(page = 1) {
-    if (!this.songQueue) throw new Error('Error: No songs in queue')
+    if (!this.songQueue) throw new Error('No songs in queue')
     return this.getQueuePage(page)
   }
 
@@ -123,7 +123,7 @@ export default class MusicAdapter implements MusicPlayer {
 
   async remove(position: number) {
     if (!this.songQueue || this.songQueue.songs.length < position + 1) {
-      throw new Error('ERROR: Not enough songs in queue')
+      throw new Error('No song at that position')
     }
 
     const [song] = this.songQueue.songs.splice(position, 1)
