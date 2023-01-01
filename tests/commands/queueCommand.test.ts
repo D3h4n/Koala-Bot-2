@@ -29,7 +29,7 @@ describe('The queue command', () => {
         queue.run(commandInfo).then(() => {
           // Assert
           expect(commandInfo.music.queue).toHaveBeenCalledWith(page)
-          expect(commandInfo.message.replyWithEmbeddedMessage).toHaveBeenCalledWith(embed)
+          expect(commandInfo.message.reply).toHaveBeenCalledWith(embed)
         })
       })
     )

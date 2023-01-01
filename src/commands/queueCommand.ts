@@ -14,6 +14,6 @@ export default class QueueCommand extends Command {
       'if page is defined it should be a number'
     )
     const embed = await commandAdapter.music.queue(page)
-    await commandAdapter.message.replyWithEmbeddedMessage(embed)
+    await commandAdapter.message.reply(embed)
   }
 }

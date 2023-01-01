@@ -1,5 +1,6 @@
 import DisTube, { Queue, Song } from 'distube'
-import { EmbeddedMessage, Message } from './messageAdapter'
+import { EmbeddedMessage } from './messageAdapter'
+import { ChatInputCommandInteraction, GuildMember, TextChannel } from 'discord.js'
 
 export interface MusicPlayer {
   play: (query: string) => Promise<void>
@@ -15,24 +16,26 @@ export default class MusicAdapter implements MusicPlayer {
   static readonly SPACE_CHARACTER = '\u2800'
 
   private readonly distube: DisTube
-  private readonly message: Message
-  private readonly songQueue: Queue | undefined
+  private readonly member?: GuildMember
+  private readonly channel?: TextChannel
+  private readonly songQueue?: Queue
 
-  constructor(distube: DisTube, message: Message) {
+  constructor(interaction: ChatInputCommandInteraction, distube: DisTube) {
     this.distube = distube
-    this.message = message
-    if (this.message.interaction) this.songQueue = this.distube.getQueue(this.message.interaction)
+    this.member = (interaction.member as GuildMember | null) ?? undefined
+    this.channel = (interaction.channel as TextChannel | null) ?? undefined
+    this.songQueue = this.distube.getQueue(interaction)
   }
 
   async play(query: string) {
-    const member = this.message.member
+    const member = this.member
     const voiceChannel = member?.voice.channel
 
     if (!voiceChannel) throw new Error('Error: Member not in voice channel')
 
     await this.distube.play(voiceChannel, query, {
       member,
-      textChannel: this.message.channel,
+      textChannel: this.channel,
     })
   }
 
@@ -109,9 +112,9 @@ export default class MusicAdapter implements MusicPlayer {
   async skip() {
     if (this.songQueue && this.songQueue.songs.length > 1) {
       await this.songQueue.skip()
+    } else {
+      await this.stop()
     }
-
-    await this.stop()
   }
 
   async stop() {

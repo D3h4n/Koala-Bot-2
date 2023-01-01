@@ -22,7 +22,7 @@ export class CommandAdapter implements CommandInfo {
     this.name = interaction.commandName
     this.options = CommandAdapter.getOptions(interaction)
     this.message = new MessageAdapter(interaction)
-    this.music = new MusicAdapter(distube, this.message)
+    this.music = new MusicAdapter(interaction, distube)
   }
 
   static getOptions(interaction: ChatInputCommandInteraction) {

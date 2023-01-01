@@ -1,60 +1,51 @@
 import {
   ChatInputCommandInteraction,
   EmbedBuilder,
-  GuildMember,
   InteractionReplyOptions,
   TextChannel,
 } from 'discord.js'
 
 export interface Message {
-  member?: GuildMember
-  channel?: TextChannel
-  interaction?: ChatInputCommandInteraction
-
-  reply: (message: string) => Promise<void>
-  replyWithEmbeddedMessage: (embed: EmbeddedMessage) => Promise<void>
+  reply: (message: string | EmbeddedMessage) => Promise<void>
   deferReply: () => Promise<void>
   noReply: () => Promise<void>
 }
 
 export default class MessageAdapter implements Message {
   readonly interaction: ChatInputCommandInteraction
-  readonly member: GuildMember | undefined
-  readonly channel: TextChannel | undefined
-  deferred: boolean
 
   constructor(interaction: ChatInputCommandInteraction) {
     this.interaction = interaction
-    this.member = interaction.member as GuildMember | undefined
-    this.channel = interaction.channel?.isTextBased()
-      ? (interaction.channel as TextChannel)
-      : undefined
-    this.deferred = false
   }
 
-  async reply(message: string) {
-    await this.sendReply(message)
-  }
+  async reply(message: string | EmbeddedMessage) {
+    if (typeof message === 'string') {
+      await this.sendReply(message)
+      return
+    }
 
-  async replyWithEmbeddedMessage(message: EmbeddedMessage) {
     await this.sendReply({ embeds: [message._builder] })
   }
 
+  private async sendReply(options: InteractionReplyOptions | string) {
+    if (this.interaction.replied) {
+      await this.interaction.editReply(options)
+      return
+    }
+
+    await this.interaction.reply(options)
+  }
+
   async deferReply() {
-    this.deferred = true
     await this.interaction.deferReply()
   }
 
   async noReply() {
-    await this.interaction.deleteReply()
-  }
-
-  private async sendReply(options: InteractionReplyOptions | string) {
-    if (this.deferred) {
-      await this.interaction.editReply(options)
-    } else {
-      await this.interaction.reply(options)
+    if (!this.interaction.replied) {
+      await this.interaction.deferReply()
     }
+
+    await this.interaction.deleteReply()
   }
 }
 
