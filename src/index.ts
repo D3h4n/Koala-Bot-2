@@ -98,18 +98,12 @@ async function handleAddPlaylistEvent(queue: Queue, playlist: Playlist) {
 function generateInteractionListener(distube: DisTube) {
   return async (interaction: Interaction) => {
     if (!interaction.isChatInputCommand()) return
+    const command = new CommandAdapter(interaction, distube)
     try {
-      await commands.run(new CommandAdapter(interaction, distube))
+      await commands.run(command)
     } catch (error) {
       console.error(error)
-
-      if (!interaction.isRepliable()) {
-        console.error(new Error('Cannot reply to interaction'))
-      } else if (interaction.deferred || interaction.replied) {
-        await interaction.editReply({ content: error.message })
-      } else {
-        await interaction.reply({ content: error.message, ephemeral: true })
-      }
+      await command.message.reply(error.message)
     }
   }
 }
