@@ -3,7 +3,7 @@ import { EmbeddedMessage, Message } from './messageAdapter'
 
 export interface MusicPlayer {
   play: (query: string) => Promise<void>
-  queue: (page?: number) => Promise<void>
+  queue: (page?: number) => EmbeddedMessage
   shuffle: () => Promise<void>
   skip: () => Promise<void>
   stop: () => Promise<void>
@@ -36,9 +36,9 @@ export default class MusicAdapter implements MusicPlayer {
     })
   }
 
-  async queue(page = 1) {
+  queue(page = 1) {
     if (!this.songQueue) throw new Error('Error: No songs in queue')
-    await this.message.replyWithEmbeddedMessage(this.getQueuePage(page))
+    return this.getQueuePage(page)
   }
 
   private getQueuePage(page: number) {

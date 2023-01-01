@@ -1,6 +1,7 @@
 import QueueCommand from '../../src/commands/queueCommand'
 import { mockCommandInfo } from '../mocks'
 import * as fc from 'fast-check'
+import { EmbeddedMessage } from '../../src/adapters/messageAdapter'
 
 describe('The queue command', () => {
   it('can display the queue', () => {
@@ -16,6 +17,8 @@ describe('The queue command', () => {
   it('can display the queue at a page', () => {
     fc.assert(
       fc.property(fc.nat(), (page) => {
+        const embed = new EmbeddedMessage({})
+
         // Arrange
         const queue = new QueueCommand()
         const commandInfo = mockCommandInfo('', new Map([['page', page]]))
@@ -26,6 +29,7 @@ describe('The queue command', () => {
         queue.run(commandInfo).then(() => {
           // Assert
           expect(commandInfo.music.queue).toHaveBeenCalledWith(page)
+          expect(commandInfo.message.replyWithEmbeddedMessage).toHaveBeenCalledWith(embed)
         })
       })
     )

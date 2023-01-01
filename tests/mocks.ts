@@ -1,4 +1,5 @@
 import { CommandInfo, Option } from '../src/adapters/commandAdapter'
+import { EmbeddedMessage } from '../src/adapters/messageAdapter'
 
 export function mockCommandInfo(name = '', options: Map<string, Option> = new Map()): CommandInfo {
   return {
@@ -7,7 +8,7 @@ export function mockCommandInfo(name = '', options: Map<string, Option> = new Ma
     music: {
       play: jest.fn(),
       stop: jest.fn(),
-      queue: jest.fn(),
+      queue: jest.fn(() => new EmbeddedMessage({})),
       shuffle: jest.fn(),
       skip: jest.fn(),
       remove: jest.fn(),
