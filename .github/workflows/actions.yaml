@@ -98,7 +98,7 @@ jobs:
             ghcr.io/d3h4n/koala-bot:latest
             ghcr.io/d3h4n/koala-bot:${{ github.sha }}
 
-  "register/update commands":
+  register-commands:
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -118,5 +118,5 @@ jobs:
       - name: Install Packages
         run: npm i
 
-      - name: Register Commands
+      - name: Register/Update Commands
         run: npm run register
