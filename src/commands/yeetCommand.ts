@@ -1,10 +1,23 @@
 import Command from '../common'
 import { CommandInfo } from '../adapters/commandAdapter'
 import assert from 'assert'
+import { ChannelType } from 'discord-api-types/v10'
 
 export default class yeetCommand extends Command {
   constructor() {
-    super('yeet', 'Move all connected members between voice channels.')
+    super(
+      'yeet',
+      'Move all connected members between voice channels.',
+      [
+        {
+          name: 'channel',
+          type: 'CHANNEL',
+          description: 'Target channel.',
+          channelTypes: [ChannelType.GuildVoice],
+        },
+      ],
+      ['MoveMembers']
+    )
   }
 
   async run(commandAdapter: CommandInfo) {

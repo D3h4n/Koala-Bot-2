@@ -97,3 +97,26 @@ jobs:
           tags: |
             ghcr.io/d3h4n/koala-bot:latest
             ghcr.io/d3h4n/koala-bot:${{ github.sha }}
+
+  "register/update commands":
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{runner.os}}-modules-${{hashFiles('package-lock.json')}}
+
+      - name: Install Packages
+        run: npm i
+
+      - name: Register Commands
+        run: npm run register

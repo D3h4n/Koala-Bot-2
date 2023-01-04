@@ -1,5 +1,11 @@
 import { CommandInfo } from './adapters/commandAdapter'
-import { PermissionsString } from 'discord.js'
+import {
+  PermissionFlagsBits,
+  PermissionsBitField,
+  PermissionsString,
+  SlashCommandBuilder,
+} from 'discord.js'
+import { ApplicationCommandOptionAllowedChannelTypes } from '@discordjs/builders'
 
 export const ECommandOptionType = {
   SUB_COMMAND: 1,
@@ -22,12 +28,13 @@ export interface CommandOption {
   type: CommandOptionType
   description: string
   required?: boolean
+  channelTypes?: ApplicationCommandOptionAllowedChannelTypes[]
 }
 
 export default abstract class Command {
   readonly name: string
   readonly description: string
-  readonly options?: CommandOption[]
+  readonly options: CommandOption[]
   readonly permissions: PermissionsString[]
 
   protected constructor(
@@ -43,4 +50,61 @@ export default abstract class Command {
   }
 
   abstract run(commandAdapter: CommandInfo): Promise<void>
+
+  toSlashCommand(): SlashCommandBuilder {
+    const command = new SlashCommandBuilder()
+      .setName(this.name)
+      .setDescription(this.description)
+      .setDefaultMemberPermissions(
+        this.permissions.reduce(
+          (prev, curr) => prev | PermissionFlagsBits[curr],
+          PermissionsBitField.Default
+        )
+      )
+    Command.addSlashCommandOptions(command, this.options)
+
+    return command
+  }
+
+  private static addSlashCommandOptions(command: SlashCommandBuilder, options: CommandOption[]) {
+    for (const option of options) {
+      switch (option.type) {
+        case 'STRING':
+          command.addStringOption((builder) =>
+            builder
+              .setName(option.name)
+              .setDescription(option.description)
+              .setRequired(option.required ?? true)
+          )
+          break
+
+        case 'INTEGER':
+          command.addIntegerOption((builder) =>
+            builder
+              .setName(option.name)
+              .setDescription(option.description)
+              .setRequired(option.required ?? true)
+          )
+          break
+
+        case 'CHANNEL':
+          command.addChannelOption((builder) => {
+            builder
+              .setName(option.name)
+              .setDescription(option.description)
+              .setRequired(option.required ?? true)
+
+            if (option.channelTypes) {
+              builder.addChannelTypes(...option.channelTypes)
+            }
+
+            return builder
+          })
+          break
+
+        default:
+          throw new Error(`Unhandled option type "${option.type}"`)
+      }
+    }
+  }
 }

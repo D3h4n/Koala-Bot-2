@@ -5,8 +5,7 @@ import CommandHandler from './commandHandler'
 import Command from './common'
 import CommandAdapter from './adapters/commandAdapter'
 import EmbeddedMessage from './adapters/embeddedMessage'
-import { promises } from 'fs'
-import { resolve } from 'path'
+import { readCommands } from './register'
 
 async function main() {
   dotenv.config()
@@ -29,7 +28,7 @@ async function main() {
     },
   })
 
-  const commands = await readCommands('./dist/commands')
+  const commands = readCommands('./dist/commands')
 
   const distube = new DisTube(client, {
     nsfw: false,
@@ -103,11 +102,15 @@ async function handleAddPlaylistEvent(queue: Queue, playlist: Playlist) {
 function generateInteractionListener(commands: Command[], distube: DisTube) {
   const commandHandler = new CommandHandler(commands)
   return async (interaction: Interaction) => {
-    if (!interaction.isChatInputCommand()) return
+    if (!interaction.isChatInputCommand() || !interaction.guildId) return
     const command = new CommandAdapter(interaction, distube)
 
     try {
       await commandHandler.run(command)
+      console.log(
+        `[INFO] User "${interaction.user.tag}" used command "${interaction.commandName}" in` +
+          `channel "${(interaction.channel as TextChannel).name}"`
+      )
     } catch (error) {
       console.error(error)
       if (error instanceof Error) await command.message.reply(error.message)
@@ -115,33 +118,6 @@ function generateInteractionListener(commands: Command[], distube: DisTube) {
   }
 }
 
-async function readCommands(dir: string): Promise<Command[]> {
-  const commands: Command[] = []
-
-  for await (const f of findFilesInDirectory(dir)) {
-    // NOTE: we're searching for js files because everything is being transpiled to js.
-    if (f.endsWith('.js')) {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const command: Command = new (require(f).default)()
-      commands.push(command)
-    }
-  }
-
-  return commands
+if (require.main === module) {
+  main()
 }
-
-async function* findFilesInDirectory(dir: string): AsyncGenerator<string, void, void> {
-  const dirEntries = await promises.readdir(dir, { withFileTypes: true })
-
-  for (const dirEntry of dirEntries) {
-    const path = resolve(dir, dirEntry.name)
-
-    if (dirEntry.isDirectory()) {
-      yield* findFilesInDirectory(path)
-    } else {
-      yield path
-    }
-  }
-}
-
-main()
