@@ -99,11 +99,11 @@ function generateInteractionListener(distube: DisTube) {
   return async (interaction: Interaction) => {
     if (!interaction.isChatInputCommand()) return
     const command = new CommandAdapter(interaction, distube)
+
     try {
       await commands.run(command)
     } catch (error) {
       console.error(error)
-
       if (error instanceof Error) await command.message.reply(error.message)
     }
   }

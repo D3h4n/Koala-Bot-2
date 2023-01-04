@@ -1,3 +1,5 @@
+import { Command } from './commands/common'
+import { CommandInfo } from './adapters/commandAdapter'
 import ChooseCommand from './commands/chooseCommand'
 import EchoCommand from './commands/echoCommand'
 import PlayCommand from './commands/playCommand'
@@ -5,9 +7,8 @@ import QueueCommand from './commands/queueCommand'
 import ShuffleCommand from './commands/shuffleCommand'
 import SkipCommand from './commands/skipCommand'
 import StopCommand from './commands/stopCommand'
-import { Command } from './commands/common'
-import { CommandInfo } from './adapters/commandAdapter'
 import RemoveCommand from './commands/removeCommand'
+import YeetCommand from './commands/yeetCommand'
 
 class CommandHandler {
   private commands: Map<string, Command>
@@ -38,6 +39,7 @@ export default (() => {
     ShuffleCommand,
     SkipCommand,
     StopCommand,
+    YeetCommand,
   ]
 
   commands.forEach((command) => {

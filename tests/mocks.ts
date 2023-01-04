@@ -18,5 +18,8 @@ export function mockCommandInfo(name = '', options: Map<string, Option> = new Ma
       defer: jest.fn(),
       noReply: jest.fn(),
     },
+    voice: {
+      moveAll: jest.fn(),
+    },
   }
 }
