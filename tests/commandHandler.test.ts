@@ -9,8 +9,10 @@ describe('The command handler after receiving a command', () => {
       const command: Command = {
         name,
         description: '',
-        permissions: ['Administrator'],
+        options: [],
+        permissions: [],
         run: jest.fn(),
+        toSlashCommand: jest.fn(),
       }
       const commands = new CommandHandler([command])
 
@@ -36,8 +38,10 @@ describe('The command handler after receiving a command', () => {
       const command: Command = {
         name,
         description: '',
-        permissions: ['Administrator'],
+        options: [],
+        permissions: [],
         run: jest.fn(),
+        toSlashCommand: jest.fn(),
       }
       const commands = new CommandHandler([command])
 
