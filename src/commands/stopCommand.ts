@@ -1,9 +1,9 @@
-import { Command } from './common'
+import Command from '../common'
 import { CommandInfo } from '../adapters/commandAdapter'
 
 export default class StopCommand extends Command {
   constructor() {
-    super('stop')
+    super('stop', 'Stop the music queue.')
   }
 
   async run(commandAdapter: CommandInfo) {

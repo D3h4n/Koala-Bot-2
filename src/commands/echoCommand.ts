@@ -1,10 +1,12 @@
-import { Command } from './common'
+import Command from '../common'
 import { CommandInfo } from '../adapters/commandAdapter'
 import assert from 'assert'
 
 export default class EchoCommand extends Command {
   constructor() {
-    super('echo')
+    super('echo', 'I repeat whatever you want.', [
+      { name: 'message', type: 'STRING', description: 'The message to repeat.' },
+    ])
   }
 
   async run(commandAdapter: CommandInfo) {

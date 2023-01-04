@@ -1,12 +1,18 @@
-import commands from '../src/commandHandler'
+import CommandHandler from '../src/commandHandler'
 import { mockCommandInfo } from './mocks'
+import Command from '../src/common'
 
 describe('The command handler after receiving a command', () => {
   describe('that exists', () => {
     it.each(['play', 'pick-a-game'])('can run the command', (name) => {
       // Arrange
-      const command = { name, run: jest.fn() }
-      commands.add(command)
+      const command: Command = {
+        name,
+        description: '',
+        permissions: ['Administrator'],
+        run: jest.fn(),
+      }
+      const commands = new CommandHandler([command])
 
       // Act
       const commandInfo = mockCommandInfo(name)
@@ -27,8 +33,13 @@ describe('The command handler after receiving a command', () => {
       },
     ])('can run the command with options', ({ commandName: name, options }) => {
       // Arrange
-      const command = { name, run: jest.fn() }
-      commands.add(command)
+      const command: Command = {
+        name,
+        description: '',
+        permissions: ['Administrator'],
+        run: jest.fn(),
+      }
+      const commands = new CommandHandler([command])
 
       // Act
       const commandInfo = mockCommandInfo(name, options)
@@ -41,6 +52,8 @@ describe('The command handler after receiving a command', () => {
 
   describe('that does not exist', () => {
     it('throws an error', () => {
+      const commands = new CommandHandler([])
+
       const test = () => {
         const commandInfo = mockCommandInfo()
         commands.run(commandInfo)

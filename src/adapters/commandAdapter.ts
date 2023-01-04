@@ -14,7 +14,7 @@ export interface CommandInfo {
   voice: Voice
 }
 
-export class CommandAdapter implements CommandInfo {
+export default class CommandAdapter implements CommandInfo {
   name: string
   options: Map<string, Option>
   readonly message: Message

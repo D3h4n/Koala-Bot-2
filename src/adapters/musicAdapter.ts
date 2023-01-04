@@ -1,6 +1,6 @@
 import DisTube, { Queue, Song } from 'distube'
-import { EmbeddedMessage } from './messageAdapter'
 import { ChatInputCommandInteraction, GuildMember, TextChannel } from 'discord.js'
+import EmbeddedMessage from './embeddedMessage'
 
 export interface Music {
   play: (query: string) => Promise<void>

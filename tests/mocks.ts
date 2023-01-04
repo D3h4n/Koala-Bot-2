@@ -1,5 +1,5 @@
 import { CommandInfo, Option } from '../src/adapters/commandAdapter'
-import { EmbeddedMessage } from '../src/adapters/messageAdapter'
+import EmbeddedMessage from '../src/adapters/embeddedMessage'
 
 export function mockCommandInfo(name = '', options: Map<string, Option> = new Map()): CommandInfo {
   return {

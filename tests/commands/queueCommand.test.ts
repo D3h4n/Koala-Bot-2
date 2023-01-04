@@ -1,7 +1,7 @@
 import QueueCommand from '../../src/commands/queueCommand'
 import { mockCommandInfo } from '../mocks'
 import * as fc from 'fast-check'
-import { EmbeddedMessage } from '../../src/adapters/messageAdapter'
+import EmbeddedMessage from '../../src/adapters/embeddedMessage'
 
 describe('The queue command', () => {
   it('can display the queue', () => {

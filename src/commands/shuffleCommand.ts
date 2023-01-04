@@ -1,9 +1,9 @@
-import { Command } from './common'
+import Command from '../common'
 import { CommandInfo } from '../adapters/commandAdapter'
 
 export default class ShuffleCommand extends Command {
   constructor() {
-    super('shuffle')
+    super('shuffle', 'Shuffle the music queue.')
   }
 
   async run(commandAdapter: CommandInfo) {
