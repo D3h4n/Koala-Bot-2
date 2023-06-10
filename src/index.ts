@@ -108,7 +108,7 @@ function generateInteractionListener(commands: Command[], distube: DisTube) {
     try {
       await commandHandler.run(command)
       console.log(
-        `[INFO] User "${interaction.user.tag}" used command "${interaction.commandName}" in` +
+        `[INFO] User "${interaction.user.tag}" used command "${interaction.commandName}" in ` +
           `channel "${(interaction.channel as TextChannel).name}"`
       )
     } catch (error) {
