@@ -31,7 +31,7 @@ the software design aspects of the project.
 
 1. Echo - Repeat a given message
 2. Choose - Choose a random option
-2. Yeet - Yeet chatters from one voice channel to another
+3. Yeet - Yeet chatters from one voice channel to another
 
 ### Music
 
@@ -46,15 +46,15 @@ the software design aspects of the project.
 
 - [x] Echo
 - [x] Choose
-- [ ] Yeet
-- [ ] Play
+- [x] Yeet
+- [x] Play
 - [ ] Pause
-- [ ] Skip
-- [ ] Queue
+- [x] Skip
+- [x] Queue
 - [ ] Loop
-- [ ] Stop
+- [x] Stop
 
 ## TODO
 
 - [x] Create the initial walking skeleton for a basic command
-- [ ] Figure out an automated way to update slash commands on discord
+- [x] Figure out an automated way to update slash commands on discord
