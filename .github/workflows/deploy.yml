@@ -1,6 +1,19 @@
 name: Deploy
 
 on:
+  workflow_call:
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      DISCORD_BOT_TOKEN:
+        required: true
+      YOUTUBE_API_KEY:
+        required: true
+      CLIENT_ID:
+        required: true
+
   workflow_run:
     workflows: [Test]
     branches: [main]
