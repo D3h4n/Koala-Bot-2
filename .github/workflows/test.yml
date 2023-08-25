@@ -25,7 +25,9 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Install Packages
-        run: npm ci
+        run: |
+          npm cache verify
+          npm i
 
       - name: Run ESLint
         run: npm run lint
