@@ -37,8 +37,6 @@ jobs:
 
       - name: Build and push to ghcr
         uses: docker/build-push-action@v3
-        env:
-          OWNER: ${{ github.repository_owner }}
         with:
           push: true
           tags: |

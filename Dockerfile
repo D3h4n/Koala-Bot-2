@@ -3,13 +3,13 @@ FROM node:lts as Builder
 WORKDIR /tmp
 COPY . .
 
-ENV NODE_ENV=production
-
 RUN npm ci
 RUN npm run build --if-present
-RUN npm prune
+RUN npm prune --omit dev
 
 FROM node:lts-slim as Runtime
+
+ENV NODE_ENV=production
 
 WORKDIR /app
 COPY --from=Builder /tmp/node_modules ./node_modules
