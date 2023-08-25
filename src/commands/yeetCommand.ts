@@ -1,7 +1,7 @@
 import Command from '../common'
 import { CommandInfo } from '../adapters/commandAdapter'
 import assert from 'assert'
-import { ChannelType } from 'discord-api-types/v10'
+import { ChannelType } from 'discord.js'
 
 export default class yeetCommand extends Command {
   constructor() {
