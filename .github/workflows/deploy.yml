@@ -31,14 +31,17 @@ jobs:
 
       - name: Build and push to ghcr
         uses: docker/build-push-action@v3
+        env:
+          OWNER: ${{ github.repository_owner }}
         with:
           push: true
           tags: |
-            ghcr.io/${{ github.actor }}/koala-bot:latest
-            ghcr.io/${{ github.actor }}/koala-bot:${{ github.sha }}
+            ghcr.io/${OWNER,,}/koala-bot:latest
+            ghcr.io/${OWNER,,}/koala-bot:${{ github.sha }}
 
   deploy:
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -62,19 +65,21 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Push and Deploy
+        env:
+          OWNER: ${{ github.repository_owner }}
         run: |
           service_name=${{ env.AWS_LIGHTSAIL_SERVICE_NAME }}
           aws lightsail push-container-image \
             --region ${{ env.AWS_REGION }} \
             --service-name ${service_name} \
-            --label ghcr.io/${{ github.actor }}/koala-bot:latest \
-            --image ghcr.io/${{ github.actor }}/koala-bot:latest
+            --label ghcr.io/${OWNER,,}/koala-bot:latest \
+            --image ghcr.io/${OWNER,,}/koala-bot:latest
           aws lightsail get-container-images --service-name ${service_name} | jq --raw-output ".containerImages[0].image" > image.txt
           jq --arg image $(cat image.txt) '.containers.koala-bot.image = $image' \
-          '.containers.koala-bot.environment.DISCORD_BOT_TOKEN = $DISCORD_BOT_TOKEN' \
-          '.containers.koala-bot.environment.YOUTUBE_API_KEY = $YOUTUBE_API_KEY' \
-          '.containers.koala-bot.environment.CLIENT_ID = $CLIENT_ID' \
-          container.template.json > container.json
+            '.containers.koala-bot.environment.DISCORD_BOT_TOKEN = $DISCORD_BOT_TOKEN' \
+            '.containers.koala-bot.environment.YOUTUBE_API_KEY = $YOUTUBE_API_KEY' \
+            '.containers.koala-bot.environment.CLIENT_ID = $CLIENT_ID' \
+            container.template.json > container.json
           aws lightsail create-container-service-deployment --service-name ${service_name} --cli-input-json file://$(pwd)/container.json
 
   register-commands:
