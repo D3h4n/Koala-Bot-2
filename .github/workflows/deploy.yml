@@ -83,7 +83,7 @@ jobs:
             | .containers."koala-bot".environment.YOUTUBE_API_KEY = "${{ secrets.YOUTUBE_API_KEY }}" \
             | .containers."koala-bot".environment.CLIENT_ID = "${{ secrets.CLIENT_ID }}"' \
             container.template.json > container.json
-          aws lightsail create-container-service-deployment --service-name ${service_name} --cli-input-json file://$(pwd)/container.json
+          aws lightsail create-container-service-deployment --service-name ${{ env.AWS_LIGHTSAIL_SERVICE_NAME }} --cli-input-json file://$(pwd)/container.json
 
   register-commands:
     needs: deploy
