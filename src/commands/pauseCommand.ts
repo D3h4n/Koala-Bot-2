@@ -3,7 +3,7 @@ import Command from '../common'
 
 export default class PauseCommand extends Command {
   constructor() {
-    super('Pause', 'Pause a song that is currently playing')
+    super('pause', 'Pause a song that is currently playing')
   }
 
   async run(commandAdapter: CommandInfo) {
