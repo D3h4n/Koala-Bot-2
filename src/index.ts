@@ -31,10 +31,9 @@ async function main() {
   const commands = readCommands('./dist/commands')
 
   const distube = new DisTube(client, {
-    nsfw: false,
+    nsfw: true,
     leaveOnEmpty: true,
     leaveOnStop: true,
-    leaveOnFinish: true,
     youtubeIdentityToken: process.env.YOUTUBE_API_KEY,
   })
 
