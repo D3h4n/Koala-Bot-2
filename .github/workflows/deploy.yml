@@ -82,9 +82,9 @@ jobs:
             --arg bot_token '${{ secrets.DISCORD_BOT_TOKEN }}' \
             --arg api_key '${{ secrets.YOUTUBE_API_KEY }}' \
             --arg client_id '${{ secrets.CLIENT_ID }}' \
-            '.containers."koala-bot".image = $image \
-            | .containers."koala-bot".environment.DISCORD_BOT_TOKEN = $bot_token \
-            | .containers."koala-bot".environment.YOUTUBE_API_KEY = $api_key \
+            '.containers."koala-bot".image = $image
+            | .containers."koala-bot".environment.DISCORD_BOT_TOKEN = $bot_token
+            | .containers."koala-bot".environment.YOUTUBE_API_KEY = $api_key
             | .containers."koala-bot".environment.CLIENT_ID = $client_id' \
             container.template.json > container.json
           aws lightsail create-container-service-deployment --service-name ${{ env.AWS_LIGHTSAIL_SERVICE_NAME }} --cli-input-json file://$(pwd)/container.json
