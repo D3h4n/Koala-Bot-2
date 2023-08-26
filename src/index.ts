@@ -34,6 +34,7 @@ async function main() {
     nsfw: true,
     leaveOnEmpty: true,
     leaveOnStop: true,
+    leaveOnFinish: true,
     youtubeIdentityToken: process.env.YOUTUBE_API_KEY,
   })
 
@@ -60,7 +61,7 @@ async function handlePlaySongEvent(queue: Queue, song: Song) {
     title: song.name,
     url: song.url,
     thumbnail: song.thumbnail,
-    description: 'Now Playing',
+    description: `**Now Playing**\n\`${song.formattedDuration}\``,
   }).send(channel)
   setTimeout(() => message?.delete(), 10000)
 }
