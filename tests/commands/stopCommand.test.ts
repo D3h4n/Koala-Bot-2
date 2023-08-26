@@ -3,9 +3,12 @@ import { mockCommandInfo } from '../mocks'
 
 describe('The stop command', () => {
   it('can stop playing a song', async () => {
-    // Act
-    const stop = new StopCommand()
     const commandInfo = mockCommandInfo()
+
+    // Arrange
+    const stop = new StopCommand()
+
+    // Act
     await stop.run(commandInfo)
 
     // Assert

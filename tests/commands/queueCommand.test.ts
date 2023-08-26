@@ -5,23 +5,30 @@ import EmbeddedMessage from '../../src/adapters/embeddedMessage'
 
 describe('The queue command', () => {
   it('can display the queue', () => {
-    // Act
-    const queue = new QueueCommand()
+    const embed = new EmbeddedMessage({})
     const commandInfo = mockCommandInfo()
+    commandInfo.music.queue = jest.fn(() => embed)
+
+    // Assemble
+    const queue = new QueueCommand()
+
+    // Act
     queue.run(commandInfo)
 
     // Assert
     expect(commandInfo.music.queue).toHaveBeenCalled()
+    expect(commandInfo.message.reply).toHaveBeenCalledWith(embed)
   })
 
   it('can display the queue at a page', () => {
     fc.assert(
       fc.property(fc.nat(), (page) => {
+        const commandInfo = mockCommandInfo('', new Map([['page', page]]))
         const embed = new EmbeddedMessage({})
+        commandInfo.music.queue = jest.fn(() => embed)
 
         // Arrange
         const queue = new QueueCommand()
-        const commandInfo = mockCommandInfo('', new Map([['page', page]]))
 
         // Act
         // Note: for consistency, need to wait on async command to run completely before

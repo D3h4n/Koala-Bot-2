@@ -22,7 +22,7 @@ export default class yeetCommand extends Command {
 
   async run(commandAdapter: CommandInfo) {
     const channel = commandAdapter.options.get('channel')
-    assert(typeof channel === 'string', 'channel should always be of type strings')
+    assert(typeof channel === 'string', 'channel should always be of type string')
     await commandAdapter.voice.moveAll(channel)
     await commandAdapter.message.noReply()
   }
