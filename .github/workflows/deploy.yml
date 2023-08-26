@@ -71,7 +71,7 @@ jobs:
             ${{ steps.repo_name.outputs.lowercase }}:${{ github.sha }}
 
   deploy:
-    needs: build
+    needs: [build, register-commands]
     runs-on: ubuntu-latest
     environment: SUPER_SECRET_SECRETS
     steps:
