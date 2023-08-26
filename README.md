@@ -37,10 +37,11 @@ the software design aspects of the project.
 
 1. Play - Play a song in a voice channel or add a song to the queue
 2. Pause - Pause the song that is currently playing
-3. Skip - Skip the song that is currently playing
-4. Queue - Display the songs currently in the queue
-5. Loop - Loop a song or the queue
-6. Stop - Stop playing
+3. Resume - Resume the song that is currently paused
+4. Skip - Skip the song that is currently playing
+5. Queue - Display the songs currently in the queue
+6. Loop - Loop a song or the queue
+7. Stop - Stop playing
 
 ## Completed Commands
 
@@ -48,7 +49,8 @@ the software design aspects of the project.
 - [x] Choose
 - [x] Yeet
 - [x] Play
-- [ ] Pause
+- [x] Pause
+- [x] Resume
 - [x] Skip
 - [x] Queue
 - [ ] Loop
@@ -58,3 +60,10 @@ the software design aspects of the project.
 
 - [x] Create the initial walking skeleton for a basic command
 - [x] Figure out an automated way to update slash commands on discord
+- [ ] Refactor error handling to be custom types
+  - [ ] Replace generic Error with more meaningful errors
+  - [ ] Handle errors within the command handler instead of widely scoped try-catch
+- [ ] Maybe shift the architecture to be more in line with web servers
+  - [ ] Commands are registered to some overarching router based on a path
+  - [ ] Dependecies are injected based on needs instead of one object with all dependecies
+        (non-music commands shouldn't know about the music adapter)

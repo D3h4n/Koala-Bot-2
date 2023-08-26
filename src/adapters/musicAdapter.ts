@@ -21,14 +21,12 @@ export default class MusicAdapter implements Music {
   private readonly member?: GuildMember
   private readonly channel?: TextChannel
   private readonly songQueue?: Queue
-  private readonly interaction: ChatInputCommandInteraction
 
   constructor(interaction: ChatInputCommandInteraction, distube: DisTube) {
     this.distube = distube
     this.member = (interaction.member as GuildMember | null) ?? undefined
     this.channel = (interaction.channel as TextChannel | null) ?? undefined
     this.songQueue = this.distube.getQueue(interaction)
-    this.interaction = interaction
   }
 
   async play(query: string) {
@@ -45,13 +43,13 @@ export default class MusicAdapter implements Music {
 
   async tryPause() {
     if (!this.songQueue?.playing) return false
-    this.distube.pause(this.interaction)
+    this.songQueue.pause()
     return true
   }
 
   async tryResume() {
     if (!this.songQueue?.paused) return false
-    this.distube.resume(this.interaction)
+    this.songQueue.resume()
     return true
   }
 
