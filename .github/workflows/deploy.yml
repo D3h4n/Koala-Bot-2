@@ -18,7 +18,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-      CLIENT_ID: ${{ secrets.CLIENT_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -111,10 +110,8 @@ jobs:
           jq --arg image '${{ steps.repo_name.outputs.lowercase }}:${{ github.sha }}' \
             --arg bot_token '${{ secrets.DISCORD_BOT_TOKEN }}' \
             --arg api_key '${{ secrets.YOUTUBE_API_KEY }}' \
-            --arg client_id '${{ secrets.CLIENT_ID }}' \
             '.containers."koala-bot".image = $image
             | .containers."koala-bot".environment.DISCORD_BOT_TOKEN = $bot_token
-            | .containers."koala-bot".environment.YOUTUBE_API_KEY = $api_key
-            | .containers."koala-bot".environment.CLIENT_ID = $client_id' \
+            | .containers."koala-bot".environment.YOUTUBE_API_KEY = $api_key' \
             container.template.json > container.json
           aws lightsail create-container-service-deployment --service-name ${{ env.AWS_LIGHTSAIL_SERVICE_NAME }} --cli-input-json file://$(pwd)/container.json
