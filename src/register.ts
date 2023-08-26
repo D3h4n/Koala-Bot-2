@@ -1,15 +1,17 @@
-import Command from './common'
-import dotenv from 'dotenv'
 import fs from 'node:fs'
-import { resolve } from 'path'
+import { resolve } from 'node:path'
+
+import dotenv from 'dotenv'
 import { Routes } from 'discord-api-types/v10'
 import { REST } from '@discordjs/rest'
+
+import type Command from './common'
 
 async function main() {
   dotenv.config()
   const token = process.env.DISCORD_BOT_TOKEN
   const clientID = process.env.CLIENT_ID
-  if (!token || !clientID) return
+  if (!token || !clientID) throw new Error('Missing Registration Credentials')
 
   const commands = readCommands('./dist/commands')
   const rest = new REST().setToken(token)
