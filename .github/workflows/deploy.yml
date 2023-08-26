@@ -78,14 +78,10 @@ jobs:
 
       - name: Push and Deploy
         run: |
-          jq --arg image ${{ steps.repo_name.outputs.lowercase }}:${{ github.sha}}\
-            --arg bot_token ${{ secrets.DISCORD_BOT_TOKEN }} \
-            --arg api_key ${{ secrets.YOUTUBE_API_KEY }} \
-            --arg client_id ${{ secrets.CLIENT_ID }} \
-            '.containers."koala-bot".image = $image' \
-            '.containers."koala-bot".environment.DISCORD_BOT_TOKEN = $bot_token' \
-            '.containers."koala-bot".environment.YOUTUBE_API_KEY = $api_key' \
-            '.containers."koala-bot".environment.CLIENT_ID = $client_id' \
+          jq '.containers."koala-bot".image = "${{ steps.repo_name.outputs.lowercase }}:${{ github.sha}}" \
+            | .containers."koala-bot".environment.DISCORD_BOT_TOKEN = "${{ secrets.DISCORD_BOT_TOKEN }}" \
+            | .containers."koala-bot".environment.YOUTUBE_API_KEY = "${{ secrets.YOUTUBE_API_KEY }}" \
+            | .containers."koala-bot".environment.CLIENT_ID = "${{ secrets.CLIENT_ID }}"' \
             container.template.json > container.json
           aws lightsail create-container-service-deployment --service-name ${service_name} --cli-input-json file://$(pwd)/container.json
 
