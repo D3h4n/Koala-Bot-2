@@ -68,14 +68,7 @@ jobs:
 
       - name: Push and Deploy
         run: |
-          service_name=${{ env.AWS_LIGHTSAIL_SERVICE_NAME }}
-          aws lightsail push-container-image \
-            --region ${{ env.AWS_REGION }} \
-            --service-name ${service_name} \
-            --label ${{ steps.repo_name.outputs.lowercase }}:latest \
-            --image ${{ steps.repo_name.outputs.lowercase }}:latest
-          aws lightsail get-container-images --service-name ${service_name} | jq --raw-output ".containerImages[0].image" > image.txt
-          jq --arg image $(cat image.txt) '.containers.koala-bot.image = $image' \
+          jq '.containers.koala-bot.image = ${{ steps.repo_name.outputs.lowercase }}:${{ github.sha }}' \
             '.containers.koala-bot.environment.DISCORD_BOT_TOKEN = ${{ secrets.DISCORD_BOT_TOKEN }}' \
             '.containers.koala-bot.environment.YOUTUBE_API_KEY = ${{ secrets.YOUTUBE_API_KEY }}' \
             '.containers.koala-bot.environment.CLIENT_ID = ${{ secrets.CLIENT_ID  }}' \
