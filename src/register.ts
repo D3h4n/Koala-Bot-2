@@ -2,21 +2,35 @@ import fs from 'node:fs'
 import { resolve } from 'node:path'
 
 import dotenv from 'dotenv'
-import { Routes } from 'discord-api-types/v10'
-import { REST } from '@discordjs/rest'
 
 import type Command from './common'
+import { Client } from 'discord.js'
 
 async function main() {
   dotenv.config()
   const token = process.env.DISCORD_BOT_TOKEN
-  const clientID = process.env.CLIENT_ID
-  if (!token || !clientID) throw new Error('Missing Registration Credentials')
+  if (!token) throw new Error('Missing Registration Credentials')
 
   const commands = readCommands('./dist/commands')
-  const rest = new REST().setToken(token)
 
-  await registerApplicationCommands(rest, clientID, commands)
+  const client = new Client({ intents: [] })
+  client
+    .on('ready', async () => {
+      console.log(`[INFO] Registering ${commands.length} commands`)
+
+      const result = await client.application?.commands.set(
+        commands.map((command) => command.toSlashCommand())
+      )
+
+      if (!result || result.size !== commands.length) {
+        console.error(`[FAIL] Failed to register all commands`)
+        process.exit(3)
+      }
+
+      console.log(`[INFO] Successfully registered ${result.size} commands`)
+      process.exit(0)
+    })
+    .login(token)
 }
 
 export function readCommands(dir: string): Command[] {
@@ -46,16 +60,6 @@ function* findFilesInDirectory(dir: string): Generator<string, void, void> {
       yield path
     }
   }
-}
-
-async function registerApplicationCommands(
-  rest: REST,
-  clientID: string,
-  commands: Command[]
-): Promise<void> {
-  await rest.put(Routes.applicationCommands(clientID), {
-    body: commands.map((command) => command.toSlashCommand().toJSON()),
-  })
 }
 
 if (require.main === module) {
