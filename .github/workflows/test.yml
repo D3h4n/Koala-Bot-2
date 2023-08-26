@@ -10,13 +10,7 @@ env:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    environment: SUPER_SECRET_SECRETS
     steps:
-      - name: Test If Access To Secrets
-        run: |
-          [[ -n "${{ secrets.DISCORD_BOT_TOKEN }}" ]] && echo "Has access to secrets"
-          [[ -z "123" ]]
-
       - name: Checkout
         uses: actions/checkout@v3
 
