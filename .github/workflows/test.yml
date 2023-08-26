@@ -11,6 +11,10 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
+      - name: Test If Access To Secrets
+        run: |
+          [[ -n "${{ env.DISCORD_BOT_TOKEN }}" || -n "${{ secrets.DISCORD_BOT_TOKEN }}" || -n "$DISCORD_BOT_TOKEN" ]] && echo "Has access to secrets"
+
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -70,7 +74,3 @@ jobs:
           minimum-coverage: 80
           artifact-name: code-coverage-report
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Test If Access To Secrets
-        run: |
-          [[ -n "${{ env.DISCORD_BOT_TOKEN }}" || -n "${{ secrets.DISCORD_BOT_TOKEN }}" ]] && echo "Has access to secrets"
