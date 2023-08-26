@@ -12,9 +12,8 @@ env:
   AWS_LIGHTSAIL_SERVICE_NAME: koala-bot-service
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    environment: SUPER_SECRET_SECRETS
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Get Repo Name
@@ -44,6 +43,17 @@ jobs:
             ${{ steps.repo_name.outputs.lowercase }}:latest
             ${{ steps.repo_name.outputs.lowercase }}:${{ github.sha }}
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: SUPER_SECRET_SECRETS
+    steps:
+      - name: Get Repo Name
+        id: repo_name
+        uses: ASzc/change-string-case-action@v2
+        with:
+          string: ghcr.io/${{ github.repository_owner }}/koala-bot
+
       - name: Install Utilities
         run: |
           sudo apt-get update
@@ -72,10 +82,10 @@ jobs:
             --arg bot_token ${{ secrets.DISCORD_BOT_TOKEN }} \
             --arg api_key ${{ secrets.YOUTUBE_API_KEY }} \
             --arg client_id ${{ secrets.CLIENT_ID }} \
-            '.containers.koala-bot.image = $image' \
-            '.containers.koala-bot.environment.DISCORD_BOT_TOKEN = $bot_token' \
-            '.containers.koala-bot.environment.YOUTUBE_API_KEY = $api_key' \
-            '.containers.koala-bot.environment.CLIENT_ID = $client_id' \
+            '.containers."koala-bot".image = $image' \
+            '.containers."koala-bot".environment.DISCORD_BOT_TOKEN = $bot_token' \
+            '.containers."koala-bot".environment.YOUTUBE_API_KEY = $api_key' \
+            '.containers."koala-bot".environment.CLIENT_ID = $client_id' \
             container.template.json > container.json
           aws lightsail create-container-service-deployment --service-name ${service_name} --cli-input-json file://$(pwd)/container.json
 
