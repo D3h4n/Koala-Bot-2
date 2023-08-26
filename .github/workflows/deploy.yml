@@ -12,8 +12,9 @@ env:
   AWS_LIGHTSAIL_SERVICE_NAME: koala-bot-service
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+    environment: SUPER_SECRET_SECRETS
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Get Repo Name
@@ -35,27 +36,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push to ghcr
+      - name: Build and Push to ghcr
         uses: docker/build-push-action@v3
         with:
           push: true
           tags: |
             ${{ steps.repo_name.outputs.lowercase }}:latest
             ${{ steps.repo_name.outputs.lowercase }}:${{ github.sha }}
-
-  deploy:
-    runs-on: ubuntu-latest
-    environment: SUPER_SECRET_SECRETS
-    needs: build
-    steps:
-      - name: Get Repo Name
-        id: repo_name
-        uses: ASzc/change-string-case-action@v2
-        with:
-          string: ghcr.io/${{ github.repository_owner }}/koala-bot
-
-      - name: Checkout
-        uses: actions/checkout@v2
 
       - name: Install Utilities
         run: |
