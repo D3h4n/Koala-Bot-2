@@ -6,6 +6,8 @@ import Command from './common'
 import CommandAdapter from './adapters/commandAdapter'
 import EmbeddedMessage from './adapters/embeddedMessage'
 import { readCommands } from './register'
+import SpotifyPlugin from '@distube/spotify'
+import SoundCloudPlugin from '@distube/soundcloud'
 
 async function main() {
   dotenv.config()
@@ -36,6 +38,7 @@ async function main() {
     leaveOnStop: true,
     leaveOnFinish: true,
     youtubeIdentityToken: process.env.YOUTUBE_API_KEY,
+    plugins: [new SpotifyPlugin(), new SoundCloudPlugin()],
   })
 
   distube
