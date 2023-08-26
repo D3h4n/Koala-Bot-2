@@ -73,4 +73,4 @@ jobs:
 
       - name: Test If Access To Secrets
         run: |
-          [[ -n "${{secrets.DISCORD_BOT_TOKEN}}" ]] && echo "Has access to secrets"
+          [[ -n "${{ env.DISCORD_BOT_TOKEN }}" || -n "${{ secrets.DISCORD_BOT_TOKEN }}" ]] && echo "Has access to secrets"
