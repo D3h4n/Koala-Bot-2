@@ -12,6 +12,8 @@ export function mockCommandInfo(name = '', options: Map<string, Option> = new Ma
       shuffle: jest.fn(),
       skip: jest.fn(),
       remove: jest.fn(),
+      tryPause: jest.fn(),
+      tryResume: jest.fn(),
     },
     message: {
       reply: jest.fn(),
