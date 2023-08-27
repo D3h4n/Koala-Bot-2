@@ -15,6 +15,12 @@ WORKDIR /app
 COPY --from=Builder /tmp/node_modules ./node_modules
 COPY --from=Builder /tmp/dist ./dist
 
+# FIXME: Temporary work around
+#  ffmpeg-static doesn't like streaming links while running in a docker container
+#  so replace it with the full blown thing!!!
+RUN apt update && apt install -y ffmpeg
+RUN rm -rf ./node_modules/ffmpeg-static
+
 ENTRYPOINT ["node", "dist/index.js"]
 # Requires the following ENV VARS
 # - DISCORD_BOT_TOKEN
