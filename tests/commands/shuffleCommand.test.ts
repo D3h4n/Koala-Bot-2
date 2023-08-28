@@ -1,11 +1,11 @@
 import ShuffleCommand from '../../src/commands/shuffleCommand'
-import { mockCommandInfo } from '../mocks'
+import { mockCommandAdapter } from '../mocks'
 
 describe('The shuffle command', () => {
   it('can shuffle a song', async () => {
     // Arrange
     const shuffle = new ShuffleCommand()
-    const commandInfo = mockCommandInfo()
+    const commandInfo = mockCommandAdapter()
 
     // Act
     await shuffle.run(commandInfo)

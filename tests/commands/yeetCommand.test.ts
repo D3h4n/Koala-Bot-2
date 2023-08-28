@@ -1,5 +1,5 @@
 import YeetCommand from '../../src/commands/yeetCommand'
-import { mockCommandInfo } from '../mocks'
+import { mockCommandAdapter } from '../mocks'
 import * as fc from 'fast-check'
 
 describe('The yeet command', () => {
@@ -7,7 +7,7 @@ describe('The yeet command', () => {
     fc.assert(
       fc.property(fc.string({ minLength: 1 }), (channel) => {
         const options = new Map([['channel', channel]])
-        const commandInfo = mockCommandInfo('yeet', options)
+        const commandInfo = mockCommandAdapter('yeet', options)
 
         // Arrange
         const yeet = new YeetCommand()

@@ -1,6 +1,6 @@
 import EchoCommand from '../../src/commands/echoCommand'
 import * as fc from 'fast-check'
-import { mockCommandInfo } from '../mocks'
+import { mockCommandAdapter } from '../mocks'
 
 describe('The echo command', () => {
   it('can reply with the correct message', () => {
@@ -8,7 +8,7 @@ describe('The echo command', () => {
       fc.property(fc.string({ minLength: 1 }), (message) => {
         // Arrange
         const echo = new EchoCommand()
-        const commandInfo = mockCommandInfo('', new Map([['message', message]]))
+        const commandInfo = mockCommandAdapter('', new Map([['message', message]]))
 
         // Act
         // Note: for consistency, need to wait on async command to run completely before

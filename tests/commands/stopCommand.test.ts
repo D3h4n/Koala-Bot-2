@@ -1,9 +1,9 @@
 import StopCommand from '../../src/commands/stopCommand'
-import { mockCommandInfo } from '../mocks'
+import { mockCommandAdapter } from '../mocks'
 
 describe('The stop command', () => {
   it('can stop playing a song', async () => {
-    const commandInfo = mockCommandInfo()
+    const commandInfo = mockCommandAdapter()
 
     // Arrange
     const stop = new StopCommand()

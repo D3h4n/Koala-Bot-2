@@ -1,12 +1,12 @@
 import RemoveCommand from '../../src/commands/removeCommand'
-import { mockCommandInfo } from '../mocks'
+import { mockCommandAdapter } from '../mocks'
 import * as fc from 'fast-check'
 
 describe('The remove command', () => {
   it('can remove a song', () => {
     fc.assert(
       fc.property(fc.nat(), (position) => {
-        const commandInfo = mockCommandInfo()
+        const commandInfo = mockCommandAdapter()
         commandInfo.music.remove = jest.fn(async () => 'Famous Song')
         commandInfo.options.set('position', position)
 

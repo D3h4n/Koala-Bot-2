@@ -1,5 +1,5 @@
-import CommandHandler from '../src/commandHandler'
-import { mockCommandInfo } from './mocks'
+import CommandHandler from '../src/handlers/handleCommandEvent'
+import { mockCommandAdapter } from './mocks'
 import Command from '../src/common'
 
 describe('The command handler after receiving a command', () => {
@@ -17,8 +17,8 @@ describe('The command handler after receiving a command', () => {
       const commands = new CommandHandler([command])
 
       // Act
-      const commandInfo = mockCommandInfo(name)
-      commands.run(commandInfo)
+      const commandInfo = mockCommandAdapter(name)
+      commands.handle(commandInfo)
 
       // Assert
       expect(command.run).toHaveBeenCalled()
@@ -46,8 +46,8 @@ describe('The command handler after receiving a command', () => {
       const commands = new CommandHandler([command])
 
       // Act
-      const commandInfo = mockCommandInfo(name, options)
-      commands.run(commandInfo)
+      const commandInfo = mockCommandAdapter(name, options)
+      commands.handle(commandInfo)
 
       // Assert
       expect(command.run).toHaveBeenCalledWith(commandInfo)
@@ -59,8 +59,8 @@ describe('The command handler after receiving a command', () => {
       const commands = new CommandHandler([])
 
       const test = () => {
-        const commandInfo = mockCommandInfo()
-        commands.run(commandInfo)
+        const commandInfo = mockCommandAdapter()
+        commands.handle(commandInfo)
       }
 
       expect(test).toThrow(Error)

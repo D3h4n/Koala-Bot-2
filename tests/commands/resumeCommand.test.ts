@@ -1,10 +1,10 @@
 import ResumeCommand from '../../src/commands/resumeCommand'
-import { mockCommandInfo } from '../mocks'
+import { mockCommandAdapter } from '../mocks'
 
 describe('The resume command', () => {
   it('resumes the currently playing song', async () => {
     const resume = new ResumeCommand()
-    const commandInfo = mockCommandInfo()
+    const commandInfo = mockCommandAdapter()
 
     commandInfo.music.tryResume = jest.fn(async () => true)
 
@@ -16,7 +16,7 @@ describe('The resume command', () => {
   it('replies with a message if pausing fails', async () => {
     // Arrange
     const resume = new ResumeCommand()
-    const commandInfo = mockCommandInfo()
+    const commandInfo = mockCommandAdapter()
 
     commandInfo.music.tryResume = jest.fn(async () => false)
 

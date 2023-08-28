@@ -1,8 +1,8 @@
 import { ChatInputCommandInteraction } from 'discord.js'
-import DisTube from 'distube'
 import MessageAdapter, { IMessageAdapter } from './messageAdapter'
 import MusicAdapter, { IMusicAdapter } from './musicAdapter'
 import VoiceAdapter, { IVoiceAdapter } from './voiceAdapter'
+import { IDistubeClient } from '../services/distubeClient'
 
 export type Option = string | number | boolean | undefined
 
@@ -21,7 +21,7 @@ export default class CommandAdapter implements ICommandAdapter {
   readonly music: IMusicAdapter
   readonly voice: IVoiceAdapter
 
-  constructor(interaction: ChatInputCommandInteraction, distube: DisTube) {
+  constructor(interaction: ChatInputCommandInteraction, distube: IDistubeClient) {
     this.name = interaction.commandName
     this.options = CommandAdapter.getOptions(interaction)
     this.message = new MessageAdapter(interaction)

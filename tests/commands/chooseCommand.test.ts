@@ -1,6 +1,6 @@
 import ChooseCommand from '../../src/commands/chooseCommand'
 import * as fc from 'fast-check'
-import { mockCommandInfo } from '../mocks'
+import { mockCommandAdapter } from '../mocks'
 
 describe('The choose command', () => {
   it.each([
@@ -16,7 +16,7 @@ describe('The choose command', () => {
 
     // Act
     const choose = new ChooseCommand()
-    const commandInfo = mockCommandInfo('', options)
+    const commandInfo = mockCommandAdapter('', options)
     await choose.run(commandInfo)
 
     // Assert
@@ -40,7 +40,7 @@ describe('The choose command', () => {
           // Arrange
           jest.spyOn(global.Math, 'random').mockReturnValue(randomValue)
           const choose = new ChooseCommand()
-          const commandInfo = mockCommandInfo('', options)
+          const commandInfo = mockCommandAdapter('', options)
 
           // Act
           // Note: for consistency, need to wait on async command to run completely before

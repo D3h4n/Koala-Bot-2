@@ -1,6 +1,7 @@
 import DisTube, { Queue, Song } from 'distube'
 import { ChatInputCommandInteraction, GuildMember, TextChannel } from 'discord.js'
 import EmbeddedMessage from './embeddedMessage'
+import { IDistubeClient } from '../services/distubeClient'
 
 export interface IMusicAdapter {
   play: (query: string) => Promise<void>
@@ -22,8 +23,8 @@ export default class MusicAdapter implements IMusicAdapter {
   private readonly channel?: TextChannel
   private readonly songQueue?: Queue
 
-  constructor(interaction: ChatInputCommandInteraction, distube: DisTube) {
-    this.distube = distube
+  constructor(interaction: ChatInputCommandInteraction, distube: IDistubeClient) {
+    this.distube = distube.client
     this.member = (interaction.member as GuildMember | null) ?? undefined
     this.channel = (interaction.channel as TextChannel | null) ?? undefined
     this.songQueue = this.distube.getQueue(interaction)

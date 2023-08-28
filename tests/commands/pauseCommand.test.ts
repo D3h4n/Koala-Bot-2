@@ -1,10 +1,10 @@
 import PauseCommand from '../../src/commands/pauseCommand'
-import { mockCommandInfo } from '../mocks'
+import { mockCommandAdapter } from '../mocks'
 
 describe('The pause command', () => {
   it('pauses the currently playing song', async () => {
     const pause = new PauseCommand()
-    const commandInfo = mockCommandInfo()
+    const commandInfo = mockCommandAdapter()
 
     commandInfo.music.tryPause = jest.fn(async () => true)
 
@@ -16,7 +16,7 @@ describe('The pause command', () => {
   it('replies with a message if pausing fails', async () => {
     // Arrange
     const pause = new PauseCommand()
-    const commandInfo = mockCommandInfo()
+    const commandInfo = mockCommandAdapter()
 
     commandInfo.music.tryPause = jest.fn(async () => false)
 

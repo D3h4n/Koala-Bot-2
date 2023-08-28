@@ -1,6 +1,6 @@
 import * as fc from 'fast-check'
 import PlayCommand from '../../src/commands/playCommand'
-import { mockCommandInfo } from '../mocks'
+import { mockCommandAdapter } from '../mocks'
 
 describe('The play command', () => {
   it('can play a song', () => {
@@ -8,7 +8,7 @@ describe('The play command', () => {
       fc.property(fc.string({ minLength: 1 }), (song) => {
         // Arrange
         const play = new PlayCommand()
-        const commandInfo = mockCommandInfo('', new Map([['song', song]]))
+        const commandInfo = mockCommandAdapter('', new Map([['song', song]]))
 
         // Act
         // Note: for consistency, need to wait on async command to run completely before

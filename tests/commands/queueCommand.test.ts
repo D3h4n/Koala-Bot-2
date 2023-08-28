@@ -1,12 +1,12 @@
 import QueueCommand from '../../src/commands/queueCommand'
-import { mockCommandInfo } from '../mocks'
+import { mockCommandAdapter } from '../mocks'
 import * as fc from 'fast-check'
 import EmbeddedMessage from '../../src/adapters/embeddedMessage'
 
 describe('The queue command', () => {
   it('can display the queue', () => {
     const embed = new EmbeddedMessage({})
-    const commandInfo = mockCommandInfo()
+    const commandInfo = mockCommandAdapter()
     commandInfo.music.queue = jest.fn(() => embed)
 
     // Assemble
@@ -23,7 +23,7 @@ describe('The queue command', () => {
   it('can display the queue at a page', () => {
     fc.assert(
       fc.property(fc.nat(), (page) => {
-        const commandInfo = mockCommandInfo('', new Map([['page', page]]))
+        const commandInfo = mockCommandAdapter('', new Map([['page', page]]))
         const embed = new EmbeddedMessage({})
         commandInfo.music.queue = jest.fn(() => embed)
 
