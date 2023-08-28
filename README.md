@@ -60,9 +60,9 @@ the software design aspects of the project.
 
 - [x] Create the initial walking skeleton for a basic command
 - [x] Figure out an automated way to update slash commands on discord
-- [ ] Refactor error handling to be custom types
-  - [ ] Replace generic Error with more meaningful errors
-  - [ ] Handle errors within the command handler instead of widely scoped try-catch
+- [x] Refactor error handling
+  - [x] Return the result of an operation instead of throwing an error
+  - [x] Handle errors within the command handler instead of widely scoped try-catch
 - [ ] Maybe shift the architecture to be more in line with web servers
   - [ ] Commands are registered to some overarching router based on a path
   - [ ] Dependecies are injected based on needs instead of one object with all dependecies
