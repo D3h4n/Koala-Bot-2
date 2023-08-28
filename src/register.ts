@@ -5,10 +5,13 @@ import dotenv from 'dotenv'
 
 import type Command from './common'
 import { Client } from 'discord.js'
+import MyLogger from './services/logger'
 
 async function main() {
   dotenv.config()
   const token = process.env.DISCORD_BOT_TOKEN
+  const logger = new MyLogger()
+
   if (!token) throw new Error('Missing Registration Credentials')
 
   const commands = readCommands('./dist/commands')
@@ -16,18 +19,18 @@ async function main() {
   const client = new Client({ intents: [] })
   client
     .on('ready', async () => {
-      console.log(`[INFO] Registering ${commands.length} commands`)
+      logger.info(`Registering ${commands.length} commands`)
 
       const result = await client.application?.commands.set(
         commands.map((command) => command.toSlashCommand())
       )
 
       if (!result || result.size !== commands.length) {
-        console.error(`[FAIL] Failed to register all commands`)
+        logger.error('Failed to register all commands')
         process.exit(3)
       }
 
-      console.log(`[INFO] Successfully registered ${result.size} commands`)
+      logger.info(`Successfully registered ${result.size} commands`)
       process.exit(0)
     })
     .login(token)

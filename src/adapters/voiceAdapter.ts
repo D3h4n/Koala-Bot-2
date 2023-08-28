@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, GuildMember } from 'discord.js'
 
 export interface IVoiceAdapter {
-  moveAll: (channel: string) => Promise<void>
+  moveAll: (channel: string) => Promise<string | null>
 }
 
 export default class VoiceAdapter implements IVoiceAdapter {
@@ -11,17 +11,18 @@ export default class VoiceAdapter implements IVoiceAdapter {
     this.interaction = interaction
   }
 
-  async moveAll(channel: string) {
+  async moveAll(channel: string): Promise<string | null> {
     const guildMember = this.interaction.member as GuildMember | null
-    if (!guildMember) throw new Error('User is not in a guild')
+    if (!guildMember) return 'Failed to find guild member'
     if (!guildMember.permissions.has('MoveMembers', true))
-      throw new Error('User does not have sufficient permissions')
+      return `${guildMember} you're not cool enough to use this command. (requires 'MoveMembers' permission)`
 
     const voiceChannel = guildMember.voice.channel
-    if (!voiceChannel) throw new Error('User is not in a voice channel')
+    if (!voiceChannel) return `${guildMember} you're not in a voice channel`
 
     voiceChannel.members.forEach((member) => {
       member.voice.setChannel(channel, 'performed yeet command')
     })
+    return null
   }
 }

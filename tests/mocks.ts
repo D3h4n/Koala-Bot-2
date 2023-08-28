@@ -10,7 +10,7 @@ export function mockCommandAdapter(
     music: {
       play: jest.fn(),
       stop: jest.fn(),
-      queue: jest.fn(),
+      getQueue: jest.fn(),
       shuffle: jest.fn(),
       skip: jest.fn(),
       remove: jest.fn(),

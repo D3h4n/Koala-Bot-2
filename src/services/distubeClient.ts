@@ -1,9 +1,11 @@
 import DisTube, { Playlist, Queue, Song } from 'distube'
+import { IDiscordClient } from './discordClient'
+import { ILogger } from './logger'
 import SpotifyPlugin from '@distube/spotify'
 import SoundCloudPlugin from '@distube/soundcloud'
-import { IDiscordClient } from './discordClient'
-import EmbeddedMessage from '../adapters/embeddedMessage'
-import { ILogger } from './logger'
+import AddPlaylistMessage from '../embeds/addPlaylistMessage'
+import PlaySongMessage from '../embeds/playSongMessage'
+import AddSongMessage from '../embeds/addSongMessage'
 
 export interface IDistubeClient {
   client: DisTube
@@ -38,15 +40,7 @@ export default class DistubeClient implements IDistubeClient {
 
       if (!channel) return
 
-      const message = new EmbeddedMessage({
-        author: song.member?.nickname || song.member?.displayName,
-        icon: song.member?.displayAvatarURL(),
-        title: song.name,
-        url: song.url,
-        image: song.thumbnail,
-        description: ['**Now Playing**', `Duration: \`${song.formattedDuration}\``],
-      })
-
+      const message = new PlaySongMessage(song)
       channel.send({ embeds: [message.embed] })
       logger.info(`Playing "${song.name}" in "${queue.voiceChannel?.name}"`)
     }
@@ -59,19 +53,7 @@ export default class DistubeClient implements IDistubeClient {
 
       if (position === 0 || !channel) return
 
-      const message = new EmbeddedMessage({
-        author: song.member?.nickname || song.member?.displayName,
-        icon: song.member?.displayAvatarURL(),
-        title: song.name,
-        image: song.thumbnail,
-        url: song.url,
-        description: [
-          '**Added Song**',
-          `Duration: \`${song.formattedDuration}\``,
-          `Position: ${position}`,
-        ],
-      })
-
+      const message = new AddSongMessage(song, position)
       channel.send({ embeds: [message.embed] })
       logger.info(`Added "${song.name}" to queue`)
     }
@@ -83,19 +65,7 @@ export default class DistubeClient implements IDistubeClient {
 
       if (!channel) return
 
-      const message = new EmbeddedMessage({
-        author: playlist.member?.nickname || playlist.member?.displayName,
-        icon: playlist.member?.displayAvatarURL(),
-        title: playlist.name,
-        url: playlist.url,
-        image: playlist.thumbnail,
-        description: [
-          '**New Playlist Added**',
-          `No. Songs: \`${playlist.songs.length}\``,
-          `Duration: \`${playlist.formattedDuration}\``,
-        ],
-      })
-
+      const message = new AddPlaylistMessage(playlist)
       channel.send({ embeds: [message.embed] })
       logger.info(`Added "${playlist.name}" to queue`)
     }

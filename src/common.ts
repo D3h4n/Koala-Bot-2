@@ -1,10 +1,5 @@
 import { ICommandAdapter } from './adapters/commandAdapter'
-import {
-  PermissionFlagsBits,
-  PermissionsBitField,
-  PermissionsString,
-  SlashCommandBuilder,
-} from 'discord.js'
+import { PermissionsBitField, PermissionsString, SlashCommandBuilder } from 'discord.js'
 import { ApplicationCommandOptionAllowedChannelTypes } from '@discordjs/builders'
 
 export const ECommandOptionType = {
@@ -52,15 +47,12 @@ export default abstract class Command {
   abstract run(commandAdapter: ICommandAdapter): Promise<void>
 
   toSlashCommand(): SlashCommandBuilder {
-    const command = new SlashCommandBuilder()
-      .setName(this.name)
-      .setDescription(this.description)
-      .setDefaultMemberPermissions(
-        this.permissions.reduce(
-          (prev, curr) => prev | PermissionFlagsBits[curr],
-          PermissionsBitField.Default
-        )
-      )
+    const command = new SlashCommandBuilder().setName(this.name).setDescription(this.description)
+
+    if (this.permissions.length > 0) {
+      command.setDefaultMemberPermissions(new PermissionsBitField().add(this.permissions).bitfield)
+    }
+
     Command.addSlashCommandOptions(command, this.options)
 
     return command

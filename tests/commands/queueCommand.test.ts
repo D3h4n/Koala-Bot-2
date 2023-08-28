@@ -1,13 +1,13 @@
 import QueueCommand from '../../src/commands/queueCommand'
 import { mockCommandAdapter } from '../mocks'
 import * as fc from 'fast-check'
-import EmbeddedMessage from '../../src/adapters/embeddedMessage'
+import EmbeddedMessage from '../../src/embeds/embeddedMessage'
 
 describe('The queue command', () => {
   it('can display the queue', () => {
     const embed = new EmbeddedMessage({})
     const commandInfo = mockCommandAdapter()
-    commandInfo.music.queue = jest.fn(() => embed)
+    commandInfo.music.getQueue = jest.fn(() => embed)
 
     // Assemble
     const queue = new QueueCommand()
@@ -16,7 +16,7 @@ describe('The queue command', () => {
     queue.run(commandInfo)
 
     // Assert
-    expect(commandInfo.music.queue).toHaveBeenCalled()
+    expect(commandInfo.music.getQueue).toHaveBeenCalled()
     expect(commandInfo.message.reply).toHaveBeenCalledWith(embed)
   })
 
@@ -25,7 +25,7 @@ describe('The queue command', () => {
       fc.property(fc.nat(), (page) => {
         const commandInfo = mockCommandAdapter('', new Map([['page', page]]))
         const embed = new EmbeddedMessage({})
-        commandInfo.music.queue = jest.fn(() => embed)
+        commandInfo.music.getQueue = jest.fn(() => embed)
 
         // Arrange
         const queue = new QueueCommand()
@@ -35,7 +35,7 @@ describe('The queue command', () => {
         // assertions but can't use async await with fast-check
         queue.run(commandInfo).then(() => {
           // Assert
-          expect(commandInfo.music.queue).toHaveBeenCalledWith(page)
+          expect(commandInfo.music.getQueue).toHaveBeenCalledWith(page)
           expect(commandInfo.message.reply).toHaveBeenCalledWith(embed)
         })
       })

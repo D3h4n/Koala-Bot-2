@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, InteractionReplyOptions } from 'discord.js'
-import EmbeddedMessage from './embeddedMessage'
+import EmbeddedMessage from '../embeds/embeddedMessage'
 
 export interface IMessageAdapter {
   reply: (message: string | EmbeddedMessage) => Promise<void>

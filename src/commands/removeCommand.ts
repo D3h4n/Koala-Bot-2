@@ -12,6 +12,11 @@ export default class RemoveCommand extends Command {
     const position = commandAdapter.options.get('position')
     assert(typeof position === 'number', 'position should always be a number')
     const song = await commandAdapter.music.remove(position)
-    await commandAdapter.message.reply(`Removed \`${song}\` at position ${position}`)
+
+    if (song) {
+      commandAdapter.message.reply(`Removed \`${song}\` at position ${position}`)
+    } else {
+      commandAdapter.message.reply(`Failed to remove song at position ${position}`)
+    }
   }
 }
