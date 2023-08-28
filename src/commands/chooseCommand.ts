@@ -1,4 +1,4 @@
-import Command from '../common'
+import Command from './command'
 import { ICommandAdapter, Option } from '../adapters/commandAdapter'
 
 export default class ChooseCommand extends Command {
@@ -8,7 +8,7 @@ export default class ChooseCommand extends Command {
       'Let the bot decide your fate.',
       [...new Array(9)].map((_, idx) => ({
         name: `choice${idx + 1}`,
-        type: 'STRING',
+        type: 'String',
         description: `Choice ${idx + 1}.`,
         required: idx <= 1,
       }))

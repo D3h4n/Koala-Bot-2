@@ -1,5 +1,5 @@
 import { ICommandAdapter } from '../adapters/commandAdapter'
-import Command from '../common'
+import Command from './command'
 
 export default class ResumeCommand extends Command {
   constructor() {

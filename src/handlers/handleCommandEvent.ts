@@ -1,4 +1,4 @@
-import Command from '../common'
+import Command from '../commands/command'
 import { ICommandAdapter } from '../adapters/commandAdapter'
 
 export interface ICommandHandler {

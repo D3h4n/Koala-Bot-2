@@ -1,4 +1,4 @@
-import Command from '../common'
+import Command from './command'
 import { ICommandAdapter } from '../adapters/commandAdapter'
 
 export default class ShuffleCommand extends Command {

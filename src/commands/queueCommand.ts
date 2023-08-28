@@ -1,11 +1,11 @@
-import Command from '../common'
+import Command from './command'
 import { ICommandAdapter } from '../adapters/commandAdapter'
 import assert from 'assert'
 
 export default class QueueCommand extends Command {
   constructor() {
     super('queue', 'Display the song queue.', [
-      { name: 'page', type: 'INTEGER', description: 'The queue page number.', required: false },
+      { name: 'page', type: 'Integer', description: 'The queue page number.', required: false },
     ])
   }
 

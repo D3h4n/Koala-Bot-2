@@ -1,4 +1,4 @@
-import Command from '../common'
+import Command from './command'
 import { ICommandAdapter } from '../adapters/commandAdapter'
 import assert from 'assert'
 import { ChannelType } from 'discord.js'
@@ -11,7 +11,7 @@ export default class yeetCommand extends Command {
       [
         {
           name: 'channel',
-          type: 'CHANNEL',
+          type: 'Channel',
           description: 'Target channel.',
           channelTypes: [ChannelType.GuildVoice],
         },

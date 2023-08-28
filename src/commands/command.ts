@@ -1,24 +1,15 @@
-import { ICommandAdapter } from './adapters/commandAdapter'
-import { PermissionsBitField, PermissionsString, SlashCommandBuilder } from 'discord.js'
+import { ICommandAdapter } from '../adapters/commandAdapter'
+import {
+  ApplicationCommandOptionType,
+  PermissionsBitField,
+  PermissionsString,
+  SlashCommandBuilder,
+} from 'discord.js'
 import { ApplicationCommandOptionAllowedChannelTypes } from '@discordjs/builders'
 
-export const ECommandOptionType = {
-  SUB_COMMAND: 1,
-  SUB_COMMAND_GROUP: 2,
-  STRING: 3,
-  INTEGER: 4,
-  BOOLEAN: 5,
-  USER: 6,
-  CHANNEL: 7,
-  ROLE: 8,
-  MENTIONABLE: 9,
-  NUMBER: 10,
-  ATTACHMENT: 11,
-} as const
+type CommandOptionType = keyof typeof ApplicationCommandOptionType
 
-type CommandOptionType = keyof typeof ECommandOptionType
-
-export interface ICommandOption {
+interface ICommandOption {
   name: string
   type: CommandOptionType
   description: string
@@ -61,7 +52,7 @@ export default abstract class Command {
   private static addSlashCommandOptions(command: SlashCommandBuilder, options: ICommandOption[]) {
     for (const option of options) {
       switch (option.type) {
-        case 'STRING':
+        case 'String':
           command.addStringOption((builder) =>
             builder
               .setName(option.name)
@@ -70,7 +61,7 @@ export default abstract class Command {
           )
           break
 
-        case 'INTEGER':
+        case 'Integer':
           command.addIntegerOption((builder) =>
             builder
               .setName(option.name)
@@ -79,7 +70,7 @@ export default abstract class Command {
           )
           break
 
-        case 'CHANNEL':
+        case 'Channel':
           command.addChannelOption((builder) => {
             builder
               .setName(option.name)

@@ -1,11 +1,11 @@
-import Command from '../common'
+import Command from './command'
 import { ICommandAdapter } from '../adapters/commandAdapter'
 import assert from 'assert'
 
 export default class RemoveCommand extends Command {
   constructor() {
     super('remove', 'Remove a song from the queue.', [
-      { name: 'position', type: 'INTEGER', description: 'The position of the song to remove.' },
+      { name: 'position', type: 'Integer', description: 'The position of the song to remove.' },
     ])
   }
   async run(commandAdapter: ICommandAdapter) {

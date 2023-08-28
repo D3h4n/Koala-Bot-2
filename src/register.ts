@@ -3,7 +3,7 @@ import { resolve } from 'node:path'
 
 import dotenv from 'dotenv'
 
-import type Command from './common'
+import type Command from './commands/command'
 import { Client } from 'discord.js'
 import MyLogger from './services/logger'
 

@@ -1,11 +1,11 @@
-import Command from '../common'
+import Command from './command'
 import { ICommandAdapter } from '../adapters/commandAdapter'
 import assert from 'assert'
 
 export default class EchoCommand extends Command {
   constructor() {
     super('echo', 'I repeat whatever you want.', [
-      { name: 'message', type: 'STRING', description: 'The message to repeat.' },
+      { name: 'message', type: 'String', description: 'The message to repeat.' },
     ])
   }
 

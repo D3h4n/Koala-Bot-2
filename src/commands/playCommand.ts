@@ -1,11 +1,11 @@
-import Command from '../common'
+import Command from './command'
 import { ICommandAdapter } from '../adapters/commandAdapter'
 import assert from 'assert'
 
 export default class PlayCommand extends Command {
   constructor() {
     super('play', 'Add a song or playlist to the music queue.', [
-      { name: 'song', type: 'STRING', description: 'URL or Song Name' },
+      { name: 'song', type: 'String', description: 'URL or Song Name' },
     ])
   }
 
