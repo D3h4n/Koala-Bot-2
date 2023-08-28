@@ -1,13 +1,15 @@
 import { ActivityType, Client, IntentsBitField, Interaction, TextChannel } from 'discord.js'
-import DisTube, { Playlist, Queue, Song } from 'distube'
 import dotenv from 'dotenv'
 import CommandHandler from './commandHandler'
 import Command from './common'
 import CommandAdapter from './adapters/commandAdapter'
-import EmbeddedMessage from './adapters/embeddedMessage'
 import { readCommands } from './register'
 import SpotifyPlugin from '@distube/spotify'
 import SoundCloudPlugin from '@distube/soundcloud'
+import handlePlaySongEvent from './eventHandlers/handlePlaySongEvent'
+import handleAddSongEvent from './eventHandlers/handleAddSongEvent'
+import handleAddPlaylistEvent from './eventHandlers/handleAddPlaylistEvent'
+import DisTube from 'distube'
 
 async function main() {
   dotenv.config()
@@ -32,20 +34,7 @@ async function main() {
 
   const commands = readCommands('./dist/commands')
 
-  const distube = new DisTube(client, {
-    nsfw: true,
-    leaveOnEmpty: true,
-    leaveOnStop: true,
-    leaveOnFinish: true,
-    youtubeIdentityToken: process.env.YOUTUBE_API_KEY,
-    plugins: [new SpotifyPlugin(), new SoundCloudPlugin()],
-  })
-
-  distube
-    .on('playSong', handlePlaySongEvent)
-    .on('addSong', handleAddSongEvent)
-    .on('addList', handleAddPlaylistEvent)
-    .on('error', (_, error) => console.error(error))
+  const distube = getDistubeClient(client)
 
   await client
     .on('ready', () => console.log('[INFO] Ready!!!!!!'))
@@ -53,53 +42,19 @@ async function main() {
     .login(process.env.DISCORD_BOT_TOKEN)
 }
 
-async function handlePlaySongEvent(queue: Queue, song: Song) {
-  const channel = queue.textChannel as TextChannel
-
-  if (!channel) return
-
-  const message = await new EmbeddedMessage({
-    author: song.member?.nickname || song.member?.displayName,
-    icon: song.member?.displayAvatarURL(),
-    title: song.name,
-    url: song.url,
-    thumbnail: song.thumbnail,
-    description: `**Now Playing**\n\`${song.formattedDuration}\``,
-  }).send(channel)
-  setTimeout(() => message?.delete(), 10000)
-}
-
-async function handleAddSongEvent(queue: Queue, song: Song) {
-  const position = queue.songs.indexOf(song)
-  const channel = queue.textChannel as TextChannel
-
-  if (position === 0 || !channel) return
-
-  const message = await new EmbeddedMessage({
-    author: song.member?.nickname || song.member?.displayName,
-    icon: song.member?.displayAvatarURL(),
-    title: song.name,
-    description: `Added Song\nPosition: ${position}`,
-    thumbnail: song.thumbnail,
-    url: song.url,
-  }).send(channel)
-  setTimeout(() => message.delete(), 5000)
-}
-
-async function handleAddPlaylistEvent(queue: Queue, playlist: Playlist) {
-  const channel = queue.textChannel as TextChannel
-
-  if (!channel) return
-
-  const message = await new EmbeddedMessage({
-    author: playlist.member?.nickname || playlist.member?.displayName,
-    icon: playlist.member?.displayAvatarURL(),
-    title: playlist.name,
-    url: playlist.url,
-    thumbnail: playlist.thumbnail,
-    description: 'New Playlist Added',
-  }).send(channel)
-  setTimeout(() => message?.delete(), 5000)
+function getDistubeClient(client: Client<boolean>) {
+  return new DisTube(client, {
+    nsfw: true,
+    leaveOnEmpty: true,
+    leaveOnStop: true,
+    leaveOnFinish: true,
+    youtubeIdentityToken: process.env.YOUTUBE_API_KEY,
+    plugins: [new SpotifyPlugin(), new SoundCloudPlugin()],
+  })
+    .on('playSong', handlePlaySongEvent)
+    .on('addSong', handleAddSongEvent)
+    .on('addList', handleAddPlaylistEvent)
+    .on('error', (_, error) => console.error(error))
 }
 
 function generateInteractionListener(commands: Command[], distube: DisTube) {
