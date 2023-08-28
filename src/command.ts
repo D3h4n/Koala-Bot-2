@@ -1,4 +1,4 @@
-import { ICommandAdapter } from '../adapters/commandAdapter'
+import { ICommandAdapter } from './adapters/commandAdapter'
 import {
   ApplicationCommandOptionType,
   PermissionsBitField,

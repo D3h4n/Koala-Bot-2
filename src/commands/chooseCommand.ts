@@ -1,4 +1,4 @@
-import Command from './command'
+import Command from '../command'
 import { ICommandAdapter, Option } from '../adapters/commandAdapter'
 
 export default class ChooseCommand extends Command {

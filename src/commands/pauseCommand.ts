@@ -1,5 +1,5 @@
 import { ICommandAdapter } from '../adapters/commandAdapter'
-import Command from './command'
+import Command from '../command'
 
 export default class PauseCommand extends Command {
   constructor() {

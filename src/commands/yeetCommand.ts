@@ -1,4 +1,4 @@
-import Command from './command'
+import Command from '../command'
 import { ICommandAdapter } from '../adapters/commandAdapter'
 import assert from 'assert'
 import { ChannelType } from 'discord.js'

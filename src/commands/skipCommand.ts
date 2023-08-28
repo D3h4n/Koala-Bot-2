@@ -1,4 +1,4 @@
-import Command from './command'
+import Command from '../command'
 import { ICommandAdapter } from '../adapters/commandAdapter'
 
 export default class SkipCommand extends Command {

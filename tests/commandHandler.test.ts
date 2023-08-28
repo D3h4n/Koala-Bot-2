@@ -1,6 +1,6 @@
 import CommandHandler from '../src/handlers/handleCommandEvent'
 import { mockCommandAdapter } from './mocks'
-import Command from '../src/commands/command'
+import Command from '../src/command'
 
 describe('The command handler after receiving a command', () => {
   describe('that exists', () => {
