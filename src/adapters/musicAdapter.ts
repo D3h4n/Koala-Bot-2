@@ -23,8 +23,8 @@ export default class MusicAdapter implements IMusicAdapter {
   private readonly channel?: TextChannel
   private readonly songQueue?: Queue
 
-  constructor(interaction: ChatInputCommandInteraction, distube: IDistubeClient) {
-    this.distube = distube.client
+  constructor(interaction: ChatInputCommandInteraction, distubeClient: IDistubeClient) {
+    this.distube = distubeClient.client
     this.member = (interaction.member as GuildMember | null) ?? undefined
     this.channel = (interaction.channel as TextChannel | null) ?? undefined
     this.songQueue = this.distube.getQueue(interaction)

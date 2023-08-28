@@ -15,17 +15,17 @@ export interface ICommandAdapter {
 }
 
 export default class CommandAdapter implements ICommandAdapter {
-  name: string
-  options: Map<string, Option>
+  readonly name: string
+  readonly options: Map<string, Option>
   readonly message: IMessageAdapter
   readonly music: IMusicAdapter
   readonly voice: IVoiceAdapter
 
-  constructor(interaction: ChatInputCommandInteraction, distube: IDistubeClient) {
+  constructor(interaction: ChatInputCommandInteraction, distubeClient: IDistubeClient) {
     this.name = interaction.commandName
     this.options = CommandAdapter.getOptions(interaction)
     this.message = new MessageAdapter(interaction)
-    this.music = new MusicAdapter(interaction, distube)
+    this.music = new MusicAdapter(interaction, distubeClient)
     this.voice = new VoiceAdapter(interaction)
   }
 

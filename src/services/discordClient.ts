@@ -1,13 +1,12 @@
 import { ActivityType, Client, IntentsBitField, TextChannel } from 'discord.js'
-import CommandAdapter from '../adapters/commandAdapter'
 import { ICommandHandler } from '../handlers/handleCommandEvent'
-import { IDistubeClient } from './distubeClient'
+import { ICommandAdapterFactory } from './commandAdapterFactory'
 
 export interface IDiscordClient {
   client: Client
   registerEventHandlers: (
     commandEventHandler: ICommandHandler,
-    distubeClient: IDistubeClient
+    commandAdapterFactory: ICommandAdapterFactory
   ) => void
   login: (token: string) => Promise<void>
 }
@@ -35,14 +34,17 @@ export default class DiscordClient implements IDiscordClient {
     })
   }
 
-  registerEventHandlers(commandHandler: ICommandHandler, distubeClient: IDistubeClient) {
+  registerEventHandlers(
+    commandHandler: ICommandHandler,
+    commandAdapterFactory: ICommandAdapterFactory
+  ) {
     this.client
       .on('ready', () => console.log('[INFO] Ready!!!!!!'))
-      .on('interactionCreate', (interaction) => {
+      .on('interactionCreate', async (interaction) => {
         if (!interaction.isChatInputCommand() || !interaction.guildId) return
-        const command = new CommandAdapter(interaction, distubeClient)
 
-        commandHandler.handle(command)
+        const command = commandAdapterFactory.fromInteraction(interaction)
+        await commandHandler.handle(command)
         console.log(
           `[INFO] User "${interaction.user.tag}" used command "${interaction.commandName}" in ` +
             `channel "${(<TextChannel | null>interaction.channel)?.name}"`
