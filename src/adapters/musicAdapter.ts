@@ -60,37 +60,33 @@ export default class MusicAdapter implements IMusicAdapter {
   }
 
   private getQueuePage(page: number) {
-    if (!this.songQueue)
-      throw new Error('FATAL: song queue is undefined while generating queue page')
-
-    const numPages = Math.ceil(this.songQueue.songs.length / MusicAdapter.QUEUE_PAGE_LENGTH)
+    const numPages = Math.ceil(this.songQueue!.songs.length / MusicAdapter.QUEUE_PAGE_LENGTH)
     page = Math.min(page, numPages)
 
     return new EmbeddedMessage({
       title: 'Queue',
+      thumbnail: this.songQueue!.songs[0].thumbnail,
       description: this.getQueueDescription(page),
       footer: this.getQueueFooter(page),
     })
   }
 
-  private getQueueDescription(pageNumber: number): string {
-    if (!this.songQueue)
-      throw new Error('FATAL: song queue is undefined while generating queue description')
+  private getQueueDescription(pageNumber: number): string[] {
+    const songs = this.songQueue!.songs
 
-    const songs = this.songQueue.songs
-
-    let description = `__Now Playing:__\n`
-    description += this.getSongDescription(songs[0])
+    let description = ['__Now Playing:__']
+    description.push(this.getSongDescription(songs[0]))
 
     if (songs.length > 1) {
-      description += '\n\n__Up Next:__\n'
+      description.push('\n__Up Next:__')
 
       const startIndex = Math.max((pageNumber - 1) * MusicAdapter.QUEUE_PAGE_LENGTH, 1)
       const endIndex = Math.min(startIndex + MusicAdapter.QUEUE_PAGE_LENGTH, songs.length)
-      description += songs
-        .slice(startIndex, endIndex)
-        .map((song, idx) => `${startIndex + idx}. ` + this.getSongDescription(song))
-        .join('\n')
+      description = description.concat(
+        songs
+          .slice(startIndex, endIndex)
+          .map((song, idx) => `${startIndex + idx}. ` + this.getSongDescription(song))
+      )
     }
 
     return description
@@ -104,20 +100,13 @@ export default class MusicAdapter implements IMusicAdapter {
   }
 
   private getQueueFooter(currentPage: number) {
-    if (!this.songQueue)
-      throw new Error('FATAL: song queue is undefined while generating queue footer')
-
-    const numSongs = this.songQueue.songs.length
+    const numSongs = this.songQueue!.songs.length
     if (numSongs <= 1) return
 
     const numPages = Math.ceil(numSongs / MusicAdapter.QUEUE_PAGE_LENGTH)
-    const formattedQueueDuration = this.songQueue.formattedDuration
+    const formattedQueueDuration = this.songQueue!.formattedDuration
 
-    return (
-      `${numSongs} songs | ${formattedQueueDuration}` +
-      MusicAdapter.SPACE_CHARACTER.repeat(43) +
-      `Page: ${currentPage}/${numPages}`
-    )
+    return `${numSongs} songs | ${formattedQueueDuration} | Page: ${currentPage}/${numPages}`
   }
 
   async shuffle() {

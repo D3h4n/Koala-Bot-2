@@ -5,8 +5,9 @@ interface IEmbedOptions {
   icon?: string
   title?: string
   url?: string
-  description?: string
+  description?: string | string[]
   thumbnail?: string
+  image?: string
   footer?: string
 }
 
@@ -16,17 +17,22 @@ export default class EmbeddedMessage {
   constructor(options: IEmbedOptions) {
     this.#builder = new EmbedBuilder()
       .setAuthor(
-        !options.author
-          ? null
-          : {
+        options.author
+          ? {
               name: options.author,
               iconURL: options.icon,
             }
+          : null
       )
       .setTitle(options.title || null)
       .setURL(options.url || null)
-      .setDescription(options.description || null)
+      .setDescription(
+        options.description instanceof Array
+          ? options.description.join('\n')
+          : options.description || null
+      )
       .setThumbnail(options.thumbnail || null)
+      .setImage(options.image || null)
       .setFooter(!options.footer ? null : { text: options.footer })
   }
 

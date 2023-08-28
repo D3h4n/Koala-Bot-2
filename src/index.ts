@@ -4,6 +4,7 @@ import DistubeClient from './services/distubeClient'
 import CommandHandler from './handlers/handleCommandEvent'
 import DiscordClient from './services/discordClient'
 import CommandAdapterFactory from './services/commandAdapterFactory'
+import MyLogger from './services/logger'
 
 async function main() {
   dotenv.config()
@@ -14,9 +15,10 @@ async function main() {
   const distubeClient = new DistubeClient(discordClient, youtubeAPIKey)
   const commandHandler = new CommandHandler(readCommands('./dist/commands'))
   const commandAdapterFactory = new CommandAdapterFactory(distubeClient)
+  const logger = new MyLogger()
 
-  distubeClient.registerEventHandlers()
-  discordClient.registerEventHandlers(commandHandler, commandAdapterFactory)
+  distubeClient.registerEventHandlers(logger)
+  discordClient.registerEventHandlers(commandHandler, commandAdapterFactory, logger)
   await discordClient.login(discordToken)
 }
 
