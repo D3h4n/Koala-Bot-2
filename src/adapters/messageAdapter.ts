@@ -1,13 +1,13 @@
 import { ChatInputCommandInteraction, InteractionReplyOptions } from 'discord.js'
 import EmbeddedMessage from './embeddedMessage'
 
-export interface Message {
+export interface IMessageAdapter {
   reply: (message: string | EmbeddedMessage) => Promise<void>
   defer: () => Promise<void>
   noReply: () => Promise<void>
 }
 
-export default class MessageAdapter implements Message {
+export default class MessageAdapter implements IMessageAdapter {
   readonly interaction: ChatInputCommandInteraction
 
   constructor(interaction: ChatInputCommandInteraction) {
@@ -20,7 +20,7 @@ export default class MessageAdapter implements Message {
       return
     }
 
-    await this.sendReply({ embeds: [message._builder] })
+    await this.sendReply({ embeds: [message.embed] })
   }
 
   private async sendReply(options: InteractionReplyOptions | string) {

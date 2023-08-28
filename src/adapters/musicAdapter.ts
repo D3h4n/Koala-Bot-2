@@ -2,7 +2,7 @@ import DisTube, { Queue, Song } from 'distube'
 import { ChatInputCommandInteraction, GuildMember, TextChannel } from 'discord.js'
 import EmbeddedMessage from './embeddedMessage'
 
-export interface Music {
+export interface IMusicAdapter {
   play: (query: string) => Promise<void>
   tryPause: () => Promise<boolean>
   tryResume: () => Promise<boolean>
@@ -13,7 +13,7 @@ export interface Music {
   remove: (position: number) => Promise<string>
 }
 
-export default class MusicAdapter implements Music {
+export default class MusicAdapter implements IMusicAdapter {
   static readonly QUEUE_PAGE_LENGTH = 20
   static readonly SPACE_CHARACTER = '\u2800'
 

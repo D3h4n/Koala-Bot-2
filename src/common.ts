@@ -1,4 +1,4 @@
-import { CommandInfo } from './adapters/commandAdapter'
+import { ICommandAdapter } from './adapters/commandAdapter'
 import {
   PermissionFlagsBits,
   PermissionsBitField,
@@ -23,7 +23,7 @@ export const ECommandOptionType = {
 
 type CommandOptionType = keyof typeof ECommandOptionType
 
-export interface CommandOption {
+export interface ICommandOption {
   name: string
   type: CommandOptionType
   description: string
@@ -34,13 +34,13 @@ export interface CommandOption {
 export default abstract class Command {
   readonly name: string
   readonly description: string
-  readonly options: CommandOption[]
+  readonly options: ICommandOption[]
   readonly permissions: PermissionsString[]
 
   protected constructor(
     name: string,
     description: string,
-    options: CommandOption[] = [],
+    options: ICommandOption[] = [],
     permissions: PermissionsString[] = []
   ) {
     this.name = name
@@ -49,7 +49,7 @@ export default abstract class Command {
     this.permissions = permissions
   }
 
-  abstract run(commandAdapter: CommandInfo): Promise<void>
+  abstract run(commandAdapter: ICommandAdapter): Promise<void>
 
   toSlashCommand(): SlashCommandBuilder {
     const command = new SlashCommandBuilder()
@@ -66,7 +66,7 @@ export default abstract class Command {
     return command
   }
 
-  private static addSlashCommandOptions(command: SlashCommandBuilder, options: CommandOption[]) {
+  private static addSlashCommandOptions(command: SlashCommandBuilder, options: ICommandOption[]) {
     for (const option of options) {
       switch (option.type) {
         case 'STRING':

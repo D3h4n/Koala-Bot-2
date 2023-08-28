@@ -1,25 +1,25 @@
 import { ChatInputCommandInteraction } from 'discord.js'
 import DisTube from 'distube'
-import MessageAdapter, { Message } from './messageAdapter'
-import MusicAdapter, { Music } from './musicAdapter'
-import VoiceAdapter, { Voice } from './voiceAdapter'
+import MessageAdapter, { IMessageAdapter } from './messageAdapter'
+import MusicAdapter, { IMusicAdapter } from './musicAdapter'
+import VoiceAdapter, { IVoiceAdapter } from './voiceAdapter'
 
 export type Option = string | number | boolean | undefined
 
-export interface CommandInfo {
+export interface ICommandAdapter {
   name: string
   options: Map<string, Option>
-  message: Message
-  music: Music
-  voice: Voice
+  message: IMessageAdapter
+  music: IMusicAdapter
+  voice: IVoiceAdapter
 }
 
-export default class CommandAdapter implements CommandInfo {
+export default class CommandAdapter implements ICommandAdapter {
   name: string
   options: Map<string, Option>
-  readonly message: Message
-  readonly music: Music
-  readonly voice: Voice
+  readonly message: IMessageAdapter
+  readonly music: IMusicAdapter
+  readonly voice: IVoiceAdapter
 
   constructor(interaction: ChatInputCommandInteraction, distube: DisTube) {
     this.name = interaction.commandName

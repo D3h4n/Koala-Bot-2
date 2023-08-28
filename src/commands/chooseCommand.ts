@@ -1,5 +1,5 @@
 import Command from '../common'
-import { CommandInfo, Option } from '../adapters/commandAdapter'
+import { ICommandAdapter, Option } from '../adapters/commandAdapter'
 
 export default class ChooseCommand extends Command {
   constructor() {
@@ -15,7 +15,7 @@ export default class ChooseCommand extends Command {
     )
   }
 
-  async run(commandAdapter: CommandInfo) {
+  async run(commandAdapter: ICommandAdapter) {
     const choices = this.getValidChoices(commandAdapter.options)
     await commandAdapter.message.reply(this.getRandomChoice(choices))
   }

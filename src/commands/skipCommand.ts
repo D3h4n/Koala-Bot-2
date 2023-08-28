@@ -1,12 +1,12 @@
 import Command from '../common'
-import { CommandInfo } from '../adapters/commandAdapter'
+import { ICommandAdapter } from '../adapters/commandAdapter'
 
 export default class SkipCommand extends Command {
   constructor() {
     super('skip', 'Skip the song that is currently playing.')
   }
 
-  async run(commandAdapter: CommandInfo) {
+  async run(commandAdapter: ICommandAdapter) {
     await commandAdapter.music.skip()
     await commandAdapter.message.noReply()
   }

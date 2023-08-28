@@ -1,5 +1,5 @@
 import Command from './common'
-import { CommandInfo } from './adapters/commandAdapter'
+import { ICommandAdapter } from './adapters/commandAdapter'
 
 export default class CommandHandler {
   private commands: Map<string, Command>
@@ -12,7 +12,7 @@ export default class CommandHandler {
     )
   }
 
-  public run(commandAdapter: CommandInfo) {
+  public run(commandAdapter: ICommandAdapter) {
     const command = this.commands.get(commandAdapter.name)
     if (!command) throw new Error(`${commandAdapter.name} command is not implemented`)
     return command.run(commandAdapter)

@@ -1,10 +1,10 @@
 import { ChatInputCommandInteraction, GuildMember } from 'discord.js'
 
-export interface Voice {
+export interface IVoiceAdapter {
   moveAll: (channel: string) => Promise<void>
 }
 
-export default class VoiceAdapter implements Voice {
+export default class VoiceAdapter implements IVoiceAdapter {
   interaction: ChatInputCommandInteraction
 
   constructor(interaction: ChatInputCommandInteraction) {

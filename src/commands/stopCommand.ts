@@ -1,12 +1,12 @@
 import Command from '../common'
-import { CommandInfo } from '../adapters/commandAdapter'
+import { ICommandAdapter } from '../adapters/commandAdapter'
 
 export default class StopCommand extends Command {
   constructor() {
     super('stop', 'Stop the music queue.')
   }
 
-  async run(commandAdapter: CommandInfo) {
+  async run(commandAdapter: ICommandAdapter) {
     await commandAdapter.music.stop()
     await commandAdapter.message.noReply()
   }

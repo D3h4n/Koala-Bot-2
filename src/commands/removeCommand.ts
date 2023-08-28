@@ -1,5 +1,5 @@
 import Command from '../common'
-import { CommandInfo } from '../adapters/commandAdapter'
+import { ICommandAdapter } from '../adapters/commandAdapter'
 import assert from 'assert'
 
 export default class RemoveCommand extends Command {
@@ -8,7 +8,7 @@ export default class RemoveCommand extends Command {
       { name: 'position', type: 'INTEGER', description: 'The position of the song to remove.' },
     ])
   }
-  async run(commandAdapter: CommandInfo) {
+  async run(commandAdapter: ICommandAdapter) {
     const position = commandAdapter.options.get('position')
     assert(typeof position === 'number', 'position should always be a number')
     const song = await commandAdapter.music.remove(position)

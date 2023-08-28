@@ -1,5 +1,5 @@
 import Command from '../common'
-import { CommandInfo } from '../adapters/commandAdapter'
+import { ICommandAdapter } from '../adapters/commandAdapter'
 import assert from 'assert'
 
 export default class PlayCommand extends Command {
@@ -9,7 +9,7 @@ export default class PlayCommand extends Command {
     ])
   }
 
-  async run(commandAdapter: CommandInfo) {
+  async run(commandAdapter: ICommandAdapter) {
     const song = commandAdapter.options.get('song')
     assert(typeof song === 'string', 'song should always be a string')
     await commandAdapter.message.defer()

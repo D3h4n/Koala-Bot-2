@@ -1,4 +1,4 @@
-import { CommandInfo } from '../adapters/commandAdapter'
+import { ICommandAdapter } from '../adapters/commandAdapter'
 import Command from '../common'
 
 export default class ResumeCommand extends Command {
@@ -6,7 +6,7 @@ export default class ResumeCommand extends Command {
     super('resume', 'Resume a song that is currently paused')
   }
 
-  async run(commandAdapter: CommandInfo) {
+  async run(commandAdapter: ICommandAdapter) {
     if (!(await commandAdapter.music.tryResume())) {
       commandAdapter.message.reply('Failed to resume the queue')
       return

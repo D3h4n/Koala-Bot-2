@@ -1,5 +1,5 @@
 import Command from '../common'
-import { CommandInfo } from '../adapters/commandAdapter'
+import { ICommandAdapter } from '../adapters/commandAdapter'
 import assert from 'assert'
 
 export default class QueueCommand extends Command {
@@ -9,7 +9,7 @@ export default class QueueCommand extends Command {
     ])
   }
 
-  async run(commandAdapter: CommandInfo) {
+  async run(commandAdapter: ICommandAdapter) {
     const page = commandAdapter.options.get('page')
     assert(
       page === undefined || typeof page === 'number',

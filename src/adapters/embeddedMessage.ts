@@ -1,6 +1,6 @@
-import { EmbedBuilder, TextChannel } from 'discord.js'
+import { EmbedBuilder } from 'discord.js'
 
-interface EmbedOptions {
+interface IEmbedOptions {
   author?: string
   icon?: string
   title?: string
@@ -11,10 +11,10 @@ interface EmbedOptions {
 }
 
 export default class EmbeddedMessage {
-  readonly _builder: EmbedBuilder
+  readonly #builder: EmbedBuilder
 
-  constructor(options: EmbedOptions) {
-    this._builder = new EmbedBuilder()
+  constructor(options: IEmbedOptions) {
+    this.#builder = new EmbedBuilder()
       .setAuthor(
         !options.author
           ? null
@@ -30,7 +30,7 @@ export default class EmbeddedMessage {
       .setFooter(!options.footer ? null : { text: options.footer })
   }
 
-  async send(channel: TextChannel) {
-    return await channel.send({ embeds: [this._builder] })
+  get embed() {
+    return this.#builder
   }
 }
