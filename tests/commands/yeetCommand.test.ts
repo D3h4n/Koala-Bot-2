@@ -1,5 +1,6 @@
+import CommandAdapter from '../../src/adapters/commandAdapter'
 import YeetCommand from '../../src/commands/yeetCommand'
-import { mockCommandAdapter } from '../mocks'
+import { messageAdapter, musicAdapter, voiceAdapter } from '../mocks'
 import * as fc from 'fast-check'
 
 describe('The yeet command', () => {
@@ -7,16 +8,21 @@ describe('The yeet command', () => {
     fc.assert(
       fc.property(fc.string({ minLength: 1 }), (channel) => {
         const options = new Map([['channel', channel]])
-        const commandInfo = mockCommandAdapter('yeet', options)
+        const commandAdapter = new CommandAdapter(
+          options,
+          messageAdapter(),
+          musicAdapter(),
+          voiceAdapter()
+        )
 
         // Arrange
         const yeet = new YeetCommand()
 
         // Act
-        yeet.run(commandInfo).then(() => {
+        yeet.run(commandAdapter).then(() => {
           // Assert
-          expect(commandInfo.voice.moveAll).toHaveBeenCalledWith(channel)
-          expect(commandInfo.message.noReply).toHaveBeenCalled()
+          expect(commandAdapter.voice.moveAll).toHaveBeenCalledWith(channel)
+          expect(commandAdapter.message.noReply).toHaveBeenCalled()
         })
       })
     )

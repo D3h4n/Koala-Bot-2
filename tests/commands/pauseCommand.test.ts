@@ -1,22 +1,33 @@
+import CommandAdapter from '../../src/adapters/commandAdapter'
 import PauseCommand from '../../src/commands/pauseCommand'
-import { mockCommandAdapter } from '../mocks'
+import { messageAdapter, musicAdapter, voiceAdapter } from '../mocks'
 
 describe('The pause command', () => {
   it('pauses the currently playing song', async () => {
     const pause = new PauseCommand()
-    const commandInfo = mockCommandAdapter()
+    const commandAdapter = new CommandAdapter(
+      new Map(),
+      messageAdapter(),
+      musicAdapter(),
+      voiceAdapter()
+    )
 
-    commandInfo.music.tryPause = jest.fn(async () => true)
+    commandAdapter.music.tryPause = jest.fn(async () => true)
 
-    await pause.run(commandInfo)
-    expect(commandInfo.music.tryPause).toHaveBeenCalled()
-    expect(commandInfo.message.noReply).toHaveBeenCalled()
+    await pause.run(commandAdapter)
+    expect(commandAdapter.music.tryPause).toHaveBeenCalled()
+    expect(commandAdapter.message.noReply).toHaveBeenCalled()
   })
 
   it('replies with a message if pausing fails', async () => {
     // Arrange
     const pause = new PauseCommand()
-    const commandInfo = mockCommandAdapter()
+    const commandInfo = new CommandAdapter(
+      new Map(),
+      messageAdapter(),
+      musicAdapter(),
+      voiceAdapter()
+    )
 
     commandInfo.music.tryPause = jest.fn(async () => false)
 

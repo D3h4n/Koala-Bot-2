@@ -1,26 +1,30 @@
 import ChooseCommand from '../../src/commands/chooseCommand'
 import * as fc from 'fast-check'
-import { mockCommandAdapter } from '../mocks'
+import { messageAdapter, musicAdapter, voiceAdapter } from '../mocks'
+import CommandAdapter from '../../src/adapters/commandAdapter'
 
 describe('The choose command', () => {
   it.each([
     [['Hello World', '1234']],
     [['Flight', 'Invisibility', 'Invincibility', 'Super Genius']],
   ])('reply with a correctly formatted choice', async (choices) => {
-    const options = new Map()
-    choices.forEach((choice, idx) => {
-      options.set(`choice${idx + 1}`, choice)
-    })
-
+    const options = new Map<string, string>(
+      choices.map((choice, idx) => [`choice${idx + 1}`, choice])
+    )
     const replies = choices.map((choice) => `\`${choice}\``)
 
     // Act
     const choose = new ChooseCommand()
-    const commandInfo = mockCommandAdapter('', options)
-    await choose.run(commandInfo)
+    const commandAdapter = new CommandAdapter(
+      options,
+      messageAdapter(),
+      musicAdapter(),
+      voiceAdapter()
+    )
+    await choose.run(commandAdapter)
 
     // Assert
-    expect(replies).toContain((commandInfo.message.reply as jest.Mock).mock.lastCall?.[0])
+    expect(replies).toContain((commandAdapter.message.reply as jest.Mock).mock.lastCall?.[0])
   })
 
   it('reply with a random choice from the given options', () => {
@@ -32,23 +36,29 @@ describe('The choose command', () => {
         }),
         fc.float({ min: 0, max: 1 }),
         (choices, randomValue) => {
-          const options = new Map()
-          choices.forEach((choice, idx) => {
-            options.set(`choice${idx + 1}`, choice)
-          })
+          const options = new Map<string, string>(
+            choices.map((choice, idx) => [`choice${idx + 1}`, choice])
+          )
 
           // Arrange
           jest.spyOn(global.Math, 'random').mockReturnValue(randomValue)
           const choose = new ChooseCommand()
-          const commandInfo = mockCommandAdapter('', options)
+          const commandAdapter = new CommandAdapter(
+            options,
+            messageAdapter(),
+            musicAdapter(),
+            voiceAdapter()
+          )
 
           // Act
           // Note: for consistency, need to wait on async command to run completely before
           // assertions but can't use async await with fast-check
-          choose.run(commandInfo).then(() => {
+          choose.run(commandAdapter).then(() => {
             // Assert
             const expectedIndex = Math.floor(randomValue * choices.length)
-            expect(commandInfo.message.reply).toHaveBeenCalledWith(`\`${choices[expectedIndex]}\``)
+            expect(commandAdapter.message.reply).toHaveBeenCalledWith(
+              `\`${choices[expectedIndex]}\``
+            )
           })
         }
       )

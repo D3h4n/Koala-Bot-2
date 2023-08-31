@@ -1,14 +1,19 @@
+import CommandAdapter from '../../src/adapters/commandAdapter'
 import RemoveCommand from '../../src/commands/removeCommand'
-import { mockCommandAdapter } from '../mocks'
+import { messageAdapter, musicAdapter, voiceAdapter } from '../mocks'
 import * as fc from 'fast-check'
 
 describe('The remove command', () => {
   it('can remove a song', () => {
     fc.assert(
       fc.property(fc.nat(), (position) => {
-        const commandInfo = mockCommandAdapter()
-        commandInfo.music.remove = jest.fn(async () => 'Famous Song')
-        commandInfo.options.set('position', position)
+        const commandAdapter = new CommandAdapter(
+          new Map([['position', position]]),
+          messageAdapter(),
+          musicAdapter(),
+          voiceAdapter()
+        )
+        commandAdapter.music.remove = jest.fn(async () => 'Famous Song')
 
         // Arrange
         const remove = new RemoveCommand()
@@ -16,11 +21,11 @@ describe('The remove command', () => {
         // Act
         // Note: for consistency, need to wait on async command to run completely before
         // assertions but can't use async await with fast-check
-        remove.run(commandInfo).then(() => {
+        remove.run(commandAdapter).then(() => {
           // Assert
-          expect(commandInfo.music.remove).toHaveBeenCalledWith(position)
-          expect(commandInfo.message.reply).toHaveBeenCalled()
-          expect(typeof (<jest.Mock>commandInfo.message.reply).mock.lastCall?.[0]).toBe('string')
+          expect(commandAdapter.music.remove).toHaveBeenCalledWith(position)
+          expect(commandAdapter.message.reply).toHaveBeenCalled()
+          expect(typeof (<jest.Mock>commandAdapter.message.reply).mock.lastCall?.[0]).toBe('string')
         })
       })
     )

@@ -1,22 +1,33 @@
+import CommandAdapter from '../../src/adapters/commandAdapter'
 import ResumeCommand from '../../src/commands/resumeCommand'
-import { mockCommandAdapter } from '../mocks'
+import { messageAdapter, musicAdapter, voiceAdapter } from '../mocks'
 
 describe('The resume command', () => {
   it('resumes the currently playing song', async () => {
     const resume = new ResumeCommand()
-    const commandInfo = mockCommandAdapter()
+    const commandAdapter = new CommandAdapter(
+      new Map(),
+      messageAdapter(),
+      musicAdapter(),
+      voiceAdapter()
+    )
 
-    commandInfo.music.tryResume = jest.fn(async () => true)
+    commandAdapter.music.tryResume = jest.fn(async () => true)
 
-    await resume.run(commandInfo)
-    expect(commandInfo.music.tryResume).toHaveBeenCalled()
-    expect(commandInfo.message.noReply).toHaveBeenCalled()
+    await resume.run(commandAdapter)
+    expect(commandAdapter.music.tryResume).toHaveBeenCalled()
+    expect(commandAdapter.message.noReply).toHaveBeenCalled()
   })
 
   it('replies with a message if pausing fails', async () => {
     // Arrange
     const resume = new ResumeCommand()
-    const commandInfo = mockCommandAdapter()
+    const commandInfo = new CommandAdapter(
+      new Map(),
+      messageAdapter(),
+      musicAdapter(),
+      voiceAdapter()
+    )
 
     commandInfo.music.tryResume = jest.fn(async () => false)
 

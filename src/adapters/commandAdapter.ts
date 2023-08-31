@@ -1,13 +1,12 @@
-import { ChatInputCommandInteraction } from 'discord.js'
 import MessageAdapter, { IMessageAdapter } from './messageAdapter'
 import MusicAdapter, { IMusicAdapter } from './musicAdapter'
 import VoiceAdapter, { IVoiceAdapter } from './voiceAdapter'
-import { IDistubeClient } from '../services/distubeClient'
+import type { ChatInputCommandInteraction } from 'discord.js'
+import type { IDistubeClient } from '../services/distubeClient'
 
 export type Option = string | number | boolean | undefined
 
 export interface ICommandAdapter {
-  name: string
   options: Map<string, Option>
   message: IMessageAdapter
   music: IMusicAdapter
@@ -15,21 +14,24 @@ export interface ICommandAdapter {
 }
 
 export default class CommandAdapter implements ICommandAdapter {
-  readonly name: string
   readonly options: Map<string, Option>
   readonly message: IMessageAdapter
   readonly music: IMusicAdapter
   readonly voice: IVoiceAdapter
 
-  constructor(interaction: ChatInputCommandInteraction, distubeClient: IDistubeClient) {
-    this.name = interaction.commandName
-    this.options = CommandAdapter.getOptions(interaction)
-    this.message = new MessageAdapter(interaction)
-    this.music = new MusicAdapter(interaction, distubeClient)
-    this.voice = new VoiceAdapter(interaction)
+  constructor(
+    options: Map<string, Option>,
+    messageAdapter: IMessageAdapter,
+    musicAdapter: IMusicAdapter,
+    voiceAdapter: IVoiceAdapter
+  ) {
+    this.options = options
+    this.message = messageAdapter
+    this.music = musicAdapter
+    this.voice = voiceAdapter
   }
 
-  static getOptions(interaction: ChatInputCommandInteraction) {
+  private static getOptionsFromInteraction(interaction: ChatInputCommandInteraction) {
     const options = new Map()
 
     interaction.options.data.forEach((option) => {
@@ -37,5 +39,21 @@ export default class CommandAdapter implements ICommandAdapter {
     })
 
     return options
+  }
+
+  public static fromInteraction(
+    interaction: ChatInputCommandInteraction,
+    distubeClient: IDistubeClient
+  ) {
+    const message = new MessageAdapter(interaction)
+    const music = new MusicAdapter(interaction, distubeClient)
+    const voice = new VoiceAdapter(interaction)
+
+    return new CommandAdapter(
+      CommandAdapter.getOptionsFromInteraction(interaction),
+      message,
+      music,
+      voice
+    )
   }
 }

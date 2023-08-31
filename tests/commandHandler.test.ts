@@ -1,6 +1,7 @@
-import CommandHandler from '../src/handlers/handleCommandEvent'
-import { mockCommandAdapter } from './mocks'
+import CommandHandler from '../src/services/commandHandler'
+import { messageAdapter, musicAdapter, voiceAdapter } from './mocks'
 import Command from '../src/command'
+import CommandAdapter from '../src/adapters/commandAdapter'
 
 describe('The command handler after receiving a command', () => {
   describe('that exists', () => {
@@ -17,8 +18,13 @@ describe('The command handler after receiving a command', () => {
       const commands = new CommandHandler([command])
 
       // Act
-      const commandInfo = mockCommandAdapter(name)
-      commands.handle(commandInfo)
+      const commandAdapter = new CommandAdapter(
+        new Map(),
+        messageAdapter(),
+        musicAdapter(),
+        voiceAdapter()
+      )
+      commands.handle(name, commandAdapter)
 
       // Assert
       expect(command.run).toHaveBeenCalled()
@@ -46,8 +52,14 @@ describe('The command handler after receiving a command', () => {
       const commands = new CommandHandler([command])
 
       // Act
-      const commandInfo = mockCommandAdapter(name, options)
-      commands.handle(commandInfo)
+      const commandInfo = new CommandAdapter(
+        options,
+        messageAdapter(),
+        musicAdapter(),
+        voiceAdapter()
+      )
+
+      commands.handle(name, commandInfo)
 
       // Assert
       expect(command.run).toHaveBeenCalledWith(commandInfo)
@@ -59,8 +71,13 @@ describe('The command handler after receiving a command', () => {
       const commands = new CommandHandler([])
 
       const test = () => {
-        const commandInfo = mockCommandAdapter()
-        commands.handle(commandInfo)
+        const commandAdapter = new CommandAdapter(
+          new Map(),
+          messageAdapter(),
+          musicAdapter(),
+          voiceAdapter()
+        )
+        commands.handle('non-existant-command', commandAdapter)
       }
 
       expect(test).toThrow(Error)
