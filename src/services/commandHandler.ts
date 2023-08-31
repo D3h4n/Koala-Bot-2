@@ -61,6 +61,6 @@ export default class CommandHandler implements ICommandHandler {
       throw new Error(`${commandName} command is not implemented`)
     }
 
-    return command.run(options, commandAdapter)
+    return command.run(commandAdapter, options)
   }
 }

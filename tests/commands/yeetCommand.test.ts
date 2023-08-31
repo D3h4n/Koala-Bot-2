@@ -14,7 +14,7 @@ describe('The yeet command', () => {
         const yeet = new YeetCommand()
 
         // Act
-        yeet.run(options, commandAdapter).then(() => {
+        yeet.run(commandAdapter, options).then(() => {
           // Assert
           expect(commandAdapter.voice.moveAll).toHaveBeenCalledWith(channel)
           expect(commandAdapter.message.noReply).toHaveBeenCalled()

@@ -16,7 +16,7 @@ describe('The echo command', () => {
         // Act
         // Note: for consistency, need to wait on async command to run completely before
         // assertions but can't use async await with fast-check
-        echo.run(options, commandAdapter).then(() => {
+        echo.run(commandAdapter, options).then(() => {
           // Assert
           expect(commandAdapter.message.reply).toHaveBeenCalledWith(message)
         })

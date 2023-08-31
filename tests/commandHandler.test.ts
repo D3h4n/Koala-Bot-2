@@ -52,7 +52,7 @@ describe('The command handler after receiving a command', () => {
       commands.handle(name, options, commandAdapter)
 
       // Assert
-      expect(command.run).toHaveBeenCalledWith(options, commandAdapter)
+      expect(command.run).toHaveBeenCalledWith(commandAdapter, options)
     })
   })
 

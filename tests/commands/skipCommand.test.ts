@@ -10,7 +10,7 @@ describe('The skip command', () => {
     const skip = new SkipCommand()
 
     // Act
-    await skip.run(new Map(), commandAdapter)
+    await skip.run(commandAdapter)
 
     // Assert
     expect(commandAdapter.music.skip).toHaveBeenCalled()

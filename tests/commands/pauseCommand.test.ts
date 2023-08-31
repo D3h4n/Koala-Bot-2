@@ -9,7 +9,7 @@ describe('The pause command', () => {
 
     commandAdapter.music.tryPause = jest.fn(async () => true)
 
-    await pause.run(new Map(), commandAdapter)
+    await pause.run(commandAdapter)
     expect(commandAdapter.music.tryPause).toHaveBeenCalled()
     expect(commandAdapter.message.noReply).toHaveBeenCalled()
   })
@@ -22,7 +22,7 @@ describe('The pause command', () => {
     commandInfo.music.tryPause = jest.fn(async () => false)
 
     // Act
-    await pause.run(new Map(), commandInfo)
+    await pause.run(commandInfo)
 
     // Assert
     expect(commandInfo.music.tryPause).toHaveBeenCalled()

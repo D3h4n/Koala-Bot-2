@@ -10,7 +10,7 @@ describe('The stop command', () => {
     const stop = new StopCommand()
 
     // Act
-    await stop.run(new Map(), commandAdapter)
+    await stop.run(commandAdapter)
 
     // Assert
     expect(commandAdapter.music.stop).toHaveBeenCalled()

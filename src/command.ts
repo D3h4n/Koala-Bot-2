@@ -1,11 +1,11 @@
-import { ICommandAdapter, Option } from './adapters/commandAdapter'
 import {
   ApplicationCommandOptionType,
   PermissionsBitField,
   PermissionsString,
   SlashCommandBuilder,
 } from 'discord.js'
-import { ApplicationCommandOptionAllowedChannelTypes } from '@discordjs/builders'
+import type { ApplicationCommandOptionAllowedChannelTypes } from '@discordjs/builders'
+import type { ICommandAdapter, Option } from './adapters/commandAdapter'
 
 type CommandOptionType = keyof typeof ApplicationCommandOptionType
 
@@ -35,9 +35,9 @@ export default abstract class Command {
     this.permissions = permissions
   }
 
-  abstract run(options: Map<string, Option>, commandAdapter: ICommandAdapter): Promise<void>
+  abstract run(commandAdapter: ICommandAdapter, options?: Map<string, Option>): Promise<void>
 
-  toSlashCommand(): SlashCommandBuilder {
+  public toSlashCommand(): SlashCommandBuilder {
     const command = new SlashCommandBuilder().setName(this.name).setDescription(this.description)
 
     if (this.permissions.length > 0) {

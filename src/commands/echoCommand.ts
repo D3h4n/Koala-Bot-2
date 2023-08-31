@@ -9,7 +9,7 @@ export default class EchoCommand extends Command {
     ])
   }
 
-  async run(options: Map<string, Option>, commandAdapter: ICommandAdapter) {
+  async run(commandAdapter: ICommandAdapter, options: Map<string, Option>) {
     const message = options.get('message')
     assert(typeof message === 'string', 'message should be a string')
     await commandAdapter.message.reply(message)

@@ -9,7 +9,7 @@ export default class PlayCommand extends Command {
     ])
   }
 
-  async run(options: Map<string, Option>, commandAdapter: ICommandAdapter) {
+  async run(commandAdapter: ICommandAdapter, options: Map<string, Option>) {
     const song = options.get('song')
     assert(typeof song === 'string', 'song should always be a string')
     await commandAdapter.message.defer()

@@ -9,7 +9,7 @@ describe('The resume command', () => {
 
     commandAdapter.music.tryResume = jest.fn(async () => true)
 
-    await resume.run(new Map(), commandAdapter)
+    await resume.run(commandAdapter)
     expect(commandAdapter.music.tryResume).toHaveBeenCalled()
     expect(commandAdapter.message.noReply).toHaveBeenCalled()
   })
@@ -22,7 +22,7 @@ describe('The resume command', () => {
     commandInfo.music.tryResume = jest.fn(async () => false)
 
     // Act
-    await resume.run(new Map(), commandInfo)
+    await resume.run(commandInfo)
 
     // Assert
     expect(commandInfo.music.tryResume).toHaveBeenCalled()

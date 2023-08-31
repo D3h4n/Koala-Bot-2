@@ -20,7 +20,7 @@ export default class yeetCommand extends Command {
     )
   }
 
-  async run(options: Map<string, Option>, commandAdapter: ICommandAdapter) {
+  async run(commandAdapter: ICommandAdapter, options: Map<string, Option>) {
     const channel = options.get('channel')
     assert(typeof channel === 'string', 'channel should always be of type string')
     const result = await commandAdapter.voice.moveAll(channel)

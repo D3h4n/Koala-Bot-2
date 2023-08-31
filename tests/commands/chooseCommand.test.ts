@@ -16,7 +16,7 @@ describe('The choose command', () => {
     // Act
     const choose = new ChooseCommand()
     const commandAdapter = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
-    await choose.run(options, commandAdapter)
+    await choose.run(commandAdapter, options)
 
     // Assert
     expect(replies).toContain((commandAdapter.message.reply as jest.Mock).mock.lastCall?.[0])
@@ -47,7 +47,7 @@ describe('The choose command', () => {
           // Act
           // Note: for consistency, need to wait on async command to run completely before
           // assertions but can't use async await with fast-check
-          choose.run(options, commandAdapter).then(() => {
+          choose.run(commandAdapter, options).then(() => {
             // Assert
             const expectedIndex = Math.floor(randomValue * choices.length)
             expect(commandAdapter.message.reply).toHaveBeenCalledWith(

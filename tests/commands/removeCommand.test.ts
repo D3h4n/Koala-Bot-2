@@ -17,7 +17,7 @@ describe('The remove command', () => {
         // Act
         // Note: for consistency, need to wait on async command to run completely before
         // assertions but can't use async await with fast-check
-        remove.run(options, commandAdapter).then(() => {
+        remove.run(commandAdapter, options).then(() => {
           // Assert
           expect(commandAdapter.music.remove).toHaveBeenCalledWith(position)
           expect(commandAdapter.message.reply).toHaveBeenCalled()

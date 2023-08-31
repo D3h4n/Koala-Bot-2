@@ -16,7 +16,7 @@ describe('The play command', () => {
         // Act
         // Note: for consistency, need to wait on async command to run completely before
         // assertions but can't use async await with fast-check
-        play.run(options, commandAdapter).then(() => {
+        play.run(commandAdapter, options).then(() => {
           // Assert
           expect(commandAdapter.message.defer).toHaveBeenCalled()
           expect(commandAdapter.music.play).toHaveBeenCalledWith(song)

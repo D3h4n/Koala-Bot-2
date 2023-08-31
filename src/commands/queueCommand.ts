@@ -9,7 +9,7 @@ export default class QueueCommand extends Command {
     ])
   }
 
-  async run(options: Map<string, Option>, commandAdapter: ICommandAdapter) {
+  async run(commandAdapter: ICommandAdapter, options: Map<string, Option>) {
     const page = options.get('page')
     assert(
       page === undefined || typeof page === 'number',

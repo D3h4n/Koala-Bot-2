@@ -14,7 +14,7 @@ describe('The queue command', () => {
     const queue = new QueueCommand()
 
     // Act
-    queue.run(new Map(), commandAdapter)
+    queue.run(commandAdapter, new Map())
 
     // Assert
     expect(commandAdapter.music.getQueue).toHaveBeenCalled()
@@ -35,7 +35,7 @@ describe('The queue command', () => {
         // Act
         // Note: for consistency, need to wait on async command to run completely before
         // assertions but can't use async await with fast-check
-        queue.run(options, commandAdapter).then(() => {
+        queue.run(commandAdapter, options).then(() => {
           // Assert
           expect(commandAdapter.music.getQueue).toHaveBeenCalledWith(page)
           expect(commandAdapter.message.reply).toHaveBeenCalledWith(embed)

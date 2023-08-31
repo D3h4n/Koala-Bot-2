@@ -15,7 +15,7 @@ export default class ChooseCommand extends Command {
     )
   }
 
-  async run(options: Map<string, Option>, commandAdapter: ICommandAdapter) {
+  async run(commandAdapter: ICommandAdapter, options: Map<string, Option>) {
     const choices = this.getValidChoices(options)
     await commandAdapter.message.reply(this.getRandomChoice(choices))
   }

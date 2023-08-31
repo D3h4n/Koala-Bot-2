@@ -9,7 +9,7 @@ describe('The shuffle command', () => {
     const commandAdapter = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
 
     // Act
-    await shuffle.run(new Map(), commandAdapter)
+    await shuffle.run(commandAdapter)
 
     // Assert
     expect(commandAdapter.music.shuffle).toHaveBeenCalled()

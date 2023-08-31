@@ -8,7 +8,7 @@ export default class RemoveCommand extends Command {
       { name: 'position', type: 'Integer', description: 'The position of the song to remove.' },
     ])
   }
-  async run(options: Map<string, Option>, commandAdapter: ICommandAdapter) {
+  async run(commandAdapter: ICommandAdapter, options: Map<string, Option>) {
     const position = options.get('position')
     assert(typeof position === 'number', 'position should always be a number')
     const song = await commandAdapter.music.remove(position)
