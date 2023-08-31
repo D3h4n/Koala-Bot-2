@@ -1,6 +1,6 @@
 import Command from '../command'
-import { ICommandAdapter } from '../adapters/commandAdapter'
 import assert from 'assert'
+import type { ICommandAdapter, Option } from '../adapters/commandAdapter'
 
 export default class EchoCommand extends Command {
   constructor() {
@@ -9,8 +9,8 @@ export default class EchoCommand extends Command {
     ])
   }
 
-  async run(commandAdapter: ICommandAdapter) {
-    const message = commandAdapter.options.get('message')
+  async run(options: Map<string, Option>, commandAdapter: ICommandAdapter) {
+    const message = options.get('message')
     assert(typeof message === 'string', 'message should be a string')
     await commandAdapter.message.reply(message)
   }

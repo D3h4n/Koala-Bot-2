@@ -1,11 +1,15 @@
 import Command from '../command'
-import CommandAdapter, { ICommandAdapter } from '../adapters/commandAdapter'
-import { IDistubeClient } from './distubeClient'
-import { ChatInputCommandInteraction } from 'discord.js'
-import { ILogger } from './logger'
+import CommandAdapter, { ICommandAdapter, Option } from '../adapters/commandAdapter'
+import type { IDistubeClient } from './distubeClient'
+import type { ChatInputCommandInteraction } from 'discord.js'
+import type { ILogger } from './logger'
 
 export interface ICommandHandler {
-  handle: (commandName, commandAdapter: ICommandAdapter) => Promise<void>
+  handle: (
+    commandName: string,
+    options: Map<string, Option>,
+    commandAdapter: ICommandAdapter
+  ) => Promise<void>
   handleInteraction: (interaction: ChatInputCommandInteraction) => Promise<void>
 }
 
@@ -32,16 +36,31 @@ export default class CommandHandler implements ICommandHandler {
 
     this.handle(
       interaction.commandName,
+      CommandHandler.getOptionsFromInteraction(interaction),
       CommandAdapter.fromInteraction(interaction, this.distubeClient)
     )
   }
 
-  public handle(commandName: string, commandAdapter: ICommandAdapter) {
+  private static getOptionsFromInteraction(interaction: ChatInputCommandInteraction) {
+    const options = new Map()
+
+    interaction.options.data.forEach((option) => {
+      options.set(option.name, option.value)
+    })
+
+    return options
+  }
+
+  public handle(
+    commandName: string,
+    options: Map<string, Option>,
+    commandAdapter: ICommandAdapter
+  ) {
     const command = this.commands.get(commandName)
     if (!command) {
       throw new Error(`${commandName} command is not implemented`)
     }
 
-    return command.run(commandAdapter)
+    return command.run(options, commandAdapter)
   }
 }

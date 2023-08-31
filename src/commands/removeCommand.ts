@@ -1,6 +1,6 @@
 import Command from '../command'
-import { ICommandAdapter } from '../adapters/commandAdapter'
 import assert from 'assert'
+import type { ICommandAdapter, Option } from '../adapters/commandAdapter'
 
 export default class RemoveCommand extends Command {
   constructor() {
@@ -8,8 +8,8 @@ export default class RemoveCommand extends Command {
       { name: 'position', type: 'Integer', description: 'The position of the song to remove.' },
     ])
   }
-  async run(commandAdapter: ICommandAdapter) {
-    const position = commandAdapter.options.get('position')
+  async run(options: Map<string, Option>, commandAdapter: ICommandAdapter) {
+    const position = options.get('position')
     assert(typeof position === 'number', 'position should always be a number')
     const song = await commandAdapter.music.remove(position)
 

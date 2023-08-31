@@ -4,18 +4,13 @@ import { messageAdapter, musicAdapter, voiceAdapter } from '../mocks'
 
 describe('The stop command', () => {
   it('can stop playing a song', async () => {
-    const commandAdapter = new CommandAdapter(
-      new Map(),
-      messageAdapter(),
-      musicAdapter(),
-      voiceAdapter()
-    )
+    const commandAdapter = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
 
     // Arrange
     const stop = new StopCommand()
 
     // Act
-    await stop.run(commandAdapter)
+    await stop.run(new Map(), commandAdapter)
 
     // Assert
     expect(commandAdapter.music.stop).toHaveBeenCalled()

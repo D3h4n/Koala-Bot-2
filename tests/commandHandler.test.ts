@@ -6,6 +6,7 @@ import CommandAdapter from '../src/adapters/commandAdapter'
 describe('The command handler after receiving a command', () => {
   describe('that exists', () => {
     it.each(['play', 'pick-a-game'])('can run the command', (name) => {
+      const commandAdapter = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
       // Arrange
       const command: Command = {
         name,
@@ -18,13 +19,7 @@ describe('The command handler after receiving a command', () => {
       const commands = new CommandHandler([command])
 
       // Act
-      const commandAdapter = new CommandAdapter(
-        new Map(),
-        messageAdapter(),
-        musicAdapter(),
-        voiceAdapter()
-      )
-      commands.handle(name, commandAdapter)
+      commands.handle(name, new Map(), commandAdapter)
 
       // Assert
       expect(command.run).toHaveBeenCalled()
@@ -40,6 +35,8 @@ describe('The command handler after receiving a command', () => {
         ]),
       },
     ])('can run the command with options', ({ commandName: name, options }) => {
+      const commandAdapter = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
+
       // Arrange
       const command: Command = {
         name,
@@ -52,17 +49,10 @@ describe('The command handler after receiving a command', () => {
       const commands = new CommandHandler([command])
 
       // Act
-      const commandInfo = new CommandAdapter(
-        options,
-        messageAdapter(),
-        musicAdapter(),
-        voiceAdapter()
-      )
-
-      commands.handle(name, commandInfo)
+      commands.handle(name, options, commandAdapter)
 
       // Assert
-      expect(command.run).toHaveBeenCalledWith(commandInfo)
+      expect(command.run).toHaveBeenCalledWith(options, commandAdapter)
     })
   })
 
@@ -71,13 +61,8 @@ describe('The command handler after receiving a command', () => {
       const commands = new CommandHandler([])
 
       const test = () => {
-        const commandAdapter = new CommandAdapter(
-          new Map(),
-          messageAdapter(),
-          musicAdapter(),
-          voiceAdapter()
-        )
-        commands.handle('non-existant-command', commandAdapter)
+        const commandAdapter = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
+        commands.handle('non-existant-command', new Map(), commandAdapter)
       }
 
       expect(test).toThrow(Error)

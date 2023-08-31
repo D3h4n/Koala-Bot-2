@@ -7,19 +7,16 @@ describe('The echo command', () => {
   it('can reply with the correct message', () => {
     fc.assert(
       fc.property(fc.string({ minLength: 1 }), (message) => {
+        const options = new Map([['message', message]])
+        const commandAdapter = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
+
         // Arrange
         const echo = new EchoCommand()
-        const commandAdapter = new CommandAdapter(
-          new Map([['message', message]]),
-          messageAdapter(),
-          musicAdapter(),
-          voiceAdapter()
-        )
 
         // Act
         // Note: for consistency, need to wait on async command to run completely before
         // assertions but can't use async await with fast-check
-        echo.run(commandAdapter).then(() => {
+        echo.run(options, commandAdapter).then(() => {
           // Assert
           expect(commandAdapter.message.reply).toHaveBeenCalledWith(message)
         })

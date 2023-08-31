@@ -6,7 +6,7 @@ export default class SkipCommand extends Command {
     super('skip', 'Skip the song that is currently playing.')
   }
 
-  async run(commandAdapter: ICommandAdapter) {
+  async run(_, commandAdapter: ICommandAdapter) {
     await commandAdapter.music.skip()
     await commandAdapter.message.noReply()
   }

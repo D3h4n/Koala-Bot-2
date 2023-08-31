@@ -6,7 +6,7 @@ export default class StopCommand extends Command {
     super('stop', 'Stop the music queue.')
   }
 
-  async run(commandAdapter: ICommandAdapter) {
+  async run(_, commandAdapter: ICommandAdapter) {
     await commandAdapter.music.stop()
     await commandAdapter.message.noReply()
   }

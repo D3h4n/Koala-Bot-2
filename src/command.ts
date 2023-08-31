@@ -1,4 +1,4 @@
-import { ICommandAdapter } from './adapters/commandAdapter'
+import { ICommandAdapter, Option } from './adapters/commandAdapter'
 import {
   ApplicationCommandOptionType,
   PermissionsBitField,
@@ -35,7 +35,7 @@ export default abstract class Command {
     this.permissions = permissions
   }
 
-  abstract run(commandAdapter: ICommandAdapter): Promise<void>
+  abstract run(options: Map<string, Option>, commandAdapter: ICommandAdapter): Promise<void>
 
   toSlashCommand(): SlashCommandBuilder {
     const command = new SlashCommandBuilder().setName(this.name).setDescription(this.description)

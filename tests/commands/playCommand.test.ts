@@ -7,19 +7,16 @@ describe('The play command', () => {
   it('can play a song', () => {
     fc.assert(
       fc.property(fc.string({ minLength: 1 }), (song) => {
+        const options = new Map([['song', song]])
+        const commandAdapter = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
+
         // Arrange
         const play = new PlayCommand()
-        const commandAdapter = new CommandAdapter(
-          new Map([['song', song]]),
-          messageAdapter(),
-          musicAdapter(),
-          voiceAdapter()
-        )
 
         // Act
         // Note: for consistency, need to wait on async command to run completely before
         // assertions but can't use async await with fast-check
-        play.run(commandAdapter).then(() => {
+        play.run(options, commandAdapter).then(() => {
           // Assert
           expect(commandAdapter.message.defer).toHaveBeenCalled()
           expect(commandAdapter.music.play).toHaveBeenCalledWith(song)

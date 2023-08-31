@@ -5,16 +5,11 @@ import { messageAdapter, musicAdapter, voiceAdapter } from '../mocks'
 describe('The resume command', () => {
   it('resumes the currently playing song', async () => {
     const resume = new ResumeCommand()
-    const commandAdapter = new CommandAdapter(
-      new Map(),
-      messageAdapter(),
-      musicAdapter(),
-      voiceAdapter()
-    )
+    const commandAdapter = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
 
     commandAdapter.music.tryResume = jest.fn(async () => true)
 
-    await resume.run(commandAdapter)
+    await resume.run(new Map(), commandAdapter)
     expect(commandAdapter.music.tryResume).toHaveBeenCalled()
     expect(commandAdapter.message.noReply).toHaveBeenCalled()
   })
@@ -22,17 +17,12 @@ describe('The resume command', () => {
   it('replies with a message if pausing fails', async () => {
     // Arrange
     const resume = new ResumeCommand()
-    const commandInfo = new CommandAdapter(
-      new Map(),
-      messageAdapter(),
-      musicAdapter(),
-      voiceAdapter()
-    )
+    const commandInfo = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
 
     commandInfo.music.tryResume = jest.fn(async () => false)
 
     // Act
-    await resume.run(commandInfo)
+    await resume.run(new Map(), commandInfo)
 
     // Assert
     expect(commandInfo.music.tryResume).toHaveBeenCalled()

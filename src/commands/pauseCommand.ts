@@ -1,12 +1,12 @@
-import { ICommandAdapter } from '../adapters/commandAdapter'
 import Command from '../command'
+import type { ICommandAdapter } from '../adapters/commandAdapter'
 
 export default class PauseCommand extends Command {
   constructor() {
     super('pause', 'Pause a song that is currently playing')
   }
 
-  async run(commandAdapter: ICommandAdapter) {
+  async run(_, commandAdapter: ICommandAdapter) {
     if (!(await commandAdapter.music.tryPause())) {
       await commandAdapter.message.reply('Failed to pause the queue')
       return

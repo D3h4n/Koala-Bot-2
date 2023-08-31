@@ -15,13 +15,8 @@ describe('The choose command', () => {
 
     // Act
     const choose = new ChooseCommand()
-    const commandAdapter = new CommandAdapter(
-      options,
-      messageAdapter(),
-      musicAdapter(),
-      voiceAdapter()
-    )
-    await choose.run(commandAdapter)
+    const commandAdapter = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
+    await choose.run(options, commandAdapter)
 
     // Assert
     expect(replies).toContain((commandAdapter.message.reply as jest.Mock).mock.lastCall?.[0])
@@ -44,7 +39,6 @@ describe('The choose command', () => {
           jest.spyOn(global.Math, 'random').mockReturnValue(randomValue)
           const choose = new ChooseCommand()
           const commandAdapter = new CommandAdapter(
-            options,
             messageAdapter(),
             musicAdapter(),
             voiceAdapter()
@@ -53,7 +47,7 @@ describe('The choose command', () => {
           // Act
           // Note: for consistency, need to wait on async command to run completely before
           // assertions but can't use async await with fast-check
-          choose.run(commandAdapter).then(() => {
+          choose.run(options, commandAdapter).then(() => {
             // Assert
             const expectedIndex = Math.floor(randomValue * choices.length)
             expect(commandAdapter.message.reply).toHaveBeenCalledWith(

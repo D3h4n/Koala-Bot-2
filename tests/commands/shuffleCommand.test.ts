@@ -6,15 +6,10 @@ describe('The shuffle command', () => {
   it('can shuffle a song', async () => {
     // Arrange
     const shuffle = new ShuffleCommand()
-    const commandAdapter = new CommandAdapter(
-      new Map(),
-      messageAdapter(),
-      musicAdapter(),
-      voiceAdapter()
-    )
+    const commandAdapter = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
 
     // Act
-    await shuffle.run(commandAdapter)
+    await shuffle.run(new Map(), commandAdapter)
 
     // Assert
     expect(commandAdapter.music.shuffle).toHaveBeenCalled()

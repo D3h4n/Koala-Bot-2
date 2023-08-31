@@ -8,18 +8,13 @@ describe('The yeet command', () => {
     fc.assert(
       fc.property(fc.string({ minLength: 1 }), (channel) => {
         const options = new Map([['channel', channel]])
-        const commandAdapter = new CommandAdapter(
-          options,
-          messageAdapter(),
-          musicAdapter(),
-          voiceAdapter()
-        )
+        const commandAdapter = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
 
         // Arrange
         const yeet = new YeetCommand()
 
         // Act
-        yeet.run(commandAdapter).then(() => {
+        yeet.run(options, commandAdapter).then(() => {
           // Assert
           expect(commandAdapter.voice.moveAll).toHaveBeenCalledWith(channel)
           expect(commandAdapter.message.noReply).toHaveBeenCalled()

@@ -1,5 +1,5 @@
 import Command from '../command'
-import { ICommandAdapter, Option } from '../adapters/commandAdapter'
+import type { ICommandAdapter, Option } from '../adapters/commandAdapter'
 
 export default class ChooseCommand extends Command {
   constructor() {
@@ -15,8 +15,8 @@ export default class ChooseCommand extends Command {
     )
   }
 
-  async run(commandAdapter: ICommandAdapter) {
-    const choices = this.getValidChoices(commandAdapter.options)
+  async run(options: Map<string, Option>, commandAdapter: ICommandAdapter) {
+    const choices = this.getValidChoices(options)
     await commandAdapter.message.reply(this.getRandomChoice(choices))
   }
 
