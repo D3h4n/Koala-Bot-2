@@ -9,24 +9,41 @@ import type { ICommandAdapter, Option } from './adapters/commandAdapter'
 
 type CommandOptionType = keyof typeof ApplicationCommandOptionType
 
-interface ICommandOption {
-  name: string
-  type: CommandOptionType
-  description: string
-  required?: boolean
-  channelTypes?: ApplicationCommandOptionAllowedChannelTypes[]
-}
+type CommandOption =
+  | {
+      name: string
+      type: Exclude<
+        CommandOptionType,
+        | 'Subcommand'
+        | 'SubcommandGroup'
+        | 'User'
+        | 'Channel'
+        | 'Role'
+        | 'Mentionable'
+        | 'Number'
+        | 'Attachment'
+      >
+      description: string
+      required?: boolean
+    }
+  | {
+      name: string
+      type: 'Channel'
+      description: string
+      required?: boolean
+      channelTypes: ApplicationCommandOptionAllowedChannelTypes[]
+    }
 
 export default abstract class Command {
   readonly name: string
   readonly description: string
-  readonly options: ICommandOption[]
+  readonly options: CommandOption[]
   readonly permissions: PermissionsString[]
 
   protected constructor(
     name: string,
     description: string,
-    options: ICommandOption[] = [],
+    options: CommandOption[] = [],
     permissions: PermissionsString[] = []
   ) {
     this.name = name
@@ -49,7 +66,7 @@ export default abstract class Command {
     return command
   }
 
-  private static addSlashCommandOptions(command: SlashCommandBuilder, options: ICommandOption[]) {
+  private static addSlashCommandOptions(command: SlashCommandBuilder, options: CommandOption[]) {
     for (const option of options) {
       switch (option.type) {
         case 'String':
@@ -71,18 +88,13 @@ export default abstract class Command {
           break
 
         case 'Channel':
-          command.addChannelOption((builder) => {
+          command.addChannelOption((builder) =>
             builder
               .setName(option.name)
               .setDescription(option.description)
+              .addChannelTypes(...option.channelTypes)
               .setRequired(option.required ?? true)
-
-            if (option.channelTypes) {
-              builder.addChannelTypes(...option.channelTypes)
-            }
-
-            return builder
-          })
+          )
           break
 
         default:

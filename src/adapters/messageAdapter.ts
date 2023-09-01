@@ -1,5 +1,5 @@
-import { ChatInputCommandInteraction, InteractionReplyOptions } from 'discord.js'
 import EmbeddedMessage from '../embeds/embeddedMessage'
+import type { EmbedBuilder } from 'discord.js'
 
 export interface IMessageAdapter {
   reply: (message: string | EmbeddedMessage) => Promise<void>
@@ -7,10 +7,21 @@ export interface IMessageAdapter {
   noReply: () => Promise<void>
 }
 
-export default class MessageAdapter implements IMessageAdapter {
-  readonly interaction: ChatInputCommandInteraction
+type ReplyOptions = string | { embeds: EmbedBuilder[] }
 
-  constructor(interaction: ChatInputCommandInteraction) {
+export interface IRepliable {
+  replied: boolean
+  deferred: boolean
+  editReply: (options: ReplyOptions) => Promise<unknown>
+  reply: (options: ReplyOptions) => Promise<unknown>
+  deferReply: () => Promise<unknown>
+  deleteReply: () => Promise<unknown>
+}
+
+export default class MessageAdapter implements IMessageAdapter {
+  readonly interaction: IRepliable
+
+  constructor(interaction: IRepliable) {
     this.interaction = interaction
   }
 
@@ -23,7 +34,7 @@ export default class MessageAdapter implements IMessageAdapter {
     await this.sendReply({ embeds: [message.embed] })
   }
 
-  private async sendReply(options: InteractionReplyOptions | string) {
+  private async sendReply(options: ReplyOptions) {
     if (this.interaction.replied || this.interaction.deferred) {
       await this.interaction.editReply(options)
       return
@@ -33,14 +44,13 @@ export default class MessageAdapter implements IMessageAdapter {
   }
 
   async defer() {
-    await this.interaction.deferReply()
+    if (!this.interaction.deferred && !this.interaction.replied) {
+      await this.interaction.deferReply()
+    }
   }
 
   async noReply() {
-    if (!this.interaction.replied && !this.interaction.deferred) {
-      await this.interaction.deferReply()
-    }
-
+    this.defer()
     await this.interaction.deleteReply()
   }
 }

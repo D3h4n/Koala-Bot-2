@@ -1,18 +1,35 @@
-import { ChatInputCommandInteraction, GuildMember } from 'discord.js'
+import { APIInteractionGuildMember, PermissionsBitField } from 'discord.js'
 
 export interface IVoiceAdapter {
   moveAll: (channel: string) => Promise<string | null>
 }
 
-export default class VoiceAdapter implements IVoiceAdapter {
-  interaction: ChatInputCommandInteraction
+export type VoiceMember = {
+  permissions: Readonly<PermissionsBitField>
+  voice: {
+    channel: {
+      members: Map<string, VoiceMember>
+    } | null
+    setChannel: (channel: string, reason?: string) => Promise<unknown>
+  }
+}
 
-  constructor(interaction: ChatInputCommandInteraction) {
+// TODO: Come up with a better name for this interface
+// FIXME: APIInteractionGuildMember is added to fix type errors
+//        maybe figure out a way to cleanly leave it out
+export interface IVoiceInteraction {
+  member: APIInteractionGuildMember | VoiceMember | null
+}
+
+export default class VoiceAdapter implements IVoiceAdapter {
+  interaction: IVoiceInteraction
+
+  constructor(interaction: IVoiceInteraction) {
     this.interaction = interaction
   }
 
   async moveAll(channel: string): Promise<string | null> {
-    const guildMember = this.interaction.member as GuildMember | null
+    const guildMember = this.interaction.member as VoiceMember | null
     if (!guildMember) return 'Failed to find guild member'
     if (!guildMember.permissions.has('MoveMembers', true))
       return `${guildMember} you're not cool enough to use this command. (requires 'MoveMembers' permission)`
@@ -21,7 +38,7 @@ export default class VoiceAdapter implements IVoiceAdapter {
     if (!voiceChannel) return `${guildMember} you're not in a voice channel`
 
     voiceChannel.members.forEach((member) => {
-      member.voice.setChannel(channel, 'performed yeet command')
+      member.voice!.setChannel(channel, 'performed yeet command')
     })
     return null
   }
