@@ -7,7 +7,7 @@ export default class SkipCommand extends Command {
   }
 
   async run(commandAdapter: ICommandAdapter) {
-    await commandAdapter.music.skip()
+    await commandAdapter.music.trySkip()
     await commandAdapter.message.noReply()
   }
 }

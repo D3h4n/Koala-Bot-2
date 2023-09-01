@@ -7,7 +7,7 @@ export default class StopCommand extends Command {
   }
 
   async run(commandAdapter: ICommandAdapter) {
-    await commandAdapter.music.stop()
+    await commandAdapter.music.tryStop()
     await commandAdapter.message.noReply()
   }
 }

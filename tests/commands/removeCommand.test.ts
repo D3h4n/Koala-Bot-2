@@ -1,6 +1,6 @@
 import CommandAdapter from '../../src/adapters/commandAdapter'
 import RemoveCommand from '../../src/commands/removeCommand'
-import { messageAdapter, musicAdapter, voiceAdapter } from '../mocks'
+import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from '../mocks'
 import * as fc from 'fast-check'
 
 describe('The remove command', () => {
@@ -8,7 +8,11 @@ describe('The remove command', () => {
     fc.assert(
       fc.property(fc.nat(), (position) => {
         const options = new Map([['position', position]])
-        const commandAdapter = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
+        const commandAdapter = new CommandAdapter(
+          mockMessageAdapter(),
+          mockMusicAdapter(),
+          mockVoiceAdapter()
+        )
         commandAdapter.music.remove = jest.fn(async () => 'Famous Song')
 
         // Arrange

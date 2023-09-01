@@ -1,6 +1,6 @@
 import * as fc from 'fast-check'
 import PlayCommand from '../../src/commands/playCommand'
-import { messageAdapter, musicAdapter, voiceAdapter } from '../mocks'
+import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from '../mocks'
 import CommandAdapter from '../../src/adapters/commandAdapter'
 
 describe('The play command', () => {
@@ -8,7 +8,11 @@ describe('The play command', () => {
     fc.assert(
       fc.property(fc.string({ minLength: 1 }), (song) => {
         const options = new Map([['song', song]])
-        const commandAdapter = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
+        const commandAdapter = new CommandAdapter(
+          mockMessageAdapter(),
+          mockMusicAdapter(),
+          mockVoiceAdapter()
+        )
 
         // Arrange
         const play = new PlayCommand()

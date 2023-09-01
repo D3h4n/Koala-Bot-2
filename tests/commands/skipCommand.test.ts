@@ -1,10 +1,14 @@
 import CommandAdapter from '../../src/adapters/commandAdapter'
 import SkipCommand from '../../src/commands/skipCommand'
-import { messageAdapter, musicAdapter, voiceAdapter } from '../mocks'
+import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from '../mocks'
 
 describe('The skip command', () => {
   it('can skip a song', async () => {
-    const commandAdapter = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
+    const commandAdapter = new CommandAdapter(
+      mockMessageAdapter(),
+      mockMusicAdapter(),
+      mockVoiceAdapter()
+    )
 
     // Arrange
     const skip = new SkipCommand()
@@ -13,7 +17,7 @@ describe('The skip command', () => {
     await skip.run(commandAdapter)
 
     // Assert
-    expect(commandAdapter.music.skip).toHaveBeenCalled()
+    expect(commandAdapter.music.trySkip).toHaveBeenCalled()
     expect(commandAdapter.message.noReply).toHaveBeenCalled()
   })
 })

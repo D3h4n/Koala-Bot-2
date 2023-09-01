@@ -1,12 +1,16 @@
 import CommandHandler from '../src/services/commandHandler'
-import { messageAdapter, musicAdapter, voiceAdapter } from './mocks'
+import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from './mocks'
 import Command from '../src/command'
 import CommandAdapter from '../src/adapters/commandAdapter'
 
 describe('The command handler after receiving a command', () => {
   describe('that exists', () => {
     it.each(['play', 'pick-a-game'])('can run the command', (name) => {
-      const commandAdapter = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
+      const commandAdapter = new CommandAdapter(
+        mockMessageAdapter(),
+        mockMusicAdapter(),
+        mockVoiceAdapter()
+      )
       // Arrange
       const command: Command = {
         name,
@@ -35,7 +39,11 @@ describe('The command handler after receiving a command', () => {
         ]),
       },
     ])('can run the command with options', ({ commandName: name, options }) => {
-      const commandAdapter = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
+      const commandAdapter = new CommandAdapter(
+        mockMessageAdapter(),
+        mockMusicAdapter(),
+        mockVoiceAdapter()
+      )
 
       // Arrange
       const command: Command = {
@@ -61,7 +69,11 @@ describe('The command handler after receiving a command', () => {
       const commands = new CommandHandler([])
 
       const test = () => {
-        const commandAdapter = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
+        const commandAdapter = new CommandAdapter(
+          mockMessageAdapter(),
+          mockMusicAdapter(),
+          mockVoiceAdapter()
+        )
         commands.handle('non-existant-command', new Map(), commandAdapter)
       }
 

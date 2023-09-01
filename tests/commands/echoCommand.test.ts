@@ -1,6 +1,6 @@
 import EchoCommand from '../../src/commands/echoCommand'
 import * as fc from 'fast-check'
-import { messageAdapter, musicAdapter, voiceAdapter } from '../mocks'
+import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from '../mocks'
 import CommandAdapter from '../../src/adapters/commandAdapter'
 
 describe('The echo command', () => {
@@ -8,7 +8,11 @@ describe('The echo command', () => {
     fc.assert(
       fc.property(fc.string({ minLength: 1 }), (message) => {
         const options = new Map([['message', message]])
-        const commandAdapter = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
+        const commandAdapter = new CommandAdapter(
+          mockMessageAdapter(),
+          mockMusicAdapter(),
+          mockVoiceAdapter()
+        )
 
         // Arrange
         const echo = new EchoCommand()

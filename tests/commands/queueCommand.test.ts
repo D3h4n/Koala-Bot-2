@@ -1,5 +1,5 @@
 import QueueCommand from '../../src/commands/queueCommand'
-import { messageAdapter, musicAdapter, voiceAdapter } from '../mocks'
+import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from '../mocks'
 import * as fc from 'fast-check'
 import EmbeddedMessage from '../../src/embeds/embeddedMessage'
 import CommandAdapter from '../../src/adapters/commandAdapter'
@@ -7,7 +7,11 @@ import CommandAdapter from '../../src/adapters/commandAdapter'
 describe('The queue command', () => {
   it('can display the queue', () => {
     const embed = new EmbeddedMessage({})
-    const commandAdapter = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
+    const commandAdapter = new CommandAdapter(
+      mockMessageAdapter(),
+      mockMusicAdapter(),
+      mockVoiceAdapter()
+    )
     commandAdapter.music.getQueue = jest.fn(() => embed)
 
     // Assemble
@@ -25,7 +29,11 @@ describe('The queue command', () => {
     fc.assert(
       fc.property(fc.nat(), (page) => {
         const options = new Map([['page', page]])
-        const commandAdapter = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
+        const commandAdapter = new CommandAdapter(
+          mockMessageAdapter(),
+          mockMusicAdapter(),
+          mockVoiceAdapter()
+        )
         const embed = new EmbeddedMessage({})
         commandAdapter.music.getQueue = jest.fn(() => embed)
 

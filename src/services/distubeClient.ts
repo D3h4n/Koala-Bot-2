@@ -6,10 +6,27 @@ import SoundCloudPlugin from '@distube/soundcloud'
 import AddPlaylistMessage from '../embeds/addPlaylistMessage'
 import PlaySongMessage from '../embeds/playSongMessage'
 import AddSongMessage from '../embeds/addSongMessage'
+import { APIInteractionGuildMember, GuildMember, TextChannel, VoiceChannel } from 'discord.js'
+import QueueMessage from '../embeds/queueMessage'
+import EmbeddedMessage from '../embeds/embeddedMessage'
+import { VoiceMember } from '../adapters/voiceAdapter'
+
+export interface IMusicInteraction {
+  member: APIInteractionGuildMember | VoiceMember | null
+  channel: unknown
+  guildId: string | null
+}
 
 export interface IDistubeClient {
-  client: DisTube
   registerEventHandlers: (logger: ILogger) => void
+  play: (query: string, interaction: IMusicInteraction) => Promise<string | null>
+  tryPause: (guildId: string) => Promise<boolean>
+  tryResume: (guildId: string) => Promise<boolean>
+  getQueue(page: number, guildId: string): EmbeddedMessage
+  tryShuffle: (guildId: string) => Promise<boolean>
+  trySkip: (guildId: string) => Promise<boolean>
+  tryStop: (guildId: string) => Promise<boolean>
+  remove: (position: number, guildId: string) => Promise<string | null>
 }
 
 export default class DistubeClient implements IDistubeClient {
@@ -28,13 +45,13 @@ export default class DistubeClient implements IDistubeClient {
 
   registerEventHandlers(logger: ILogger) {
     this.client
-      .on('playSong', this.handlePlaySongEvent(logger))
-      .on('addSong', this.handleAddSongEvent(logger))
-      .on('addList', this.handleAddPlaylistEvent(logger))
+      .on('playSong', DistubeClient.handlePlaySongEvent(logger))
+      .on('addSong', DistubeClient.handleAddSongEvent(logger))
+      .on('addList', DistubeClient.handleAddPlaylistEvent(logger))
       .on('error', (_, error) => logger.error(error))
   }
 
-  handlePlaySongEvent(logger: ILogger) {
+  private static handlePlaySongEvent(logger: ILogger) {
     return (queue: Queue, song: Song) => {
       const channel = queue.textChannel
 
@@ -46,7 +63,7 @@ export default class DistubeClient implements IDistubeClient {
     }
   }
 
-  handleAddSongEvent(logger: ILogger) {
+  private static handleAddSongEvent(logger: ILogger) {
     return (queue: Queue, song: Song) => {
       const position = queue.songs.indexOf(song)
       const channel = queue.textChannel
@@ -59,7 +76,7 @@ export default class DistubeClient implements IDistubeClient {
     }
   }
 
-  handleAddPlaylistEvent(logger: ILogger) {
+  private static handleAddPlaylistEvent(logger: ILogger) {
     return (queue: Queue, playlist: Playlist) => {
       const channel = queue.textChannel
 
@@ -69,5 +86,79 @@ export default class DistubeClient implements IDistubeClient {
       channel.send({ embeds: [message.embed] })
       logger.info(`Added "${playlist.name}" to queue`)
     }
+  }
+
+  async play(query: string, interaction: IMusicInteraction): Promise<string | null> {
+    const member = interaction.member as GuildMember | null
+    const voiceChannel = member?.voice.channel
+
+    if (!voiceChannel) return 'Member not in voice channel'
+
+    await this.client.play(voiceChannel as VoiceChannel, query, {
+      member,
+      textChannel: interaction.channel as TextChannel,
+    })
+    return null
+  }
+
+  async tryPause(guildId: string): Promise<boolean> {
+    const queue = this.client.getQueue(guildId)
+    if (!queue?.playing) return false
+    queue.pause()
+    return true
+  }
+
+  async tryResume(guildId: string): Promise<boolean> {
+    const queue = this.client.getQueue(guildId)
+    if (!queue?.paused) return false
+    queue.resume()
+    return true
+  }
+
+  getQueue(page: number, guildId: string): EmbeddedMessage {
+    const queue = this.client.getQueue(guildId)
+    return queue ? new QueueMessage(queue, page) : QueueMessage.EmptyQueue
+  }
+
+  async tryShuffle(guildId: string): Promise<boolean> {
+    const queue = this.client.getQueue(guildId)
+
+    if (!queue) {
+      return false
+    }
+
+    await queue.shuffle()
+    return true
+  }
+
+  async trySkip(guildId: string): Promise<boolean> {
+    const queue = this.client.getQueue(guildId)
+    if (!queue) return false
+
+    if (queue.songs.length > 1) {
+      await queue.skip()
+    } else {
+      await queue.stop()
+    }
+
+    return true
+  }
+
+  async tryStop(guildId: string): Promise<boolean> {
+    const queue = this.client.getQueue(guildId)
+    if (!queue) return false
+
+    await queue.stop()
+    return true
+  }
+
+  async remove(position: number, guildId: string): Promise<string | null> {
+    const queue = this.client.getQueue(guildId)
+    if (queue && queue.songs.length > position) {
+      const [song] = queue.songs.splice(position, 1)
+      return song.name || 'Unnamed Song'
+    }
+
+    return null
   }
 }

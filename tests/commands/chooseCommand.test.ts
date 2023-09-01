@@ -1,6 +1,6 @@
 import ChooseCommand from '../../src/commands/chooseCommand'
 import * as fc from 'fast-check'
-import { messageAdapter, musicAdapter, voiceAdapter } from '../mocks'
+import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from '../mocks'
 import CommandAdapter from '../../src/adapters/commandAdapter'
 
 describe('The choose command', () => {
@@ -15,7 +15,11 @@ describe('The choose command', () => {
 
     // Act
     const choose = new ChooseCommand()
-    const commandAdapter = new CommandAdapter(messageAdapter(), musicAdapter(), voiceAdapter())
+    const commandAdapter = new CommandAdapter(
+      mockMessageAdapter(),
+      mockMusicAdapter(),
+      mockVoiceAdapter()
+    )
     await choose.run(commandAdapter, options)
 
     // Assert
@@ -39,9 +43,9 @@ describe('The choose command', () => {
           jest.spyOn(global.Math, 'random').mockReturnValue(randomValue)
           const choose = new ChooseCommand()
           const commandAdapter = new CommandAdapter(
-            messageAdapter(),
-            musicAdapter(),
-            voiceAdapter()
+            mockMessageAdapter(),
+            mockMusicAdapter(),
+            mockVoiceAdapter()
           )
 
           // Act
