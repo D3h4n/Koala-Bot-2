@@ -12,7 +12,7 @@
     "start": "node dist/index.js --",
     "preregister": "npm run build",
     "register": "node dist/register.js --",
-    "clean": "rm -rf dist reports"
+    "clean": "rm -rf dist reports coverage"
   },
   "repository": {
     "type": "git",
