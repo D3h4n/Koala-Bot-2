@@ -1,19 +1,26 @@
-import DisTube, { Playlist, Queue, Song } from 'distube'
-import { IDiscordClient } from './discordClient'
-import { ILogger } from './logger'
 import SpotifyPlugin from '@distube/spotify'
 import SoundCloudPlugin from '@distube/soundcloud'
-import AddPlaylistMessage from '../embeds/addPlaylistMessage'
-import PlaySongMessage from '../embeds/playSongMessage'
-import AddSongMessage from '../embeds/addSongMessage'
-import { APIInteractionGuildMember, GuildMember, TextChannel } from 'discord.js'
+import DisTube, { Playlist, Queue, Song } from 'distube'
+import {
+  APIInteractionGuildMember,
+  GuildMember,
+  TextBasedChannel,
+  GuildTextBasedChannel,
+} from 'discord.js'
+
+import { ILogger } from './logger'
+import { IDiscordClient } from './discordClient'
+import { VoiceMember } from '../services/voiceService'
+
 import QueueMessage from '../embeds/queueMessage'
+import AddSongMessage from '../embeds/addSongMessage'
 import EmbeddedMessage from '../embeds/embeddedMessage'
-import { VoiceMember } from '../adapters/voiceAdapter'
+import PlaySongMessage from '../embeds/playSongMessage'
+import AddPlaylistMessage from '../embeds/addPlaylistMessage'
 
 export interface IMusicInteraction {
   member: APIInteractionGuildMember | VoiceMember | null
-  channel: unknown
+  channel: TextBasedChannel | null
   guildId: string | null
 }
 
@@ -89,14 +96,15 @@ export default class DistubeClient implements IDistubeClient {
   }
 
   async play(query: string, interaction: IMusicInteraction): Promise<string | null> {
-    const member = interaction.member as GuildMember | null
+    const member = <GuildMember | null>interaction.member
     const voiceChannel = member?.voice.channel
 
     if (!voiceChannel) return 'Member not in voice channel'
+    if (!interaction.channel) return 'Invalid text channel'
 
     await this.client.play(voiceChannel, query, {
       member,
-      textChannel: interaction.channel as TextChannel,
+      textChannel: <GuildTextBasedChannel>interaction.channel,
     })
     return null
   }

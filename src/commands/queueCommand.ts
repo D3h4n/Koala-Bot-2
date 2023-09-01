@@ -1,6 +1,7 @@
 import Command from '../command'
 import assert from 'assert'
-import type { ICommandAdapter, Option } from '../adapters/commandAdapter'
+import type { IServiceProvider } from '../services/serviceProvider'
+import type { Option } from '../commandHandler'
 
 export default class QueueCommand extends Command {
   constructor() {
@@ -9,7 +10,7 @@ export default class QueueCommand extends Command {
     ])
   }
 
-  async run(commandAdapter: ICommandAdapter, options: Map<string, Option>) {
+  async run(commandAdapter: IServiceProvider, options: Map<string, Option>) {
     const page = options.get('page')
     assert(
       page === undefined || typeof page === 'number',

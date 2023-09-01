@@ -1,6 +1,7 @@
 import Command from '../command'
 import assert from 'assert'
-import type { ICommandAdapter, Option } from '../adapters/commandAdapter'
+import type { IServiceProvider } from '../services/serviceProvider'
+import type { Option } from '../commandHandler'
 
 export default class PlayCommand extends Command {
   constructor() {
@@ -9,7 +10,7 @@ export default class PlayCommand extends Command {
     ])
   }
 
-  async run(commandAdapter: ICommandAdapter, options: Map<string, Option>) {
+  async run(commandAdapter: IServiceProvider, options: Map<string, Option>) {
     const song = options.get('song')
     assert(typeof song === 'string', 'song should always be a string')
     await commandAdapter.message.defer()

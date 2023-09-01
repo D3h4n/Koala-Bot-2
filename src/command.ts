@@ -5,7 +5,8 @@ import {
   SlashCommandBuilder,
 } from 'discord.js'
 import type { ApplicationCommandOptionAllowedChannelTypes } from '@discordjs/builders'
-import type { ICommandAdapter, Option } from './adapters/commandAdapter'
+import type { IServiceProvider } from './services/serviceProvider'
+import { Option } from './commandHandler'
 
 type CommandOptionType = keyof typeof ApplicationCommandOptionType
 
@@ -52,7 +53,7 @@ export default abstract class Command {
     this.permissions = permissions
   }
 
-  abstract run(commandAdapter: ICommandAdapter, options?: Map<string, Option>): Promise<void>
+  abstract run(commandAdapter: IServiceProvider, options?: Map<string, Option>): Promise<void>
 
   public toSlashCommand(): SlashCommandBuilder {
     const command = new SlashCommandBuilder().setName(this.name).setDescription(this.description)

@@ -1,8 +1,8 @@
 import QueueMessage from '../embeds/queueMessage'
 import type EmbeddedMessage from '../embeds/embeddedMessage'
-import type { IDistubeClient, IMusicInteraction } from '../services/distubeClient'
+import type { IDistubeClient, IMusicInteraction } from '../infrastructure/distubeClient'
 
-export interface IMusicAdapter {
+export interface IMusicService {
   play: (query: string) => Promise<string | null>
   tryPause: () => Promise<boolean>
   tryResume: () => Promise<boolean>
@@ -13,7 +13,7 @@ export interface IMusicAdapter {
   remove: (position: number) => Promise<string | null>
 }
 
-export default class MusicAdapter implements IMusicAdapter {
+export default class MusicService implements IMusicService {
   private readonly distube: IDistubeClient
   private readonly interaction: IMusicInteraction
 

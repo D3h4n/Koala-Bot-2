@@ -1,6 +1,6 @@
 import { APIInteractionGuildMember, PermissionsBitField } from 'discord.js'
 
-export interface IVoiceAdapter {
+export interface IVoiceService {
   moveAll: (channel: string) => Promise<string | null>
 }
 
@@ -21,7 +21,7 @@ export interface IVoiceInteraction {
   member: APIInteractionGuildMember | VoiceMember | null
 }
 
-export default class VoiceAdapter implements IVoiceAdapter {
+export default class VoiceService implements IVoiceService {
   interaction: IVoiceInteraction
 
   constructor(interaction: IVoiceInteraction) {

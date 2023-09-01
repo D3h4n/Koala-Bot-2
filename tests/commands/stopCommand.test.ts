@@ -1,10 +1,11 @@
-import CommandAdapter from '../../src/adapters/commandAdapter'
-import StopCommand from '../../src/commands/stopCommand'
 import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from '../mocks'
+
+import ServiceProvider from '../../src/services/serviceProvider'
+import StopCommand from '../../src/commands/stopCommand'
 
 describe('The stop command', () => {
   it('can stop playing a song', async () => {
-    const commandAdapter = new CommandAdapter(
+    const serviceProvider = new ServiceProvider(
       mockMessageAdapter(),
       mockMusicAdapter(),
       mockVoiceAdapter()
@@ -14,10 +15,10 @@ describe('The stop command', () => {
     const stop = new StopCommand()
 
     // Act
-    await stop.run(commandAdapter)
+    await stop.run(serviceProvider)
 
     // Assert
-    expect(commandAdapter.music.tryStop).toHaveBeenCalled()
-    expect(commandAdapter.message.noReply).toHaveBeenCalled()
+    expect(serviceProvider.music.tryStop).toHaveBeenCalled()
+    expect(serviceProvider.message.noReply).toHaveBeenCalled()
   })
 })

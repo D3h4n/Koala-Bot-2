@@ -1,7 +1,7 @@
 import EmbeddedMessage from '../embeds/embeddedMessage'
 import type { EmbedBuilder } from 'discord.js'
 
-export interface IMessageAdapter {
+export interface IMessageService {
   reply: (message: string | EmbeddedMessage) => Promise<void>
   defer: () => Promise<void>
   noReply: () => Promise<void>
@@ -18,7 +18,7 @@ export interface IRepliable {
   deleteReply: () => Promise<unknown>
 }
 
-export default class MessageAdapter implements IMessageAdapter {
+export default class MessageService implements IMessageService {
   readonly interaction: IRepliable
 
   constructor(interaction: IRepliable) {

@@ -1,11 +1,11 @@
-import MusicAdapter from '../../src/adapters/musicAdapter'
+import MusicService from '../../src/services/musicService'
 import EmbeddedMessage from '../../src/embeds/embeddedMessage'
 import QueueMessage from '../../src/embeds/queueMessage'
-import { IMusicInteraction } from '../../src/services/distubeClient'
+import { IMusicInteraction } from '../../src/infrastructure/distubeClient'
 import { mockDistubeClient } from '../mocks'
 import * as fc from 'fast-check'
 
-describe('The Music Adapter', () => {
+describe('The Music Service', () => {
   describe('can play music', () => {
     it.each([
       'A fancy song',
@@ -15,7 +15,7 @@ describe('The Music Adapter', () => {
     ])('successfully', async (query) => {
       const interaction: IMusicInteraction = {
         member: null,
-        channel: undefined,
+        channel: null,
         guildId: 'A valid guildId',
       }
 
@@ -23,10 +23,10 @@ describe('The Music Adapter', () => {
       distubeClient.play = jest.fn(async () => null)
 
       // Arrange
-      const musicAdapter = new MusicAdapter(interaction, distubeClient)
+      const musicService = new MusicService(interaction, distubeClient)
 
       // Act
-      const result = await musicAdapter.play(query)
+      const result = await musicService.play(query)
 
       // Assert
       expect(distubeClient.play).toHaveBeenCalledWith(query, interaction)
@@ -38,7 +38,7 @@ describe('The Music Adapter', () => {
       async (expectedResult) => {
         const interaction: IMusicInteraction = {
           member: null,
-          channel: undefined,
+          channel: null,
           guildId: 'A valid guildId',
         }
 
@@ -48,10 +48,10 @@ describe('The Music Adapter', () => {
         const query = 'A cool song'
 
         // Arrange
-        const musicAdapter = new MusicAdapter(interaction, distubeClient)
+        const musicService = new MusicService(interaction, distubeClient)
 
         // Act
-        const result = await musicAdapter.play(query)
+        const result = await musicService.play(query)
 
         // Assert
         expect(distubeClient.play).toHaveBeenCalledWith(query, interaction)
@@ -64,7 +64,7 @@ describe('The Music Adapter', () => {
     it.each(['2134812341234321423', '3141232312423412341324'])('successfully', async (guildId) => {
       const interaction: IMusicInteraction = {
         member: null,
-        channel: undefined,
+        channel: null,
         guildId: guildId,
       }
 
@@ -72,10 +72,10 @@ describe('The Music Adapter', () => {
       distubeClient.tryPause = jest.fn(async () => true)
 
       // Arrange
-      const musicAdapter = new MusicAdapter(interaction, distubeClient)
+      const musicService = new MusicService(interaction, distubeClient)
 
       // Act
-      const result = await musicAdapter.tryPause()
+      const result = await musicService.tryPause()
 
       // Assert
       expect(distubeClient.tryPause).toHaveBeenCalledWith(guildId)
@@ -86,7 +86,7 @@ describe('The Music Adapter', () => {
       const guildId = '12312423412342134'
       const interaction: IMusicInteraction = {
         member: null,
-        channel: undefined,
+        channel: null,
         guildId: guildId,
       }
 
@@ -94,10 +94,10 @@ describe('The Music Adapter', () => {
       distubeClient.tryPause = jest.fn(async () => expectedResult)
 
       // Arrange
-      const musicAdapter = new MusicAdapter(interaction, distubeClient)
+      const musicService = new MusicService(interaction, distubeClient)
 
       // Act
-      const result = await musicAdapter.tryPause()
+      const result = await musicService.tryPause()
 
       // Assert
       expect(distubeClient.tryPause).toHaveBeenCalledWith(guildId)
@@ -107,17 +107,17 @@ describe('The Music Adapter', () => {
     it('returns false when guildId not specified', async () => {
       const interaction: IMusicInteraction = {
         member: null,
-        channel: undefined,
+        channel: null,
         guildId: null,
       }
 
       const distubeClient = mockDistubeClient()
 
       // Arrange
-      const musicAdapter = new MusicAdapter(interaction, distubeClient)
+      const musicService = new MusicService(interaction, distubeClient)
 
       // Act
-      const result = await musicAdapter.tryPause()
+      const result = await musicService.tryPause()
 
       // Assert
       expect(distubeClient.tryPause).not.toHaveBeenCalled()
@@ -129,7 +129,7 @@ describe('The Music Adapter', () => {
     it.each(['2134812341234321423', '3141232312423412341324'])('successfully', async (guildId) => {
       const interaction: IMusicInteraction = {
         member: null,
-        channel: undefined,
+        channel: null,
         guildId: guildId,
       }
 
@@ -137,10 +137,10 @@ describe('The Music Adapter', () => {
       distubeClient.tryResume = jest.fn(async () => true)
 
       // Arrange
-      const musicAdapter = new MusicAdapter(interaction, distubeClient)
+      const musicService = new MusicService(interaction, distubeClient)
 
       // Act
-      const result = await musicAdapter.tryResume()
+      const result = await musicService.tryResume()
 
       // Assert
       expect(distubeClient.tryResume).toHaveBeenCalledWith(guildId)
@@ -151,7 +151,7 @@ describe('The Music Adapter', () => {
       const guildId = '12312423412342134'
       const interaction: IMusicInteraction = {
         member: null,
-        channel: undefined,
+        channel: null,
         guildId: guildId,
       }
 
@@ -159,10 +159,10 @@ describe('The Music Adapter', () => {
       distubeClient.tryResume = jest.fn(async () => expectedResult)
 
       // Arrange
-      const musicAdapter = new MusicAdapter(interaction, distubeClient)
+      const musicService = new MusicService(interaction, distubeClient)
 
       // Act
-      const result = await musicAdapter.tryResume()
+      const result = await musicService.tryResume()
 
       // Assert
       expect(distubeClient.tryResume).toHaveBeenCalledWith(guildId)
@@ -172,17 +172,17 @@ describe('The Music Adapter', () => {
     it('returns false when guildId not specified', async () => {
       const interaction: IMusicInteraction = {
         member: null,
-        channel: undefined,
+        channel: null,
         guildId: null,
       }
 
       const distubeClient = mockDistubeClient()
 
       // Arrange
-      const musicAdapter = new MusicAdapter(interaction, distubeClient)
+      const musicService = new MusicService(interaction, distubeClient)
 
       // Act
-      const result = await musicAdapter.tryResume()
+      const result = await musicService.tryResume()
 
       // Assert
       expect(distubeClient.tryResume).not.toHaveBeenCalled()
@@ -196,7 +196,7 @@ describe('The Music Adapter', () => {
       (guildId) => {
         const interaction: IMusicInteraction = {
           member: null,
-          channel: undefined,
+          channel: null,
           guildId: guildId,
         }
 
@@ -206,10 +206,10 @@ describe('The Music Adapter', () => {
         distubeClient.getQueue = jest.fn(() => embed)
 
         // Arrange
-        const musicAdapter = new MusicAdapter(interaction, distubeClient)
+        const musicService = new MusicService(interaction, distubeClient)
 
         // Act
-        const result = musicAdapter.getQueue()
+        const result = musicService.getQueue()
 
         // Assert
         expect(distubeClient.getQueue).toHaveBeenCalledWith(1, guildId)
@@ -223,7 +223,7 @@ describe('The Music Adapter', () => {
           const guildId = '1213123132421341'
           const interaction: IMusicInteraction = {
             member: null,
-            channel: undefined,
+            channel: null,
             guildId: guildId,
           }
 
@@ -233,10 +233,10 @@ describe('The Music Adapter', () => {
           distubeClient.getQueue = jest.fn(() => embed)
 
           // Arrange
-          const musicAdapter = new MusicAdapter(interaction, distubeClient)
+          const musicService = new MusicService(interaction, distubeClient)
 
           // Act
-          const result = musicAdapter.getQueue(page)
+          const result = musicService.getQueue(page)
 
           // Assert
           expect(distubeClient.getQueue).toHaveBeenCalledWith(page, guildId)
@@ -248,17 +248,17 @@ describe('The Music Adapter', () => {
     it('returns empty queue when guildId not specified', () => {
       const interaction: IMusicInteraction = {
         member: null,
-        channel: undefined,
+        channel: null,
         guildId: null,
       }
 
       const distubeClient = mockDistubeClient()
 
       // Arrange
-      const musicAdapter = new MusicAdapter(interaction, distubeClient)
+      const musicService = new MusicService(interaction, distubeClient)
 
       // Act
-      const result = musicAdapter.getQueue()
+      const result = musicService.getQueue()
 
       // Assert
       expect(distubeClient.getQueue).not.toHaveBeenCalled()
@@ -270,7 +270,7 @@ describe('The Music Adapter', () => {
     it.each(['2134812341234321423', '3141232312423412341324'])('successfully', async (guildId) => {
       const interaction: IMusicInteraction = {
         member: null,
-        channel: undefined,
+        channel: null,
         guildId: guildId,
       }
 
@@ -278,10 +278,10 @@ describe('The Music Adapter', () => {
       distubeClient.tryShuffle = jest.fn(async () => true)
 
       // Arrange
-      const musicAdapter = new MusicAdapter(interaction, distubeClient)
+      const musicService = new MusicService(interaction, distubeClient)
 
       // Act
-      const result = await musicAdapter.tryShuffle()
+      const result = await musicService.tryShuffle()
 
       // Assert
       expect(distubeClient.tryShuffle).toHaveBeenCalledWith(guildId)
@@ -292,7 +292,7 @@ describe('The Music Adapter', () => {
       const guildId = '12312423412342134'
       const interaction: IMusicInteraction = {
         member: null,
-        channel: undefined,
+        channel: null,
         guildId: guildId,
       }
 
@@ -300,10 +300,10 @@ describe('The Music Adapter', () => {
       distubeClient.tryShuffle = jest.fn(async () => expectedResult)
 
       // Arrange
-      const musicAdapter = new MusicAdapter(interaction, distubeClient)
+      const musicService = new MusicService(interaction, distubeClient)
 
       // Act
-      const result = await musicAdapter.tryShuffle()
+      const result = await musicService.tryShuffle()
 
       // Assert
       expect(distubeClient.tryShuffle).toHaveBeenCalledWith(guildId)
@@ -313,17 +313,17 @@ describe('The Music Adapter', () => {
     it('returns false when guildId not specified', async () => {
       const interaction: IMusicInteraction = {
         member: null,
-        channel: undefined,
+        channel: null,
         guildId: null,
       }
 
       const distubeClient = mockDistubeClient()
 
       // Arrange
-      const musicAdapter = new MusicAdapter(interaction, distubeClient)
+      const musicService = new MusicService(interaction, distubeClient)
 
       // Act
-      const result = await musicAdapter.tryShuffle()
+      const result = await musicService.tryShuffle()
 
       // Assert
       expect(distubeClient.tryShuffle).not.toHaveBeenCalled()
@@ -335,7 +335,7 @@ describe('The Music Adapter', () => {
     it.each(['2134812341234321423', '3141232312423412341324'])('successfully', async (guildId) => {
       const interaction: IMusicInteraction = {
         member: null,
-        channel: undefined,
+        channel: null,
         guildId: guildId,
       }
 
@@ -343,10 +343,10 @@ describe('The Music Adapter', () => {
       distubeClient.trySkip = jest.fn(async () => true)
 
       // Arrange
-      const musicAdapter = new MusicAdapter(interaction, distubeClient)
+      const musicService = new MusicService(interaction, distubeClient)
 
       // Act
-      const result = await musicAdapter.trySkip()
+      const result = await musicService.trySkip()
 
       // Assert
       expect(distubeClient.trySkip).toHaveBeenCalledWith(guildId)
@@ -357,7 +357,7 @@ describe('The Music Adapter', () => {
       const guildId = '12312423412342134'
       const interaction: IMusicInteraction = {
         member: null,
-        channel: undefined,
+        channel: null,
         guildId: guildId,
       }
 
@@ -365,10 +365,10 @@ describe('The Music Adapter', () => {
       distubeClient.trySkip = jest.fn(async () => expectedResult)
 
       // Arrange
-      const musicAdapter = new MusicAdapter(interaction, distubeClient)
+      const musicService = new MusicService(interaction, distubeClient)
 
       // Act
-      const result = await musicAdapter.trySkip()
+      const result = await musicService.trySkip()
 
       // Assert
       expect(distubeClient.trySkip).toHaveBeenCalledWith(guildId)
@@ -378,17 +378,17 @@ describe('The Music Adapter', () => {
     it('returns false when guildId not specified', async () => {
       const interaction: IMusicInteraction = {
         member: null,
-        channel: undefined,
+        channel: null,
         guildId: null,
       }
 
       const distubeClient = mockDistubeClient()
 
       // Arrange
-      const musicAdapter = new MusicAdapter(interaction, distubeClient)
+      const musicService = new MusicService(interaction, distubeClient)
 
       // Act
-      const result = await musicAdapter.trySkip()
+      const result = await musicService.trySkip()
 
       // Assert
       expect(distubeClient.trySkip).not.toHaveBeenCalled()
@@ -400,7 +400,7 @@ describe('The Music Adapter', () => {
     it.each(['2134812341234321423', '3141232312423412341324'])('successfully', async (guildId) => {
       const interaction: IMusicInteraction = {
         member: null,
-        channel: undefined,
+        channel: null,
         guildId: guildId,
       }
 
@@ -408,10 +408,10 @@ describe('The Music Adapter', () => {
       distubeClient.tryStop = jest.fn(async () => true)
 
       // Arrange
-      const musicAdapter = new MusicAdapter(interaction, distubeClient)
+      const musicService = new MusicService(interaction, distubeClient)
 
       // Act
-      const result = await musicAdapter.tryStop()
+      const result = await musicService.tryStop()
 
       // Assert
       expect(distubeClient.tryStop).toHaveBeenCalledWith(guildId)
@@ -422,7 +422,7 @@ describe('The Music Adapter', () => {
       const guildId = '12312423412342134'
       const interaction: IMusicInteraction = {
         member: null,
-        channel: undefined,
+        channel: null,
         guildId: guildId,
       }
 
@@ -430,10 +430,10 @@ describe('The Music Adapter', () => {
       distubeClient.tryStop = jest.fn(async () => expectedResult)
 
       // Arrange
-      const musicAdapter = new MusicAdapter(interaction, distubeClient)
+      const musicService = new MusicService(interaction, distubeClient)
 
       // Act
-      const result = await musicAdapter.tryStop()
+      const result = await musicService.tryStop()
 
       // Assert
       expect(distubeClient.tryStop).toHaveBeenCalledWith(guildId)
@@ -443,17 +443,17 @@ describe('The Music Adapter', () => {
     it('returns false when guildId not specified', async () => {
       const interaction: IMusicInteraction = {
         member: null,
-        channel: undefined,
+        channel: null,
         guildId: null,
       }
 
       const distubeClient = mockDistubeClient()
 
       // Arrange
-      const musicAdapter = new MusicAdapter(interaction, distubeClient)
+      const musicService = new MusicService(interaction, distubeClient)
 
       // Act
-      const result = await musicAdapter.tryStop()
+      const result = await musicService.tryStop()
 
       // Assert
       expect(distubeClient.tryStop).not.toHaveBeenCalled()
@@ -468,7 +468,7 @@ describe('The Music Adapter', () => {
     ])('successfully', async (position, guildId) => {
       const interaction: IMusicInteraction = {
         member: null,
-        channel: undefined,
+        channel: null,
         guildId: guildId,
       }
 
@@ -478,10 +478,10 @@ describe('The Music Adapter', () => {
       distubeClient.remove = jest.fn(async () => songName)
 
       // Arrange
-      const musicAdapter = new MusicAdapter(interaction, distubeClient)
+      const musicService = new MusicService(interaction, distubeClient)
 
       // Act
-      const result = await musicAdapter.remove(position)
+      const result = await musicService.remove(position)
 
       // Assert
       expect(distubeClient.remove).toHaveBeenCalledWith(position, guildId)
@@ -494,7 +494,7 @@ describe('The Music Adapter', () => {
         const guildId = '12341341231231'
         const interaction: IMusicInteraction = {
           member: null,
-          channel: undefined,
+          channel: null,
           guildId: guildId,
         }
 
@@ -502,10 +502,10 @@ describe('The Music Adapter', () => {
         distubeClient.remove = jest.fn(async () => expectedResult)
 
         // Arrange
-        const musicAdapter = new MusicAdapter(interaction, distubeClient)
+        const musicService = new MusicService(interaction, distubeClient)
 
         // Act
-        const result = await musicAdapter.remove(2)
+        const result = await musicService.remove(2)
 
         // Assert
         expect(distubeClient.remove).toHaveBeenCalledWith(2, guildId)
@@ -516,17 +516,17 @@ describe('The Music Adapter', () => {
     it.each([7, 3, 2, 43])('and return null if the guildId is not specified', async (position) => {
       const interaction: IMusicInteraction = {
         member: null,
-        channel: undefined,
+        channel: null,
         guildId: null,
       }
 
       const distubeClient = mockDistubeClient()
 
       // Arrange
-      const musicAdapter = new MusicAdapter(interaction, distubeClient)
+      const musicService = new MusicService(interaction, distubeClient)
 
       // Act
-      const result = await musicAdapter.remove(position)
+      const result = await musicService.remove(position)
 
       // Assert
       expect(distubeClient.remove).not.toHaveBeenCalled()

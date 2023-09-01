@@ -1,12 +1,12 @@
 import Command from '../command'
-import { ICommandAdapter } from '../adapters/commandAdapter'
+import { IServiceProvider } from '../services/serviceProvider'
 
 export default class ShuffleCommand extends Command {
   constructor() {
     super('shuffle', 'Shuffle the music queue.')
   }
 
-  async run(commandAdapter: ICommandAdapter) {
+  async run(commandAdapter: IServiceProvider) {
     await commandAdapter.music.tryShuffle()
     await commandAdapter.message.reply('Shuffled Queue')
   }

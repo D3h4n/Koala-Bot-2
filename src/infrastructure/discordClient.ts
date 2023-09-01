@@ -1,5 +1,5 @@
 import { ActivityType, Client, IntentsBitField, TextChannel } from 'discord.js'
-import { ICommandHandler } from './commandHandler'
+import { ICommandHandler } from '../commandHandler'
 import { ILogger } from './logger'
 
 export interface IDiscordClient {

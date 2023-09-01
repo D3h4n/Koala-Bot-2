@@ -1,7 +1,8 @@
-import ChooseCommand from '../../src/commands/chooseCommand'
 import * as fc from 'fast-check'
 import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from '../mocks'
-import CommandAdapter from '../../src/adapters/commandAdapter'
+
+import ServiceProvider from '../../src/services/serviceProvider'
+import ChooseCommand from '../../src/commands/chooseCommand'
 
 describe('The choose command', () => {
   it.each([
@@ -15,15 +16,15 @@ describe('The choose command', () => {
 
     // Act
     const choose = new ChooseCommand()
-    const commandAdapter = new CommandAdapter(
+    const serviceProvider = new ServiceProvider(
       mockMessageAdapter(),
       mockMusicAdapter(),
       mockVoiceAdapter()
     )
-    await choose.run(commandAdapter, options)
+    await choose.run(serviceProvider, options)
 
     // Assert
-    expect(replies).toContain((commandAdapter.message.reply as jest.Mock).mock.lastCall?.[0])
+    expect(replies).toContain((serviceProvider.message.reply as jest.Mock).mock.lastCall?.[0])
   })
 
   it('reply with a random choice from the given options', () => {
@@ -42,7 +43,7 @@ describe('The choose command', () => {
           // Arrange
           jest.spyOn(global.Math, 'random').mockReturnValue(randomValue)
           const choose = new ChooseCommand()
-          const commandAdapter = new CommandAdapter(
+          const serviceProvider = new ServiceProvider(
             mockMessageAdapter(),
             mockMusicAdapter(),
             mockVoiceAdapter()
@@ -51,10 +52,10 @@ describe('The choose command', () => {
           // Act
           // Note: for consistency, need to wait on async command to run completely before
           // assertions but can't use async await with fast-check
-          choose.run(commandAdapter, options).then(() => {
+          choose.run(serviceProvider, options).then(() => {
             // Assert
             const expectedIndex = Math.floor(randomValue * choices.length)
-            expect(commandAdapter.message.reply).toHaveBeenCalledWith(
+            expect(serviceProvider.message.reply).toHaveBeenCalledWith(
               `\`${choices[expectedIndex]}\``
             )
           })

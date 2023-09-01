@@ -1,10 +1,11 @@
-import CommandAdapter from '../../src/adapters/commandAdapter'
-import SkipCommand from '../../src/commands/skipCommand'
 import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from '../mocks'
+
+import ServiceProvider from '../../src/services/serviceProvider'
+import SkipCommand from '../../src/commands/skipCommand'
 
 describe('The skip command', () => {
   it('can skip a song', async () => {
-    const commandAdapter = new CommandAdapter(
+    const serviceProvider = new ServiceProvider(
       mockMessageAdapter(),
       mockMusicAdapter(),
       mockVoiceAdapter()
@@ -14,10 +15,10 @@ describe('The skip command', () => {
     const skip = new SkipCommand()
 
     // Act
-    await skip.run(commandAdapter)
+    await skip.run(serviceProvider)
 
     // Assert
-    expect(commandAdapter.music.trySkip).toHaveBeenCalled()
-    expect(commandAdapter.message.noReply).toHaveBeenCalled()
+    expect(serviceProvider.music.trySkip).toHaveBeenCalled()
+    expect(serviceProvider.message.noReply).toHaveBeenCalled()
   })
 })

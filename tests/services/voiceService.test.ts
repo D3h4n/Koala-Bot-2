@@ -1,8 +1,8 @@
-import VoiceAdapter, { IVoiceInteraction, VoiceMember } from '../../src/adapters/voiceAdapter'
+import VoiceService, { IVoiceInteraction, VoiceMember } from '../../src/services/voiceService'
 import { PermissionsBitField } from 'discord.js'
 import * as fc from 'fast-check'
 
-describe('The Voice Adapter', () => {
+describe('The Voice Service', () => {
   it('can move members between voice channels', () => {
     fc.assert(
       fc.property(
@@ -30,10 +30,10 @@ describe('The Voice Adapter', () => {
           }
 
           // Arrange
-          const voiceAdapter = new VoiceAdapter(interaction)
+          const voiceService = new VoiceService(interaction)
 
           // Act
-          voiceAdapter.moveAll(channel).then((result) => {
+          voiceService.moveAll(channel).then((result) => {
             // Assert
             expect(result).toEqual(null)
 
@@ -73,10 +73,10 @@ describe('The Voice Adapter', () => {
       const channel = 'A new channel'
 
       // Arrange
-      const voiceAdapter = new VoiceAdapter(interaction)
+      const voiceService = new VoiceService(interaction)
 
       // Act
-      const result = await voiceAdapter.moveAll(channel)
+      const result = await voiceService.moveAll(channel)
 
       // Assert
       expect(movedMember.voice.setChannel).not.toHaveBeenCalled()
@@ -95,10 +95,10 @@ describe('The Voice Adapter', () => {
       }
 
       // Arrange
-      const voiceAdapter = new VoiceAdapter(interaction)
+      const voiceService = new VoiceService(interaction)
 
       // Act
-      const result = await voiceAdapter.moveAll('A new channel')
+      const result = await voiceService.moveAll('A new channel')
 
       // Assert
       expect(typeof result).toBe('string')
@@ -109,10 +109,10 @@ describe('The Voice Adapter', () => {
       const channel = 'A really cool channel'
 
       // Arrange
-      const voiceAdapter = new VoiceAdapter(interaction)
+      const voiceService = new VoiceService(interaction)
 
       // Act
-      const result = await voiceAdapter.moveAll(channel)
+      const result = await voiceService.moveAll(channel)
 
       // Assert
       expect(typeof result).toBe('string')

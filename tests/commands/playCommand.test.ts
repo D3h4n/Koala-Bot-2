@@ -1,14 +1,15 @@
 import * as fc from 'fast-check'
-import PlayCommand from '../../src/commands/playCommand'
 import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from '../mocks'
-import CommandAdapter from '../../src/adapters/commandAdapter'
+
+import ServiceProvider from '../../src/services/serviceProvider'
+import PlayCommand from '../../src/commands/playCommand'
 
 describe('The play command', () => {
   it('can play a song', () => {
     fc.assert(
       fc.property(fc.string({ minLength: 1 }), (song) => {
         const options = new Map([['song', song]])
-        const commandAdapter = new CommandAdapter(
+        const serviceProvider = new ServiceProvider(
           mockMessageAdapter(),
           mockMusicAdapter(),
           mockVoiceAdapter()
@@ -20,13 +21,36 @@ describe('The play command', () => {
         // Act
         // Note: for consistency, need to wait on async command to run completely before
         // assertions but can't use async await with fast-check
-        play.run(commandAdapter, options).then(() => {
+        play.run(serviceProvider, options).then(() => {
           // Assert
-          expect(commandAdapter.message.defer).toHaveBeenCalled()
-          expect(commandAdapter.music.play).toHaveBeenCalledWith(song)
-          expect(commandAdapter.message.noReply).toHaveBeenCalled()
+          expect(serviceProvider.message.defer).toHaveBeenCalled()
+          expect(serviceProvider.music.play).toHaveBeenCalledWith(song)
+          expect(serviceProvider.message.noReply).toHaveBeenCalled()
         })
       })
     )
+  })
+
+  it('replies with an error message', async () => {
+    const song = 'A song'
+    const errorMsg = 'Some error message'
+    const options = new Map([['song', song]])
+    const serviceProvider = new ServiceProvider(
+      mockMessageAdapter(),
+      mockMusicAdapter(),
+      mockVoiceAdapter()
+    )
+    serviceProvider.music.play = jest.fn(async () => errorMsg)
+
+    // Arrange
+    const play = new PlayCommand()
+
+    // Act
+    await play.run(serviceProvider, options)
+
+    // Assert
+    expect(serviceProvider.message.defer).toHaveBeenCalled()
+    expect(serviceProvider.music.play).toHaveBeenCalledWith(song)
+    expect(serviceProvider.message.reply).toHaveBeenCalledWith(errorMsg)
   })
 })

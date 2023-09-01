@@ -53,8 +53,11 @@ the software design aspects of the project.
 - [x] Resume
 - [x] Skip
 - [x] Queue
-- [ ] Loop
 - [x] Stop
+- [ ] NowPlaying
+- [ ] Seek
+- [ ] Loop
+- [ ] Repeat
 
 ## TODO
 
@@ -67,3 +70,4 @@ the software design aspects of the project.
   - [ ] Commands are registered to some overarching router based on a path
   - [ ] Dependecies are injected based on needs instead of one object with all dependecies
         (non-music commands shouldn't know about the music adapter)
+- [ ] Shift Interface Definitions in to their own files within a domain sub folder

@@ -1,8 +1,8 @@
-import MessageAdapter, { IRepliable } from '../../src/adapters/messageAdapter'
+import MessageService, { IRepliable } from '../../src/services/messageService'
 import EmbeddedMessage from '../../src/embeds/embeddedMessage'
 import * as fc from 'fast-check'
 
-describe('The Message Adapter', () => {
+describe('The Message Service', () => {
   describe('can reply to an interaction', () => {
     describe('that has not been previously replied to', () => {
       it('with a string', () => {
@@ -18,10 +18,10 @@ describe('The Message Adapter', () => {
             }
 
             // Arrange
-            const messageAdapter = new MessageAdapter(interaction)
+            const messageService = new MessageService(interaction)
 
             // Act
-            messageAdapter.reply(message).then(() => {
+            messageService.reply(message).then(() => {
               // Assert
               expect(interaction.reply).toHaveBeenCalledWith(message)
             })
@@ -45,10 +45,10 @@ describe('The Message Adapter', () => {
         })
 
         // Arrange
-        const messageAdapter = new MessageAdapter(interaction)
+        const messageService = new MessageService(interaction)
 
         // Act
-        await messageAdapter.reply(embed)
+        await messageService.reply(embed)
 
         // Assert
         expect(interaction.reply).toHaveBeenCalledWith({ embeds: [embed.embed] })
@@ -69,10 +69,10 @@ describe('The Message Adapter', () => {
             }
 
             // Arrange
-            const messageAdapter = new MessageAdapter(interaction)
+            const messageService = new MessageService(interaction)
 
             // Act
-            messageAdapter.reply(message).then(() => {
+            messageService.reply(message).then(() => {
               // Assert
               expect(interaction.editReply).toHaveBeenCalledWith(message)
             })
@@ -97,10 +97,10 @@ describe('The Message Adapter', () => {
         })
 
         // Arrange
-        const messageAdapter = new MessageAdapter(interaction)
+        const messageService = new MessageService(interaction)
 
         // Act
-        await messageAdapter.reply(embed)
+        await messageService.reply(embed)
 
         // Assert
         expect(interaction.editReply).toHaveBeenCalledWith({ embeds: [embed.embed] })
@@ -121,10 +121,10 @@ describe('The Message Adapter', () => {
             }
 
             // Arrange
-            const messageAdapter = new MessageAdapter(interaction)
+            const messageService = new MessageService(interaction)
 
             // Act
-            messageAdapter.reply(message).then(() => {
+            messageService.reply(message).then(() => {
               // Assert
               expect(interaction.editReply).toHaveBeenCalledWith(message)
             })
@@ -147,9 +147,9 @@ describe('The Message Adapter', () => {
           description: 'Free pizza for all!!!',
         })
 
-        const messageAdapter = new MessageAdapter(interaction)
+        const messageService = new MessageService(interaction)
 
-        await messageAdapter.reply(embed)
+        await messageService.reply(embed)
 
         expect(interaction.editReply).toHaveBeenCalledWith({ embeds: [embed.embed] })
       })
@@ -168,10 +168,10 @@ describe('The Message Adapter', () => {
       }
 
       // Arrange
-      const messageAdapter = new MessageAdapter(interaction)
+      const messageService = new MessageService(interaction)
 
       // Act
-      await messageAdapter.noReply()
+      await messageService.noReply()
 
       // Assert
       expect(interaction.deferReply).toHaveBeenCalled()
@@ -189,10 +189,10 @@ describe('The Message Adapter', () => {
       }
 
       // Arrange
-      const messageAdapter = new MessageAdapter(interaction)
+      const messageService = new MessageService(interaction)
 
       // Act
-      await messageAdapter.noReply()
+      await messageService.noReply()
 
       // Assert
       expect(interaction.deferReply).not.toHaveBeenCalled()
@@ -210,10 +210,10 @@ describe('The Message Adapter', () => {
       }
 
       // Arrange
-      const messageAdapter = new MessageAdapter(interaction)
+      const messageService = new MessageService(interaction)
 
       // Act
-      await messageAdapter.noReply()
+      await messageService.noReply()
 
       // Assert
       expect(interaction.deferReply).not.toHaveBeenCalled()
@@ -233,10 +233,10 @@ describe('The Message Adapter', () => {
       }
 
       // Arrange
-      const messageAdapter = new MessageAdapter(interaction)
+      const messageService = new MessageService(interaction)
 
       // Act
-      await messageAdapter.defer()
+      await messageService.defer()
 
       // Assert
       expect(interaction.deferReply).toHaveBeenCalled()
@@ -253,10 +253,10 @@ describe('The Message Adapter', () => {
       }
 
       // Arrange
-      const messageAdapter = new MessageAdapter(interaction)
+      const messageService = new MessageService(interaction)
 
       // Act
-      await messageAdapter.defer()
+      await messageService.defer()
 
       // Assert
       expect(interaction.deferReply).not.toHaveBeenCalled()
@@ -273,10 +273,10 @@ describe('The Message Adapter', () => {
       }
 
       // Arrange
-      const messageAdapter = new MessageAdapter(interaction)
+      const messageService = new MessageService(interaction)
 
       // Act
-      await messageAdapter.defer()
+      await messageService.defer()
 
       // Assert
       expect(interaction.deferReply).not.toHaveBeenCalled()

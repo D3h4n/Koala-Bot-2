@@ -1,22 +1,23 @@
-import CommandAdapter from '../../src/adapters/commandAdapter'
-import ShuffleCommand from '../../src/commands/shuffleCommand'
 import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from '../mocks'
+
+import ServiceProvider from '../../src/services/serviceProvider'
+import ShuffleCommand from '../../src/commands/shuffleCommand'
 
 describe('The shuffle command', () => {
   it('can shuffle a song', async () => {
     // Arrange
     const shuffle = new ShuffleCommand()
-    const commandAdapter = new CommandAdapter(
+    const serviceProvider = new ServiceProvider(
       mockMessageAdapter(),
       mockMusicAdapter(),
       mockVoiceAdapter()
     )
 
     // Act
-    await shuffle.run(commandAdapter)
+    await shuffle.run(serviceProvider)
 
     // Assert
-    expect(commandAdapter.music.tryShuffle).toHaveBeenCalled()
-    expect(commandAdapter.message.reply).toHaveBeenCalledWith('Shuffled Queue')
+    expect(serviceProvider.music.tryShuffle).toHaveBeenCalled()
+    expect(serviceProvider.message.reply).toHaveBeenCalledWith('Shuffled Queue')
   })
 })

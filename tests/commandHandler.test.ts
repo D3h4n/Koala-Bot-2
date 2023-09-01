@@ -1,12 +1,12 @@
-import CommandHandler from '../src/services/commandHandler'
+import CommandHandler from '../src/commandHandler'
 import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from './mocks'
 import Command from '../src/command'
-import CommandAdapter from '../src/adapters/commandAdapter'
+import ServiceProvider from '../src/services/serviceProvider'
 
 describe('The command handler after receiving a command', () => {
   describe('that exists', () => {
-    it.each(['play', 'pick-a-game'])('can run the command', (name) => {
-      const commandAdapter = new CommandAdapter(
+    it.each(['play', 'pick-a-game'])('can run the command', async (name) => {
+      const serviceProvider = new ServiceProvider(
         mockMessageAdapter(),
         mockMusicAdapter(),
         mockVoiceAdapter()
@@ -23,7 +23,7 @@ describe('The command handler after receiving a command', () => {
       const commands = new CommandHandler([command])
 
       // Act
-      commands.handle(name, new Map(), commandAdapter)
+      await commands.handle(name, new Map(), serviceProvider)
 
       // Assert
       expect(command.run).toHaveBeenCalled()
@@ -38,8 +38,8 @@ describe('The command handler after receiving a command', () => {
           ['num', 123],
         ]),
       },
-    ])('can run the command with options', ({ commandName: name, options }) => {
-      const commandAdapter = new CommandAdapter(
+    ])('can run the command with options', async ({ commandName: name, options }) => {
+      const serviceProvider = new ServiceProvider(
         mockMessageAdapter(),
         mockMusicAdapter(),
         mockVoiceAdapter()
@@ -57,27 +57,28 @@ describe('The command handler after receiving a command', () => {
       const commands = new CommandHandler([command])
 
       // Act
-      commands.handle(name, options, commandAdapter)
+      await commands.handle(name, options, serviceProvider)
 
       // Assert
-      expect(command.run).toHaveBeenCalledWith(commandAdapter, options)
+      expect(command.run).toHaveBeenCalledWith(serviceProvider, options)
     })
   })
 
   describe('that does not exist', () => {
-    it('throws an error', () => {
+    it('throws an error', async () => {
+      const serviceProvider = new ServiceProvider(
+        mockMessageAdapter(),
+        mockMusicAdapter(),
+        mockVoiceAdapter()
+      )
+
+      // Arrange
       const commands = new CommandHandler([])
 
-      const test = () => {
-        const commandAdapter = new CommandAdapter(
-          mockMessageAdapter(),
-          mockMusicAdapter(),
-          mockVoiceAdapter()
-        )
-        commands.handle('non-existant-command', new Map(), commandAdapter)
-      }
-
-      expect(test).toThrow(Error)
+      // Act/Assert
+      await expect(
+        async () => await commands.handle('non-existant-command', new Map(), serviceProvider)
+      ).rejects.toThrow()
     })
   })
 })
