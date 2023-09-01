@@ -6,7 +6,7 @@ import SoundCloudPlugin from '@distube/soundcloud'
 import AddPlaylistMessage from '../embeds/addPlaylistMessage'
 import PlaySongMessage from '../embeds/playSongMessage'
 import AddSongMessage from '../embeds/addSongMessage'
-import { APIInteractionGuildMember, GuildMember, TextChannel, VoiceChannel } from 'discord.js'
+import { APIInteractionGuildMember, GuildMember, TextChannel } from 'discord.js'
 import QueueMessage from '../embeds/queueMessage'
 import EmbeddedMessage from '../embeds/embeddedMessage'
 import { VoiceMember } from '../adapters/voiceAdapter'
@@ -94,7 +94,7 @@ export default class DistubeClient implements IDistubeClient {
 
     if (!voiceChannel) return 'Member not in voice channel'
 
-    await this.client.play(voiceChannel as VoiceChannel, query, {
+    await this.client.play(voiceChannel, query, {
       member,
       textChannel: interaction.channel as TextChannel,
     })
