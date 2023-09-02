@@ -1,4 +1,4 @@
-import { ILogger } from '../domain/infrastructure/ILogger'
+import ILogger from '../domain/infrastructure/ILogger'
 
 export default class MyLogger implements ILogger {
   info(msg: string) {

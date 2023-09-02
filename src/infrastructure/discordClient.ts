@@ -1,13 +1,13 @@
-import { ICommandHandler } from '../commandHandler'
-import { ILogger } from '../domain/infrastructure/ILogger'
-import { IDiscordClient } from '../domain/infrastructure/IDiscordClient'
-import { ActivityType, Client, IntentsBitField, TextChannel } from 'discord.js'
+import IInteractionProducer from 'src/domain/infrastructure/IInteractionProducter'
+import ILogger from '../domain/infrastructure/ILogger'
+import { ActivityType, ChatInputCommandInteraction, Client, IntentsBitField } from 'discord.js'
+import IClientProvider from 'src/domain/infrastructure/IClientProvider'
 
-export default class DiscordClient implements IDiscordClient {
-  client: Client<boolean>
+export default class DiscordClient implements IInteractionProducer, IClientProvider {
+  private readonly discordClient: Client<boolean>
 
   constructor() {
-    this.client = new Client({
+    this.discordClient = new Client({
       intents: [
         IntentsBitField.Flags.Guilds,
         IntentsBitField.Flags.GuildMessages,
@@ -26,18 +26,19 @@ export default class DiscordClient implements IDiscordClient {
     })
   }
 
-  registerEventHandlers(commandHandler: ICommandHandler, logger: ILogger) {
-    this.client
-      .on('ready', () => logger.info('Running'))
-      .on('interactionCreate', async (interaction) => {
-        logger.info(`Received interaction ${interaction.id}`)
-        if (!interaction.isChatInputCommand() || !interaction.guildId) return
+  get client() {
+    return this.discordClient
+  }
 
-        await commandHandler.handleInteraction(interaction)
-        logger.info(
-          `User "${interaction.user.tag}" used command "${interaction.commandName}" in ` +
-            `channel "${(<TextChannel | null>interaction.channel)?.name}"`
-        )
+  registerCommandHandler(
+    handler: (interaction: ChatInputCommandInteraction) => void,
+    logger?: ILogger
+  ) {
+    this.client
+      .on('ready', () => logger?.info('Running'))
+      .on('interactionCreate', (interaction) => {
+        if (!interaction.isChatInputCommand() || !interaction.guildId) return
+        handler(interaction)
       })
   }
 

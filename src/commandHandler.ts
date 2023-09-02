@@ -1,58 +1,55 @@
-import type { ChatInputCommandInteraction } from 'discord.js'
+import type { ChatInputCommandInteraction, TextChannel } from 'discord.js'
 
-import type { IDistubeClient } from './domain/infrastructure/IDistubeClient'
-import { IServiceProvider } from './domain/services/IServiceProvider'
-import type { ILogger } from './domain/infrastructure/ILogger'
+import type IDistubeClient from './domain/infrastructure/IDistubeClient'
+import IServiceProvider from './domain/services/IServiceProvider'
+import type ILogger from './domain/infrastructure/ILogger'
 
 import Command from './command'
 import ServiceProvider from './services/serviceProvider'
+import { CommandOption } from './domain/CommandOption'
+import IInteractionProducer from './domain/infrastructure/IInteractionProducter'
 
-export type Option = string | number | boolean | undefined
-
-export interface ICommandHandler {
-  handle: (
-    commandName: string,
-    options: Map<string, Option>,
-    serviceProvider: IServiceProvider
-  ) => Promise<void>
-  handleInteraction: (interaction: ChatInputCommandInteraction) => Promise<void>
-}
-
-export default class CommandHandler implements ICommandHandler {
+export default class CommandHandler {
   private readonly commands: Map<string, Command>
-  private readonly distubeClient?: IDistubeClient
-  private readonly logger?: ILogger
 
-  constructor(commands: Command[], distubeClient?: IDistubeClient, logger?: ILogger) {
+  constructor(
+    commands: Command[],
+    interactionProvider?: IInteractionProducer,
+    distubeClient?: IDistubeClient,
+    logger?: ILogger
+  ) {
     this.commands = new Map(
       commands.map((command) => {
         return [command.name, command]
       })
     )
-    this.distubeClient = distubeClient
-    this.logger = logger
-  }
 
-  public async handleInteraction(interaction: ChatInputCommandInteraction) {
-    if (!this.distubeClient) {
-      this.logger?.error('Cannot handle interaction without distube client set')
-      return
-    }
+    distubeClient?.registerEventHandlers(logger)
+    interactionProvider?.registerCommandHandler(
+      async (interaction: ChatInputCommandInteraction) => {
+        if (!distubeClient) {
+          logger?.error('Cannot handle interaction without distube client set')
+          return
+        }
 
-    this.handle(
-      interaction.commandName,
-      CommandHandler.getOptionsFromInteraction(interaction),
-      ServiceProvider.fromInteraction(interaction, this.distubeClient)
+        logger?.info(
+          `User '${interaction.user.tag}' used command '${interaction.commandName}' ` +
+            `in channel '${(<TextChannel | null>interaction.channel)?.name}'`
+        )
+
+        await this.handle(
+          interaction.commandName,
+          new Map(interaction.options.data.map((option) => [option.name, option.value])),
+          ServiceProvider.fromInteraction(interaction, distubeClient)
+        )
+      },
+      logger
     )
-  }
-
-  private static getOptionsFromInteraction(interaction: ChatInputCommandInteraction) {
-    return new Map(interaction.options.data.map((option) => [option.name, option.value]))
   }
 
   public async handle(
     commandName: string,
-    options: Map<string, Option>,
+    options: Map<string, CommandOption>,
     serviceProvider: IServiceProvider
   ) {
     const command = this.commands.get(commandName)

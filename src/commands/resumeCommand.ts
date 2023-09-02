@@ -1,4 +1,4 @@
-import { IServiceProvider } from '../domain/services/IServiceProvider'
+import IServiceProvider from '../domain/services/IServiceProvider'
 import Command from '../command'
 
 export default class ResumeCommand extends Command {

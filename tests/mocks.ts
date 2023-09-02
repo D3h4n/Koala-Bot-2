@@ -1,7 +1,7 @@
-import { IDistubeClient } from '../src/domain/infrastructure/IDistubeClient'
-import { IMessageService } from '../src/domain/services/IMessageService'
-import { IMusicService } from '../src/domain/services/IMusicService'
-import { IVoiceService } from '../src/domain/services/IVoiceService'
+import IDistubeClient from '../src/domain/infrastructure/IDistubeClient'
+import IMessageService from '../src/domain/services/IMessageService'
+import IMusicService from '../src/domain/services/IMusicService'
+import IVoiceService from '../src/domain/services/IVoiceService'
 
 export const mockMusicService: () => IMusicService = () => ({
   play: jest.fn(),

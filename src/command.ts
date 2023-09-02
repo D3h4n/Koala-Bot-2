@@ -4,9 +4,9 @@ import {
   SlashCommandBuilder,
   SlashCommandSubcommandBuilder,
 } from 'discord.js'
-import type { IServiceProvider } from './domain/services/IServiceProvider'
+import type IServiceProvider from './domain/services/IServiceProvider'
 import { SlashCommandOption } from './domain/SlashCommandOption'
-import { Option } from './commandHandler'
+import { CommandOption } from './domain/CommandOption'
 
 export default abstract class Command {
   readonly name: string
@@ -26,7 +26,10 @@ export default abstract class Command {
     this.permissions = permissions
   }
 
-  abstract run(serviceProvider: IServiceProvider, options?: Map<string, Option>): Promise<void>
+  abstract run(
+    serviceProvider: IServiceProvider,
+    options?: Map<string, CommandOption>
+  ): Promise<void>
 
   public toSlashCommand(): SlashCommandBuilder {
     const command = Command.addSlashCommandOptions(new SlashCommandBuilder(), this.options)

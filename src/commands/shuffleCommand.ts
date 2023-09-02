@@ -1,5 +1,5 @@
 import Command from '../command'
-import { IServiceProvider } from '../domain/services/IServiceProvider'
+import IServiceProvider from '../domain/services/IServiceProvider'
 
 export default class ShuffleCommand extends Command {
   constructor() {

@@ -12,12 +12,12 @@ async function main() {
   const youtubeAPIKey = process.env.YOUTUBE_API_KEY
 
   const discordClient = new DiscordClient()
-  const distubeClient = new DistubeClient(discordClient, youtubeAPIKey)
-  const commandHandler = new CommandHandler(readCommands('./dist/commands'), distubeClient)
-  const logger = new MyLogger()
-
-  distubeClient.registerEventHandlers(logger)
-  discordClient.registerEventHandlers(commandHandler, logger)
+  new CommandHandler(
+    readCommands('./dist/commands'),
+    discordClient,
+    new DistubeClient(discordClient, youtubeAPIKey),
+    new MyLogger()
+  )
   await discordClient.login(discordToken)
 }
 

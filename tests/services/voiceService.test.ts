@@ -1,7 +1,7 @@
 import * as fc from 'fast-check'
 import { PermissionsBitField } from 'discord.js'
 
-import { IVoiceInteraction, VoiceMember } from '../../src/domain/services/IVoiceService'
+import { VoiceInteraction, VoiceMember } from '../../src/domain/VoiceInteraction'
 import VoiceService from '../../src/services/voiceService'
 
 describe('The Voice Service', () => {
@@ -19,7 +19,7 @@ describe('The Voice Service', () => {
             },
           }))
 
-          const interaction: IVoiceInteraction = {
+          const interaction: VoiceInteraction = {
             member: {
               permissions: new PermissionsBitField().add('MoveMembers'),
               voice: {
@@ -61,7 +61,7 @@ describe('The Voice Service', () => {
         },
       }
 
-      const interaction: IVoiceInteraction = {
+      const interaction: VoiceInteraction = {
         member: {
           permissions: new PermissionsBitField(),
           voice: {
@@ -86,7 +86,7 @@ describe('The Voice Service', () => {
     })
 
     it('member is not in a voice channel', async () => {
-      const interaction: IVoiceInteraction = {
+      const interaction: VoiceInteraction = {
         member: {
           permissions: new PermissionsBitField().add('MoveMembers'),
           voice: {
@@ -107,7 +107,7 @@ describe('The Voice Service', () => {
     })
 
     it('member is null', async () => {
-      const interaction: IVoiceInteraction = { member: null }
+      const interaction: VoiceInteraction = { member: null }
       const channel = 'A really cool channel'
 
       // Arrange

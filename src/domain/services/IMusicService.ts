@@ -1,6 +1,6 @@
 import { APIInteractionGuildMember, TextBasedChannel } from 'discord.js'
 import EmbeddedMessage from '../../embeds/embeddedMessage'
-import { VoiceMember } from './IVoiceService'
+import { VoiceMember } from '../VoiceInteraction'
 
 export interface IMusicInteraction {
   member: APIInteractionGuildMember | VoiceMember | null
@@ -8,7 +8,7 @@ export interface IMusicInteraction {
   guildId: string | null
 }
 
-export interface IMusicService {
+export default interface IMusicService {
   play: (query: string) => Promise<string | null>
   tryPause: () => Promise<boolean>
   tryResume: () => Promise<boolean>

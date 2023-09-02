@@ -1,5 +1,5 @@
-import { Option } from 'src/commandHandler'
-import { IServiceProvider } from '../domain/services/IServiceProvider'
+import { CommandOption } from 'src/domain/CommandOption'
+import IServiceProvider from '../domain/services/IServiceProvider'
 import Command from '../command'
 import assert from 'assert'
 
@@ -12,7 +12,7 @@ export default class LoopCommand extends Command {
     ])
   }
 
-  async run(serviceProvider: IServiceProvider, options: Map<string, Option>): Promise<void> {
+  async run(serviceProvider: IServiceProvider, options: Map<string, CommandOption>): Promise<void> {
     assert(options.size === 1, 'Only a single subcommand should be provided')
     const subcommand = Array.from(options.keys())[0]
     assert(

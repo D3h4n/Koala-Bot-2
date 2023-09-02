@@ -1,6 +1,6 @@
 import MessageService from '../../src/services/messageService'
 import EmbeddedMessage from '../../src/embeds/embeddedMessage'
-import { IRepliable } from '../../src/domain/services/IMessageService'
+import IRepliable from '../../src/domain/IRepliable'
 import * as fc from 'fast-check'
 
 describe('The Message Service', () => {

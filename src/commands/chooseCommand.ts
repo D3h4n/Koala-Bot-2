@@ -1,6 +1,6 @@
 import Command from '../command'
-import { IServiceProvider } from '../domain/services/IServiceProvider'
-import type { Option } from '../commandHandler'
+import IServiceProvider from '../domain/services/IServiceProvider'
+import type { CommandOption } from 'src/domain/CommandOption'
 
 export default class ChooseCommand extends Command {
   constructor() {
@@ -16,12 +16,12 @@ export default class ChooseCommand extends Command {
     )
   }
 
-  async run(serviceProvider: IServiceProvider, options: Map<string, Option>) {
+  async run(serviceProvider: IServiceProvider, options: Map<string, CommandOption>) {
     const choices = this.getValidChoices(options)
     await serviceProvider.message.reply(this.getRandomChoice(choices))
   }
 
-  private getValidChoices(options: Map<string, Option>) {
+  private getValidChoices(options: Map<string, CommandOption>) {
     return (
       Array.from(options.entries())
         .filter(([name, value]) => name.match(/choice[1-9]/) && typeof value === 'string')
