@@ -1,4 +1,4 @@
-import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from '../mocks'
+import { mockMessageService, mockMusicService, mockVoiceService } from '../mocks'
 
 import ServiceProvider from '../../src/services/serviceProvider'
 import ResumeCommand from '../../src/commands/resumeCommand'
@@ -7,9 +7,9 @@ describe('The resume command', () => {
   it('resumes the currently playing song', async () => {
     const resume = new ResumeCommand()
     const serviceProvider = new ServiceProvider(
-      mockMessageAdapter(),
-      mockMusicAdapter(),
-      mockVoiceAdapter()
+      mockMessageService(),
+      mockMusicService(),
+      mockVoiceService()
     )
 
     serviceProvider.music.tryResume = jest.fn(async () => true)
@@ -22,20 +22,20 @@ describe('The resume command', () => {
   it('replies with a message if pausing fails', async () => {
     // Arrange
     const resume = new ResumeCommand()
-    const commandInfo = new ServiceProvider(
-      mockMessageAdapter(),
-      mockMusicAdapter(),
-      mockVoiceAdapter()
+    const serviceProvider = new ServiceProvider(
+      mockMessageService(),
+      mockMusicService(),
+      mockVoiceService()
     )
 
-    commandInfo.music.tryResume = jest.fn(async () => false)
+    serviceProvider.music.tryResume = jest.fn(async () => false)
 
     // Act
-    await resume.run(commandInfo)
+    await resume.run(serviceProvider)
 
     // Assert
-    expect(commandInfo.music.tryResume).toHaveBeenCalled()
-    expect(commandInfo.message.reply).toHaveBeenCalled()
-    expect(typeof (<jest.Mock>commandInfo.message.reply).mock.lastCall?.[0]).toBe('string')
+    expect(serviceProvider.music.tryResume).toHaveBeenCalled()
+    expect(serviceProvider.message.reply).toHaveBeenCalled()
+    expect(typeof (<jest.Mock>serviceProvider.message.reply).mock.lastCall?.[0]).toBe('string')
   })
 })

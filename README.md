@@ -42,6 +42,8 @@ the software design aspects of the project.
 5. Queue - Display the songs currently in the queue
 6. Loop - Loop a song or the queue
 7. Stop - Stop playing
+8. NowPlaying - Displays info about the song that is currently playing
+9. Seek - Specify a timestamp to start playing a song from
 
 ## Completed Commands
 
@@ -53,11 +55,10 @@ the software design aspects of the project.
 - [x] Resume
 - [x] Skip
 - [x] Queue
+- [x] Loop
 - [x] Stop
 - [ ] NowPlaying
 - [ ] Seek
-- [ ] Loop
-- [ ] Repeat
 
 ## TODO
 
@@ -66,8 +67,8 @@ the software design aspects of the project.
 - [x] Refactor error handling
   - [x] Return the result of an operation instead of throwing an error
   - [x] Handle errors within the command handler instead of widely scoped try-catch
+- [x] Shift Interface Definitions in to their own files within a domain sub folder
 - [ ] Maybe shift the architecture to be more in line with web servers
   - [ ] Commands are registered to some overarching router based on a path
   - [ ] Dependecies are injected based on needs instead of one object with all dependecies
         (non-music commands shouldn't know about the music adapter)
-- [ ] Shift Interface Definitions in to their own files within a domain sub folder

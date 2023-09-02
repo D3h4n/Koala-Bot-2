@@ -1,4 +1,4 @@
-import { IServiceProvider } from '../services/serviceProvider'
+import { IServiceProvider } from '../domain/services/IServiceProvider'
 import Command from '../command'
 
 export default class ResumeCommand extends Command {
@@ -6,12 +6,12 @@ export default class ResumeCommand extends Command {
     super('resume', 'Resume a song that is currently paused')
   }
 
-  async run(commandAdapter: IServiceProvider) {
-    if (!(await commandAdapter.music.tryResume())) {
-      commandAdapter.message.reply('Failed to resume the queue')
+  async run(serviceProvider: IServiceProvider) {
+    if (!(await serviceProvider.music.tryResume())) {
+      serviceProvider.message.reply('Failed to resume the queue')
       return
     }
 
-    commandAdapter.message.noReply()
+    serviceProvider.message.noReply()
   }
 }

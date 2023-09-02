@@ -1,9 +1,11 @@
-import Command from './command'
-import ServiceProvider, { IServiceProvider } from './services/serviceProvider'
-
-import type { IDistubeClient } from './infrastructure/distubeClient'
 import type { ChatInputCommandInteraction } from 'discord.js'
-import type { ILogger } from './infrastructure/logger'
+
+import type { IDistubeClient } from './domain/infrastructure/IDistubeClient'
+import { IServiceProvider } from './domain/services/IServiceProvider'
+import type { ILogger } from './domain/infrastructure/ILogger'
+
+import Command from './command'
+import ServiceProvider from './services/serviceProvider'
 
 export type Option = string | number | boolean | undefined
 

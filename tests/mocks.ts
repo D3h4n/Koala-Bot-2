@@ -1,9 +1,9 @@
-import { IMessageService } from '../src/services/messageService'
-import { IMusicService } from '../src/services/musicService'
-import { IVoiceService } from '../src/services/voiceService'
-import { IDistubeClient } from '../src/infrastructure/distubeClient'
+import { IDistubeClient } from '../src/domain/infrastructure/IDistubeClient'
+import { IMessageService } from '../src/domain/services/IMessageService'
+import { IMusicService } from '../src/domain/services/IMusicService'
+import { IVoiceService } from '../src/domain/services/IVoiceService'
 
-export const mockMusicAdapter: () => IMusicService = () => ({
+export const mockMusicService: () => IMusicService = () => ({
   play: jest.fn(),
   tryPause: jest.fn(),
   tryResume: jest.fn(),
@@ -12,15 +12,16 @@ export const mockMusicAdapter: () => IMusicService = () => ({
   trySkip: jest.fn(),
   tryStop: jest.fn(),
   remove: jest.fn(),
+  loop: jest.fn(),
 })
 
-export const mockMessageAdapter: () => IMessageService = () => ({
+export const mockMessageService: () => IMessageService = () => ({
   reply: jest.fn(),
   defer: jest.fn(),
   noReply: jest.fn(),
 })
 
-export const mockVoiceAdapter: () => IVoiceService = () => ({
+export const mockVoiceService: () => IVoiceService = () => ({
   moveAll: jest.fn(),
 })
 
@@ -34,4 +35,5 @@ export const mockDistubeClient: () => IDistubeClient = () => ({
   trySkip: jest.fn(),
   tryStop: jest.fn(),
   remove: jest.fn(),
+  loop: jest.fn(),
 })

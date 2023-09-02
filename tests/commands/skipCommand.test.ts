@@ -1,4 +1,4 @@
-import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from '../mocks'
+import { mockMessageService, mockMusicService, mockVoiceService } from '../mocks'
 
 import ServiceProvider from '../../src/services/serviceProvider'
 import SkipCommand from '../../src/commands/skipCommand'
@@ -6,9 +6,9 @@ import SkipCommand from '../../src/commands/skipCommand'
 describe('The skip command', () => {
   it('can skip a song', async () => {
     const serviceProvider = new ServiceProvider(
-      mockMessageAdapter(),
-      mockMusicAdapter(),
-      mockVoiceAdapter()
+      mockMessageService(),
+      mockMusicService(),
+      mockVoiceService()
     )
 
     // Arrange

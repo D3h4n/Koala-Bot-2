@@ -1,50 +1,23 @@
 import {
-  ApplicationCommandOptionType,
   PermissionsBitField,
   PermissionsString,
   SlashCommandBuilder,
+  SlashCommandSubcommandBuilder,
 } from 'discord.js'
-import type { ApplicationCommandOptionAllowedChannelTypes } from '@discordjs/builders'
-import type { IServiceProvider } from './services/serviceProvider'
+import type { IServiceProvider } from './domain/services/IServiceProvider'
+import { SlashCommandOption } from './domain/SlashCommandOption'
 import { Option } from './commandHandler'
-
-type CommandOptionType = keyof typeof ApplicationCommandOptionType
-
-type CommandOption =
-  | {
-      name: string
-      type: Exclude<
-        CommandOptionType,
-        | 'Subcommand'
-        | 'SubcommandGroup'
-        | 'User'
-        | 'Channel'
-        | 'Role'
-        | 'Mentionable'
-        | 'Number'
-        | 'Attachment'
-      >
-      description: string
-      required?: boolean
-    }
-  | {
-      name: string
-      type: 'Channel'
-      description: string
-      required?: boolean
-      channelTypes: ApplicationCommandOptionAllowedChannelTypes[]
-    }
 
 export default abstract class Command {
   readonly name: string
   readonly description: string
-  readonly options: CommandOption[]
+  readonly options: SlashCommandOption[]
   readonly permissions: PermissionsString[]
 
   protected constructor(
     name: string,
     description: string,
-    options: CommandOption[] = [],
+    options: SlashCommandOption[] = [],
     permissions: PermissionsString[] = []
   ) {
     this.name = name
@@ -53,21 +26,25 @@ export default abstract class Command {
     this.permissions = permissions
   }
 
-  abstract run(commandAdapter: IServiceProvider, options?: Map<string, Option>): Promise<void>
+  abstract run(serviceProvider: IServiceProvider, options?: Map<string, Option>): Promise<void>
 
   public toSlashCommand(): SlashCommandBuilder {
-    const command = new SlashCommandBuilder().setName(this.name).setDescription(this.description)
+    const command = Command.addSlashCommandOptions(new SlashCommandBuilder(), this.options)
+      .setName(this.name)
+      .setDescription(this.description)
 
     if (this.permissions.length > 0) {
       command.setDefaultMemberPermissions(new PermissionsBitField().add(this.permissions).bitfield)
     }
 
-    Command.addSlashCommandOptions(command, this.options)
-
     return command
   }
 
-  private static addSlashCommandOptions(command: SlashCommandBuilder, options: CommandOption[]) {
+  private static addSlashCommandOptions<
+    T extends SlashCommandBuilder | SlashCommandSubcommandBuilder
+  >(command: T, options?: SlashCommandOption[]): T {
+    if (!options) return command
+
     for (const option of options) {
       switch (option.type) {
         case 'String':
@@ -98,9 +75,22 @@ export default abstract class Command {
           )
           break
 
+        case 'Subcommand':
+          if (command instanceof SlashCommandSubcommandBuilder)
+            throw new Error('Cannot nest subcommands, use Subcommand Group instead.')
+
+          command.addSubcommand((builder) =>
+            Command.addSlashCommandOptions(builder, option.options)
+              .setName(option.name)
+              .setDescription(option.description)
+          )
+          break
+
         default:
           throw new Error(`Unhandled option type "${option.type}"`)
       }
     }
+
+    return command
   }
 }

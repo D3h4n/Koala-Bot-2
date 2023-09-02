@@ -1,5 +1,5 @@
 import * as fc from 'fast-check'
-import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from '../mocks'
+import { mockMessageService, mockMusicService, mockVoiceService } from '../mocks'
 
 import ServiceProvider from '../../src/services/serviceProvider'
 import RemoveCommand from '../../src/commands/removeCommand'
@@ -10,9 +10,9 @@ describe('The remove command', () => {
       fc.property(fc.nat(), fc.string({ minLength: 1 }), (position, song) => {
         const options = new Map([['position', position]])
         const serviceProvider = new ServiceProvider(
-          mockMessageAdapter(),
-          mockMusicAdapter(),
-          mockVoiceAdapter()
+          mockMessageService(),
+          mockMusicService(),
+          mockVoiceService()
         )
         serviceProvider.music.remove = jest.fn(async () => song)
 
@@ -36,9 +36,9 @@ describe('The remove command', () => {
     const position = 2
     const options = new Map([['position', position]])
     const serviceProvider = new ServiceProvider(
-      mockMessageAdapter(),
-      mockMusicAdapter(),
-      mockVoiceAdapter()
+      mockMessageService(),
+      mockMusicService(),
+      mockVoiceService()
     )
     serviceProvider.music.remove = jest.fn(async () => null)
 

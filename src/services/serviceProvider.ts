@@ -1,14 +1,14 @@
-import MessageService, { IMessageService } from './messageService'
-import MusicService, { IMusicService } from './musicService'
-import VoiceService, { IVoiceService } from './voiceService'
 import type { ChatInputCommandInteraction } from 'discord.js'
-import type { IDistubeClient } from '../infrastructure/distubeClient'
 
-export interface IServiceProvider {
-  message: IMessageService
-  music: IMusicService
-  voice: IVoiceService
-}
+import { IMusicService } from '../domain/services/IMusicService'
+import { IVoiceService } from '../domain/services/IVoiceService'
+import { IMessageService } from '../domain/services/IMessageService'
+import { IServiceProvider } from '../domain/services/IServiceProvider'
+import type { IDistubeClient } from 'src/domain/infrastructure/IDistubeClient'
+
+import MessageService from './messageService'
+import MusicService from './musicService'
+import VoiceService from './voiceService'
 
 export default class ServiceProvider implements IServiceProvider {
   readonly message: IMessageService

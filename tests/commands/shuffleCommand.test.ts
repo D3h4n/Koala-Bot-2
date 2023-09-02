@@ -1,4 +1,4 @@
-import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from '../mocks'
+import { mockMessageService, mockMusicService, mockVoiceService } from '../mocks'
 
 import ServiceProvider from '../../src/services/serviceProvider'
 import ShuffleCommand from '../../src/commands/shuffleCommand'
@@ -8,9 +8,9 @@ describe('The shuffle command', () => {
     // Arrange
     const shuffle = new ShuffleCommand()
     const serviceProvider = new ServiceProvider(
-      mockMessageAdapter(),
-      mockMusicAdapter(),
-      mockVoiceAdapter()
+      mockMessageService(),
+      mockMusicService(),
+      mockVoiceService()
     )
 
     // Act

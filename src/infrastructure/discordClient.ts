@@ -1,12 +1,7 @@
-import { ActivityType, Client, IntentsBitField, TextChannel } from 'discord.js'
 import { ICommandHandler } from '../commandHandler'
-import { ILogger } from './logger'
-
-export interface IDiscordClient {
-  client: Client
-  registerEventHandlers: (commandEventHandler: ICommandHandler, logger: ILogger) => void
-  login: (token: string) => Promise<void>
-}
+import { ILogger } from '../domain/infrastructure/ILogger'
+import { IDiscordClient } from '../domain/infrastructure/IDiscordClient'
+import { ActivityType, Client, IntentsBitField, TextChannel } from 'discord.js'
 
 export default class DiscordClient implements IDiscordClient {
   client: Client<boolean>

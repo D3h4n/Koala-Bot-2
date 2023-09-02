@@ -1,6 +1,6 @@
 import Command from '../command'
 import assert from 'assert'
-import type { IServiceProvider } from '../services/serviceProvider'
+import { IServiceProvider } from '../domain/services/IServiceProvider'
 import type { Option } from '../commandHandler'
 
 export default class EchoCommand extends Command {
@@ -10,9 +10,9 @@ export default class EchoCommand extends Command {
     ])
   }
 
-  async run(commandAdapter: IServiceProvider, options: Map<string, Option>) {
+  async run(serviceProvider: IServiceProvider, options: Map<string, Option>) {
     const message = options.get('message')
     assert(typeof message === 'string', 'message should be a string')
-    await commandAdapter.message.reply(message)
+    await serviceProvider.message.reply(message)
   }
 }

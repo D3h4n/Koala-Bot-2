@@ -1,6 +1,6 @@
 import Command from '../command'
 import assert from 'assert'
-import type { IServiceProvider } from '../services/serviceProvider'
+import { IServiceProvider } from '../domain/services/IServiceProvider'
 import type { Option } from '../commandHandler'
 
 export default class RemoveCommand extends Command {
@@ -9,15 +9,15 @@ export default class RemoveCommand extends Command {
       { name: 'position', type: 'Integer', description: 'The position of the song to remove.' },
     ])
   }
-  async run(commandAdapter: IServiceProvider, options: Map<string, Option>) {
+  async run(serviceProvider: IServiceProvider, options: Map<string, Option>) {
     const position = options.get('position')
     assert(typeof position === 'number', 'position should always be a number')
-    const song = await commandAdapter.music.remove(position)
+    const song = await serviceProvider.music.remove(position)
 
     if (song) {
-      commandAdapter.message.reply(`Removed \`${song}\` at position ${position}`)
+      serviceProvider.message.reply(`Removed \`${song}\` at position ${position}`)
     } else {
-      commandAdapter.message.reply(`Failed to remove song at position ${position}`)
+      serviceProvider.message.reply(`Failed to remove song at position ${position}`)
     }
   }
 }

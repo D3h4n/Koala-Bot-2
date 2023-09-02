@@ -1,6 +1,6 @@
 import Command from '../command'
 import assert from 'assert'
-import type { IServiceProvider } from '../services/serviceProvider'
+import { IServiceProvider } from '../domain/services/IServiceProvider'
 import type { Option } from '../commandHandler'
 
 export default class QueueCommand extends Command {
@@ -10,13 +10,13 @@ export default class QueueCommand extends Command {
     ])
   }
 
-  async run(commandAdapter: IServiceProvider, options: Map<string, Option>) {
+  async run(serviceProvider: IServiceProvider, options: Map<string, Option>) {
     const page = options.get('page')
     assert(
       page === undefined || typeof page === 'number',
       'if page is defined it should be a number'
     )
 
-    await commandAdapter.message.reply(commandAdapter.music.getQueue(page))
+    await serviceProvider.message.reply(serviceProvider.music.getQueue(page))
   }
 }

@@ -1,5 +1,5 @@
 import * as fc from 'fast-check'
-import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from '../mocks'
+import { mockMessageService, mockMusicService, mockVoiceService } from '../mocks'
 
 import ServiceProvider from '../../src/services/serviceProvider'
 import PlayCommand from '../../src/commands/playCommand'
@@ -10,9 +10,9 @@ describe('The play command', () => {
       fc.property(fc.string({ minLength: 1 }), (song) => {
         const options = new Map([['song', song]])
         const serviceProvider = new ServiceProvider(
-          mockMessageAdapter(),
-          mockMusicAdapter(),
-          mockVoiceAdapter()
+          mockMessageService(),
+          mockMusicService(),
+          mockVoiceService()
         )
 
         // Arrange
@@ -36,9 +36,9 @@ describe('The play command', () => {
     const errorMsg = 'Some error message'
     const options = new Map([['song', song]])
     const serviceProvider = new ServiceProvider(
-      mockMessageAdapter(),
-      mockMusicAdapter(),
-      mockVoiceAdapter()
+      mockMessageService(),
+      mockMusicService(),
+      mockVoiceService()
     )
     serviceProvider.music.play = jest.fn(async () => errorMsg)
 

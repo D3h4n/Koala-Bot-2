@@ -20,7 +20,6 @@ async function main() {
   client
     .on('ready', async () => {
       logger.info(`Registering ${commands.length} commands`)
-      commands.map((command) => command.toSlashCommand().toJSON()).forEach(console.log)
 
       const result = await client.application?.commands.set(
         commands.map((command) => command.toSlashCommand())

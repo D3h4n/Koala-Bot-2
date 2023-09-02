@@ -1,16 +1,12 @@
 import SpotifyPlugin from '@distube/spotify'
 import SoundCloudPlugin from '@distube/soundcloud'
-import DisTube, { Playlist, Queue, Song } from 'distube'
-import {
-  APIInteractionGuildMember,
-  GuildMember,
-  TextBasedChannel,
-  GuildTextBasedChannel,
-} from 'discord.js'
+import { GuildMember, GuildTextBasedChannel } from 'discord.js'
+import DisTube, { Playlist, Queue, RepeatMode, Song } from 'distube'
 
-import { ILogger } from './logger'
-import { IDiscordClient } from './discordClient'
-import { VoiceMember } from '../services/voiceService'
+import { IDistubeClient, LoopMode } from '../domain/infrastructure/IDistubeClient'
+import { IDiscordClient } from '../domain/infrastructure/IDiscordClient'
+import { IMusicInteraction } from '../domain/services/IMusicService'
+import { ILogger } from '../domain/infrastructure/ILogger'
 
 import QueueMessage from '../embeds/queueMessage'
 import AddSongMessage from '../embeds/addSongMessage'
@@ -18,33 +14,17 @@ import EmbeddedMessage from '../embeds/embeddedMessage'
 import PlaySongMessage from '../embeds/playSongMessage'
 import AddPlaylistMessage from '../embeds/addPlaylistMessage'
 
-export interface IMusicInteraction {
-  member: APIInteractionGuildMember | VoiceMember | null
-  channel: TextBasedChannel | null
-  guildId: string | null
-}
-
-export interface IDistubeClient {
-  registerEventHandlers: (logger: ILogger) => void
-  play: (query: string, interaction: IMusicInteraction) => Promise<string | null>
-  tryPause: (guildId: string) => Promise<boolean>
-  tryResume: (guildId: string) => Promise<boolean>
-  getQueue(page: number, guildId: string): EmbeddedMessage
-  tryShuffle: (guildId: string) => Promise<boolean>
-  trySkip: (guildId: string) => Promise<boolean>
-  tryStop: (guildId: string) => Promise<boolean>
-  remove: (position: number, guildId: string) => Promise<string | null>
-}
-
 export default class DistubeClient implements IDistubeClient {
   client: DisTube
 
   constructor(client: IDiscordClient, youtubeAPIKey?: string) {
     this.client = new DisTube(client.client, {
       nsfw: true,
-      leaveOnEmpty: true,
       leaveOnStop: true,
+      leaveOnEmpty: true,
       leaveOnFinish: true,
+      emitNewSongOnly: true,
+      emitAddSongWhenCreatingQueue: false,
       youtubeIdentityToken: youtubeAPIKey,
       plugins: [new SpotifyPlugin(), new SoundCloudPlugin()],
     })
@@ -75,7 +55,7 @@ export default class DistubeClient implements IDistubeClient {
       const position = queue.songs.indexOf(song)
       const channel = queue.textChannel
 
-      if (position === 0 || !channel) return
+      if (!channel) return
 
       const message = new AddSongMessage(song, position)
       channel.send({ embeds: [message.embed] })
@@ -168,5 +148,30 @@ export default class DistubeClient implements IDistubeClient {
     }
 
     return null
+  }
+
+  async loop(mode: LoopMode, guildId: string): Promise<string | null> {
+    const queue = this.client.getQueue(guildId)
+
+    if (!queue || queue.songs.length < 1) {
+      return null
+    }
+
+    switch (mode) {
+      case 'song':
+        queue.setRepeatMode(RepeatMode.SONG)
+        return `Looping \`${queue.songs[0].name}\`.`
+
+      case 'queue':
+        queue.setRepeatMode(RepeatMode.QUEUE)
+        return 'Looping queue.'
+
+      case 'off':
+        queue.setRepeatMode(RepeatMode.DISABLED)
+        return 'Stopped looping'
+
+      default:
+        throw new Error('Unhandled loop mode')
+    }
   }
 }

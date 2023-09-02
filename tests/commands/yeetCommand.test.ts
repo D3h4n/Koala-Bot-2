@@ -1,5 +1,5 @@
 import * as fc from 'fast-check'
-import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from '../mocks'
+import { mockMessageService, mockMusicService, mockVoiceService } from '../mocks'
 
 import ServiceProvider from '../../src/services/serviceProvider'
 import YeetCommand from '../../src/commands/yeetCommand'
@@ -10,9 +10,9 @@ describe('The yeet command', () => {
       fc.property(fc.string({ minLength: 1 }), (channel) => {
         const options = new Map([['channel', channel]])
         const serviceProvider = new ServiceProvider(
-          mockMessageAdapter(),
-          mockMusicAdapter(),
-          mockVoiceAdapter()
+          mockMessageService(),
+          mockMusicService(),
+          mockVoiceService()
         )
 
         // Arrange
@@ -34,9 +34,9 @@ describe('The yeet command', () => {
 
     const options = new Map([['channel', channel]])
     const serviceProvider = new ServiceProvider(
-      mockMessageAdapter(),
-      mockMusicAdapter(),
-      mockVoiceAdapter()
+      mockMessageService(),
+      mockMusicService(),
+      mockVoiceService()
     )
     serviceProvider.voice.moveAll = jest.fn(async () => errorMsg)
 

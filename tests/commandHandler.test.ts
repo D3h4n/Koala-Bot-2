@@ -1,15 +1,16 @@
-import CommandHandler from '../src/commandHandler'
-import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from './mocks'
+import { mockMessageService, mockMusicService, mockVoiceService } from './mocks'
+
 import Command from '../src/command'
+import CommandHandler from '../src/commandHandler'
 import ServiceProvider from '../src/services/serviceProvider'
 
 describe('The command handler after receiving a command', () => {
   describe('that exists', () => {
     it.each(['play', 'pick-a-game'])('can run the command', async (name) => {
       const serviceProvider = new ServiceProvider(
-        mockMessageAdapter(),
-        mockMusicAdapter(),
-        mockVoiceAdapter()
+        mockMessageService(),
+        mockMusicService(),
+        mockVoiceService()
       )
       // Arrange
       const command: Command = {
@@ -40,9 +41,9 @@ describe('The command handler after receiving a command', () => {
       },
     ])('can run the command with options', async ({ commandName: name, options }) => {
       const serviceProvider = new ServiceProvider(
-        mockMessageAdapter(),
-        mockMusicAdapter(),
-        mockVoiceAdapter()
+        mockMessageService(),
+        mockMusicService(),
+        mockVoiceService()
       )
 
       // Arrange
@@ -67,9 +68,9 @@ describe('The command handler after receiving a command', () => {
   describe('that does not exist', () => {
     it('throws an error', async () => {
       const serviceProvider = new ServiceProvider(
-        mockMessageAdapter(),
-        mockMusicAdapter(),
-        mockVoiceAdapter()
+        mockMessageService(),
+        mockMusicService(),
+        mockVoiceService()
       )
 
       // Arrange

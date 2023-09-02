@@ -1,6 +1,6 @@
 import Command from '../command'
 import assert from 'assert'
-import type { IServiceProvider } from '../services/serviceProvider'
+import { IServiceProvider } from '../domain/services/IServiceProvider'
 import type { Option } from '../commandHandler'
 
 export default class PlayCommand extends Command {
@@ -10,17 +10,17 @@ export default class PlayCommand extends Command {
     ])
   }
 
-  async run(commandAdapter: IServiceProvider, options: Map<string, Option>) {
+  async run(serviceProvider: IServiceProvider, options: Map<string, Option>) {
     const song = options.get('song')
     assert(typeof song === 'string', 'song should always be a string')
-    await commandAdapter.message.defer()
+    await serviceProvider.message.defer()
 
-    const result = await commandAdapter.music.play(song)
+    const result = await serviceProvider.music.play(song)
 
     if (result) {
-      commandAdapter.message.reply(result)
+      serviceProvider.message.reply(result)
     } else {
-      commandAdapter.message.noReply()
+      serviceProvider.message.noReply()
     }
   }
 }

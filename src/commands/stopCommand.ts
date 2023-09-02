@@ -1,13 +1,13 @@
 import Command from '../command'
-import { IServiceProvider } from '../services/serviceProvider'
+import { IServiceProvider } from '../domain/services/IServiceProvider'
 
 export default class StopCommand extends Command {
   constructor() {
     super('stop', 'Stop the music queue.')
   }
 
-  async run(commandAdapter: IServiceProvider) {
-    await commandAdapter.music.tryStop()
-    await commandAdapter.message.noReply()
+  async run(serviceProvider: IServiceProvider) {
+    await serviceProvider.music.tryStop()
+    await serviceProvider.message.noReply()
   }
 }

@@ -1,5 +1,5 @@
 import * as fc from 'fast-check'
-import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from '../mocks'
+import { mockMessageService, mockMusicService, mockVoiceService } from '../mocks'
 
 import ServiceProvider from '../../src/services/serviceProvider'
 import ChooseCommand from '../../src/commands/chooseCommand'
@@ -17,9 +17,9 @@ describe('The choose command', () => {
     // Act
     const choose = new ChooseCommand()
     const serviceProvider = new ServiceProvider(
-      mockMessageAdapter(),
-      mockMusicAdapter(),
-      mockVoiceAdapter()
+      mockMessageService(),
+      mockMusicService(),
+      mockVoiceService()
     )
     await choose.run(serviceProvider, options)
 
@@ -44,9 +44,9 @@ describe('The choose command', () => {
           jest.spyOn(global.Math, 'random').mockReturnValue(randomValue)
           const choose = new ChooseCommand()
           const serviceProvider = new ServiceProvider(
-            mockMessageAdapter(),
-            mockMusicAdapter(),
-            mockVoiceAdapter()
+            mockMessageService(),
+            mockMusicService(),
+            mockVoiceService()
           )
 
           // Act

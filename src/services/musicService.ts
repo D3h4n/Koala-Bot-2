@@ -1,17 +1,8 @@
-import QueueMessage from '../embeds/queueMessage'
-import type EmbeddedMessage from '../embeds/embeddedMessage'
-import type { IDistubeClient, IMusicInteraction } from '../infrastructure/distubeClient'
+import { IMusicService, IMusicInteraction } from '../domain/services/IMusicService'
+import { IDistubeClient, LoopMode } from '../domain/infrastructure/IDistubeClient'
 
-export interface IMusicService {
-  play: (query: string) => Promise<string | null>
-  tryPause: () => Promise<boolean>
-  tryResume: () => Promise<boolean>
-  getQueue: (page?: number) => EmbeddedMessage
-  tryShuffle: () => Promise<boolean>
-  trySkip: () => Promise<boolean>
-  tryStop: () => Promise<boolean>
-  remove: (position: number) => Promise<string | null>
-}
+import EmbeddedMessage from '../embeds/embeddedMessage'
+import QueueMessage from '../embeds/queueMessage'
 
 export default class MusicService implements IMusicService {
   private readonly distube: IDistubeClient
@@ -22,17 +13,17 @@ export default class MusicService implements IMusicService {
     this.interaction = interaction
   }
 
-  async play(query: string): Promise<string | null> {
+  play(query: string): Promise<string | null> {
     return this.distube.play(query, this.interaction)
   }
 
   async tryPause(): Promise<boolean> {
     if (!this.interaction.guildId) return false
-    return this.distube.tryPause(this.interaction.guildId)
+    return await this.distube.tryPause(this.interaction.guildId)
   }
 
   async tryResume(): Promise<boolean> {
-    return this.interaction.guildId ? this.distube.tryResume(this.interaction.guildId) : false
+    return this.interaction.guildId ? await this.distube.tryResume(this.interaction.guildId) : false
   }
 
   getQueue(page: number = 1): EmbeddedMessage {
@@ -42,15 +33,17 @@ export default class MusicService implements IMusicService {
   }
 
   async tryShuffle(): Promise<boolean> {
-    return this.interaction.guildId ? this.distube.tryShuffle(this.interaction.guildId) : false
+    return this.interaction.guildId
+      ? await this.distube.tryShuffle(this.interaction.guildId)
+      : false
   }
 
   async trySkip(): Promise<boolean> {
-    return this.interaction.guildId ? this.distube.trySkip(this.interaction.guildId) : false
+    return this.interaction.guildId ? await this.distube.trySkip(this.interaction.guildId) : false
   }
 
   async tryStop(): Promise<boolean> {
-    return this.interaction.guildId ? this.distube.tryStop(this.interaction.guildId) : false
+    return this.interaction.guildId ? await this.distube.tryStop(this.interaction.guildId) : false
   }
 
   // FIXME: This is the reverse of other functions. A successful result returns a string
@@ -58,6 +51,14 @@ export default class MusicService implements IMusicService {
   //        Might be useful to replace string | null with a Result type in the entire codebase, to avoid
   //        this confusion.
   async remove(position: number): Promise<string | null> {
-    return this.interaction.guildId ? this.distube.remove(position, this.interaction.guildId) : null
+    return this.interaction.guildId
+      ? await this.distube.remove(position, this.interaction.guildId)
+      : null
+  }
+
+  async loop(target: LoopMode): Promise<string | null> {
+    return this.interaction.guildId
+      ? await this.distube.loop(target, this.interaction.guildId)
+      : null
   }
 }

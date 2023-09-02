@@ -1,5 +1,5 @@
 import * as fc from 'fast-check'
-import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from '../mocks'
+import { mockMessageService, mockMusicService, mockVoiceService } from '../mocks'
 
 import ServiceProvider from '../../src/services/serviceProvider'
 import EmbeddedMessage from '../../src/embeds/embeddedMessage'
@@ -9,9 +9,9 @@ describe('The queue command', () => {
   it('can display the queue', () => {
     const embed = new EmbeddedMessage({})
     const serviceProvider = new ServiceProvider(
-      mockMessageAdapter(),
-      mockMusicAdapter(),
-      mockVoiceAdapter()
+      mockMessageService(),
+      mockMusicService(),
+      mockVoiceService()
     )
     serviceProvider.music.getQueue = jest.fn(() => embed)
 
@@ -31,9 +31,9 @@ describe('The queue command', () => {
       fc.property(fc.nat(), (page) => {
         const options = new Map([['page', page]])
         const serviceProvider = new ServiceProvider(
-          mockMessageAdapter(),
-          mockMusicAdapter(),
-          mockVoiceAdapter()
+          mockMessageService(),
+          mockMusicService(),
+          mockVoiceService()
         )
         const embed = new EmbeddedMessage({})
         serviceProvider.music.getQueue = jest.fn(() => embed)

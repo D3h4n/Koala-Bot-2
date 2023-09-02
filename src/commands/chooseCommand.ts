@@ -1,5 +1,5 @@
 import Command from '../command'
-import type { IServiceProvider } from '../services/serviceProvider'
+import { IServiceProvider } from '../domain/services/IServiceProvider'
 import type { Option } from '../commandHandler'
 
 export default class ChooseCommand extends Command {
@@ -16,9 +16,9 @@ export default class ChooseCommand extends Command {
     )
   }
 
-  async run(commandAdapter: IServiceProvider, options: Map<string, Option>) {
+  async run(serviceProvider: IServiceProvider, options: Map<string, Option>) {
     const choices = this.getValidChoices(options)
-    await commandAdapter.message.reply(this.getRandomChoice(choices))
+    await serviceProvider.message.reply(this.getRandomChoice(choices))
   }
 
   private getValidChoices(options: Map<string, Option>) {

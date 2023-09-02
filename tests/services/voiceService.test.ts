@@ -1,6 +1,8 @@
-import VoiceService, { IVoiceInteraction, VoiceMember } from '../../src/services/voiceService'
-import { PermissionsBitField } from 'discord.js'
 import * as fc from 'fast-check'
+import { PermissionsBitField } from 'discord.js'
+
+import { IVoiceInteraction, VoiceMember } from '../../src/domain/services/IVoiceService'
+import VoiceService from '../../src/services/voiceService'
 
 describe('The Voice Service', () => {
   it('can move members between voice channels', () => {

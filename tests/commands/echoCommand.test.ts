@@ -1,5 +1,5 @@
 import * as fc from 'fast-check'
-import { mockMessageAdapter, mockMusicAdapter, mockVoiceAdapter } from '../mocks'
+import { mockMessageService, mockMusicService, mockVoiceService } from '../mocks'
 
 import ServiceProvider from '../../src/services/serviceProvider'
 import EchoCommand from '../../src/commands/echoCommand'
@@ -10,9 +10,9 @@ describe('The echo command', () => {
       fc.property(fc.string({ minLength: 1 }), (message) => {
         const options = new Map([['message', message]])
         const serviceProvider = new ServiceProvider(
-          mockMessageAdapter(),
-          mockMusicAdapter(),
-          mockVoiceAdapter()
+          mockMessageService(),
+          mockMusicService(),
+          mockVoiceService()
         )
 
         // Arrange

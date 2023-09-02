@@ -1,22 +1,6 @@
 import EmbeddedMessage from '../embeds/embeddedMessage'
-import type { EmbedBuilder } from 'discord.js'
-
-export interface IMessageService {
-  reply: (message: string | EmbeddedMessage) => Promise<void>
-  defer: () => Promise<void>
-  noReply: () => Promise<void>
-}
-
-type ReplyOptions = string | { embeds: EmbedBuilder[] }
-
-export interface IRepliable {
-  replied: boolean
-  deferred: boolean
-  editReply: (options: ReplyOptions) => Promise<unknown>
-  reply: (options: ReplyOptions) => Promise<unknown>
-  deferReply: () => Promise<unknown>
-  deleteReply: () => Promise<unknown>
-}
+import { IMessageService } from '../domain/services/IMessageService'
+import { IRepliable, ReplyMessage } from 'src/domain/services/IMessageService'
 
 export default class MessageService implements IMessageService {
   readonly interaction: IRepliable
@@ -34,7 +18,7 @@ export default class MessageService implements IMessageService {
     await this.sendReply({ embeds: [message.embed] })
   }
 
-  private async sendReply(options: ReplyOptions) {
+  private async sendReply(options: ReplyMessage) {
     if (this.interaction.replied || this.interaction.deferred) {
       await this.interaction.editReply(options)
       return

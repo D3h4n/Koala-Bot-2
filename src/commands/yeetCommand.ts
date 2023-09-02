@@ -1,7 +1,7 @@
 import Command from '../command'
 import assert from 'assert'
 import { ChannelType } from 'discord.js'
-import type { IServiceProvider } from '../services/serviceProvider'
+import { IServiceProvider } from '../domain/services/IServiceProvider'
 import type { Option } from '../commandHandler'
 
 export default class yeetCommand extends Command {
@@ -21,15 +21,15 @@ export default class yeetCommand extends Command {
     )
   }
 
-  async run(commandAdapter: IServiceProvider, options: Map<string, Option>) {
+  async run(serviceProvider: IServiceProvider, options: Map<string, Option>) {
     const channel = options.get('channel')
     assert(typeof channel === 'string', 'channel should always be of type string')
-    const result = await commandAdapter.voice.moveAll(channel)
+    const result = await serviceProvider.voice.moveAll(channel)
 
     if (result) {
-      commandAdapter.message.reply(result)
+      serviceProvider.message.reply(result)
     } else {
-      commandAdapter.message.noReply()
+      serviceProvider.message.noReply()
     }
   }
 }

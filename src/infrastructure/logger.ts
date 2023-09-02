@@ -1,8 +1,4 @@
-export interface ILogger {
-  info: (msg: string) => void
-  error: (error: Error | string) => void
-  warn: (warn: Error | string) => void
-}
+import { ILogger } from '../domain/infrastructure/ILogger'
 
 export default class MyLogger implements ILogger {
   info(msg: string) {
