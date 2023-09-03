@@ -1,8 +1,8 @@
 import Command from '../command'
 import assert from 'assert'
 import { ChannelType } from 'discord.js'
-import IServiceProvider from '../domain/services/IServiceProvider'
-import type { CommandOption } from 'src/domain/CommandOption'
+import type CommandOption from '@domain/CommandOption'
+import type IServiceProvider from '@domain/IServiceProvider'
 
 export default class yeetCommand extends Command {
   constructor() {

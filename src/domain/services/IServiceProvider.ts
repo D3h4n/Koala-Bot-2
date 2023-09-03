@@ -1,6 +1,6 @@
-import IMessageService from './IMessageService'
 import IMusicService from './IMusicService'
 import IVoiceService from './IVoiceService'
+import IMessageService from './IMessageService'
 
 export default interface IServiceProvider {
   message: IMessageService

@@ -1,5 +1,5 @@
-import IServiceProvider from '../domain/services/IServiceProvider'
-import Command from '../command'
+import Command from 'command'
+import type IServiceProvider from '@domain/IServiceProvider'
 
 export default class ResumeCommand extends Command {
   constructor() {

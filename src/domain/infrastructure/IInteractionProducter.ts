@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction } from 'discord.js'
-import ILogger from './ILogger'
+import ILogger from '@domain/ILogger'
 
 export default interface IInteractionProducer {
   registerCommandHandler: (

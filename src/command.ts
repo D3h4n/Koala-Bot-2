@@ -4,9 +4,9 @@ import {
   SlashCommandBuilder,
   SlashCommandSubcommandBuilder,
 } from 'discord.js'
-import type IServiceProvider from './domain/services/IServiceProvider'
-import { SlashCommandOption } from './domain/SlashCommandOption'
-import { CommandOption } from './domain/CommandOption'
+import type IServiceProvider from 'domain/services/IServiceProvider'
+import { SlashCommandOption } from 'domain/SlashCommandOption'
+import CommandOption from 'domain/CommandOption'
 
 export default abstract class Command {
   readonly name: string

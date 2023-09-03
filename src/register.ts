@@ -2,10 +2,10 @@ import fs from 'node:fs'
 import { resolve } from 'node:path'
 
 import dotenv from 'dotenv'
-
-import type Command from './command'
 import { Client } from 'discord.js'
-import MyLogger from './infrastructure/logger'
+
+import type Command from 'command'
+import MyLogger from 'infrastructure/myLogger'
 
 async function main() {
   dotenv.config()
@@ -14,7 +14,7 @@ async function main() {
 
   if (!token) throw new Error('Missing Registration Credentials')
 
-  const commands = readCommands('./dist/commands')
+  const commands = readCommands('./src/commands')
 
   const client = new Client({ intents: [] })
   client
@@ -37,32 +37,18 @@ async function main() {
 }
 
 export function readCommands(dir: string): Command[] {
-  const commands: Command[] = []
-
-  for (const f of findFilesInDirectory(dir)) {
-    // NOTE: we're searching for js files because everything is being transpiled to js.
-    if (f.endsWith('.js')) {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const command: Command = new (require(f).default)()
-      commands.push(command)
-    }
-  }
-
-  return commands
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  return findCommandsInDirectory(dir).map((path) => new (require(path).default)())
 }
 
-function* findFilesInDirectory(dir: string): Generator<string, void, void> {
-  const dirEntries = fs.readdirSync(dir, { withFileTypes: true })
-
-  for (const dirEntry of dirEntries) {
-    const path = resolve(dir, dirEntry.name)
-
-    if (dirEntry.isDirectory()) {
-      yield* findFilesInDirectory(path)
-    } else {
-      yield path
-    }
-  }
+function findCommandsInDirectory(dir: string): string[] {
+  return fs
+    .readdirSync(dir, { withFileTypes: true })
+    .flatMap((dirEntry) => {
+      const path = resolve(dirEntry.path, dirEntry.name)
+      return !dirEntry.isDirectory() ? path : findCommandsInDirectory(path)
+    })
+    .filter((path) => path.endsWith('.ts'))
 }
 
 if (require.main === module) {

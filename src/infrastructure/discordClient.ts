@@ -1,7 +1,8 @@
-import IInteractionProducer from 'src/domain/infrastructure/IInteractionProducter'
-import ILogger from '../domain/infrastructure/ILogger'
 import { ActivityType, ChatInputCommandInteraction, Client, IntentsBitField } from 'discord.js'
-import IClientProvider from 'src/domain/infrastructure/IClientProvider'
+
+import type ILogger from '@domain/ILogger'
+import type IClientProvider from '@domain/IClientProvider'
+import type IInteractionProducer from '@domain/IInteractionProducter'
 
 export default class DiscordClient implements IInteractionProducer, IClientProvider {
   private readonly discordClient: Client<boolean>
@@ -37,6 +38,7 @@ export default class DiscordClient implements IInteractionProducer, IClientProvi
     this.client
       .on('ready', () => logger?.info('Running'))
       .on('interactionCreate', (interaction) => {
+        logger?.debug(`Received interaction ${interaction.id}`)
         if (!interaction.isChatInputCommand() || !interaction.guildId) return
         handler(interaction)
       })

@@ -1,8 +1,7 @@
-import ILogger from './ILogger'
-import EmbeddedMessage from '../../embeds/embeddedMessage'
-import { IMusicInteraction } from '../services/IMusicService'
-
-export type LoopMode = 'queue' | 'song' | 'off'
+import type ILogger from '@domain/ILogger'
+import type EmbeddedMessage from 'embeds/embeddedMessage'
+import type { IMusicInteraction } from '@domain/IMusicService'
+import type { LoopMode } from 'infrastructure/distubeClient'
 
 export default interface IDistubeClient {
   registerEventHandlers: (logger?: ILogger) => void

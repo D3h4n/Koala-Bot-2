@@ -1,5 +1,5 @@
-import IVoiceService from 'src/domain/services/IVoiceService'
-import { VoiceMember, VoiceInteraction as IVoiceInteraction } from 'src/domain/VoiceInteraction'
+import type IVoiceService from '@domain/IVoiceService'
+import type { VoiceMember, VoiceInteraction as IVoiceInteraction } from '@domain/VoiceInteraction'
 
 export default class VoiceService implements IVoiceService {
   interaction: IVoiceInteraction

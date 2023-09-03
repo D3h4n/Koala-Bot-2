@@ -1,1 +1,2 @@
-export type CommandOption = string | number | boolean | undefined
+type CommandOption = string | number | boolean | undefined
+export default CommandOption

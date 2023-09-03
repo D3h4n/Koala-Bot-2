@@ -1,7 +1,7 @@
-import { CommandOption } from 'src/domain/CommandOption'
-import IServiceProvider from '../domain/services/IServiceProvider'
-import Command from '../command'
 import assert from 'assert'
+import Command from 'command'
+import type CommandOption from '@domain/CommandOption'
+import type IServiceProvider from '@domain/IServiceProvider'
 
 export default class LoopCommand extends Command {
   constructor() {

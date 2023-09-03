@@ -1,7 +1,7 @@
-import Command from '../command'
 import assert from 'assert'
-import IServiceProvider from '../domain/services/IServiceProvider'
-import type { CommandOption } from 'src/domain/CommandOption'
+import Command from 'command'
+import type CommandOption from '@domain/CommandOption'
+import type IServiceProvider from '@domain/IServiceProvider'
 
 export default class RemoveCommand extends Command {
   constructor() {

@@ -1,6 +1,6 @@
-import EmbeddedMessage from '../embeds/embeddedMessage'
-import IMessageService from '../domain/services/IMessageService'
-import IRepliable, { ReplyMessage } from 'src/domain/IRepliable'
+import type EmbeddedMessage from 'embeds/embeddedMessage'
+import IRepliable, { ReplyMessage } from '@domain/IRepliable'
+import type IMessageService from '@domain/services/IMessageService'
 
 export default class MessageService implements IMessageService {
   readonly interaction: IRepliable

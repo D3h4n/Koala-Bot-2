@@ -1,5 +1,6 @@
-import Command from '../command'
-import IServiceProvider from '../domain/services/IServiceProvider'
+import Command from 'command'
+import type IServiceProvider from '@domain/IServiceProvider'
+
 export default class PauseCommand extends Command {
   constructor() {
     super('pause', 'Pause a song that is currently playing')

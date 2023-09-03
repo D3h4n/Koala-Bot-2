@@ -1,6 +1,7 @@
-import { APIInteractionGuildMember, TextBasedChannel } from 'discord.js'
-import EmbeddedMessage from '../../embeds/embeddedMessage'
-import { VoiceMember } from '../VoiceInteraction'
+import type EmbeddedMessage from 'embeds/embeddedMessage'
+import type { VoiceMember } from '@domain/VoiceInteraction'
+import type { LoopMode } from 'infrastructure/distubeClient'
+import type { APIInteractionGuildMember, TextBasedChannel } from 'discord.js'
 
 export interface IMusicInteraction {
   member: APIInteractionGuildMember | VoiceMember | null
@@ -17,5 +18,5 @@ export default interface IMusicService {
   trySkip: () => Promise<boolean>
   tryStop: () => Promise<boolean>
   remove: (position: number) => Promise<string | null>
-  loop: (target: 'queue' | 'song' | 'off') => Promise<string | null>
+  loop: (target: LoopMode) => Promise<string | null>
 }

@@ -1,6 +1,6 @@
-import Command from '../command'
-import IServiceProvider from '../domain/services/IServiceProvider'
-import type { CommandOption } from 'src/domain/CommandOption'
+import Command from 'command'
+import type IServiceProvider from '@domain/IServiceProvider'
+import type CommandOption from '@domain/CommandOption'
 
 export default class ChooseCommand extends Command {
   constructor() {

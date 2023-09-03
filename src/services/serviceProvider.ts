@@ -1,10 +1,10 @@
 import type { ChatInputCommandInteraction } from 'discord.js'
 
-import IMusicService from '../domain/services/IMusicService'
-import IVoiceService from '../domain/services/IVoiceService'
-import IMessageService from '../domain/services/IMessageService'
-import IServiceProvider from '../domain/services/IServiceProvider'
-import type IDistubeClient from 'src/domain/infrastructure/IDistubeClient'
+import type IMusicService from '@domain/IMusicService'
+import type IVoiceService from '@domain/IVoiceService'
+import type IDistubeClient from '@domain/IDistubeClient'
+import type IMessageService from '@domain/IMessageService'
+import type IServiceProvider from '@domain/IServiceProvider'
 
 import MessageService from './messageService'
 import MusicService from './musicService'

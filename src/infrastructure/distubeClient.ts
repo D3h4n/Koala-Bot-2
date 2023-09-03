@@ -1,18 +1,20 @@
 import SpotifyPlugin from '@distube/spotify'
 import SoundCloudPlugin from '@distube/soundcloud'
-import { GuildMember, GuildTextBasedChannel } from 'discord.js'
 import DisTube, { Playlist, Queue, RepeatMode, Song } from 'distube'
+import type { GuildMember, GuildTextBasedChannel } from 'discord.js'
 
-import IDistubeClient, { LoopMode } from '../domain/infrastructure/IDistubeClient'
-import { IMusicInteraction } from '../domain/services/IMusicService'
-import ILogger from '../domain/infrastructure/ILogger'
+import type { IMusicInteraction } from '@domain/IMusicService'
+import type IClientProvider from '@domain/IClientProvider'
+import type IDistubeClient from '@domain/IDistubeClient'
+import type ILogger from '@domain/ILogger'
 
-import QueueMessage from '../embeds/queueMessage'
-import AddSongMessage from '../embeds/addSongMessage'
-import EmbeddedMessage from '../embeds/embeddedMessage'
-import PlaySongMessage from '../embeds/playSongMessage'
-import AddPlaylistMessage from '../embeds/addPlaylistMessage'
-import IClientProvider from 'src/domain/infrastructure/IClientProvider'
+import QueueMessage from 'embeds/queueMessage'
+import AddSongMessage from 'embeds/addSongMessage'
+import EmbeddedMessage from 'embeds/embeddedMessage'
+import PlaySongMessage from 'embeds/playSongMessage'
+import AddPlaylistMessage from 'embeds/addPlaylistMessage'
+
+export type LoopMode = 'queue' | 'song' | 'off'
 
 export default class DistubeClient implements IDistubeClient {
   client: DisTube
@@ -46,7 +48,7 @@ export default class DistubeClient implements IDistubeClient {
 
       const message = new PlaySongMessage(song)
       channel.send({ embeds: [message.embed] })
-      logger?.info(`Playing "${song.name}" in "${queue.voiceChannel?.name}"`)
+      logger?.debug(`Playing "${song.name}" in "${queue.voiceChannel?.name}"`)
     }
   }
 
@@ -59,7 +61,7 @@ export default class DistubeClient implements IDistubeClient {
 
       const message = new AddSongMessage(song, position)
       channel.send({ embeds: [message.embed] })
-      logger?.info(`Added "${song.name}" to queue`)
+      logger?.debug(`Added "${song.name}" to queue`)
     }
   }
 
@@ -71,7 +73,7 @@ export default class DistubeClient implements IDistubeClient {
 
       const message = new AddPlaylistMessage(playlist)
       channel.send({ embeds: [message.embed] })
-      logger?.info(`Added "${playlist.name}" to queue`)
+      logger?.debug(`Added "${playlist.name}" to queue`)
     }
   }
 

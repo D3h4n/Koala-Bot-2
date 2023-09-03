@@ -1,5 +1,5 @@
-import Command from '../command'
-import IServiceProvider from '../domain/services/IServiceProvider'
+import Command from 'command'
+import type IServiceProvider from '@domain/IServiceProvider'
 
 export default class StopCommand extends Command {
   constructor() {

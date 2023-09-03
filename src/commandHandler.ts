@@ -4,10 +4,10 @@ import type IDistubeClient from './domain/infrastructure/IDistubeClient'
 import IServiceProvider from './domain/services/IServiceProvider'
 import type ILogger from './domain/infrastructure/ILogger'
 
-import Command from './command'
-import ServiceProvider from './services/serviceProvider'
-import { CommandOption } from './domain/CommandOption'
-import IInteractionProducer from './domain/infrastructure/IInteractionProducter'
+import Command from 'command'
+import ServiceProvider from 'services/serviceProvider'
+import CommandOption from 'domain/CommandOption'
+import IInteractionProducer from 'domain/infrastructure/IInteractionProducter'
 
 export default class CommandHandler {
   private readonly commands: Map<string, Command>

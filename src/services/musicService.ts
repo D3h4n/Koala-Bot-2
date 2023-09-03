@@ -1,5 +1,6 @@
 import IMusicService, { IMusicInteraction } from '../domain/services/IMusicService'
-import IDistubeClient, { LoopMode } from '../domain/infrastructure/IDistubeClient'
+import IDistubeClient from '../domain/infrastructure/IDistubeClient'
+import { LoopMode } from 'infrastructure/distubeClient'
 
 import EmbeddedMessage from '../embeds/embeddedMessage'
 import QueueMessage from '../embeds/queueMessage'

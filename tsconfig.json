@@ -1,15 +1,14 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "commonJS",
-    "lib": ["dom", "ES2020", "esnext.asynciterable"],
-    "sourceMap": true,
-    "outDir": "./dist",
-    "moduleResolution": "node",
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "lib": ["ES2022"],
+    "types": ["node"],
+    "rootDir": "src",
+    "strict": true,
     "removeComments": true,
-    "noImplicitAny": false,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
+    "noImplicitAny": true,
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -20,7 +19,10 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "resolveJsonModule": true,
-    "baseUrl": "."
+    "baseUrl": "src",
+    "paths": {
+      "@domain/*": ["domain/*", "domain/services/*", "domain/infrastructure/*"]
+    }
   },
-  "include": ["./src/**/*.ts"]
+  "include": ["src"]
 }
