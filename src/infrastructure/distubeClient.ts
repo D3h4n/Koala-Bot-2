@@ -19,7 +19,7 @@ export type LoopMode = 'queue' | 'song' | 'off'
 export default class DistubeClient implements IDistubeClient {
   client: DisTube
 
-  constructor(client: IClientProvider, youtubeAPIKey?: string) {
+  constructor(client: IClientProvider) {
     this.client = new DisTube(client.client, {
       nsfw: true,
       leaveOnStop: true,
@@ -27,7 +27,6 @@ export default class DistubeClient implements IDistubeClient {
       leaveOnFinish: true,
       emitNewSongOnly: true,
       emitAddSongWhenCreatingQueue: false,
-      youtubeIdentityToken: youtubeAPIKey,
       plugins: [new SpotifyPlugin(), new SoundCloudPlugin()],
     })
   }

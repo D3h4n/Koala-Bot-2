@@ -25,4 +25,3 @@ RUN rm -rf ./node_modules/ffmpeg-static
 ENTRYPOINT ["npm", "start"]
 # Requires the following ENV VARS
 # - DISCORD_BOT_TOKEN
-# - YOUTUBE_API_KEY

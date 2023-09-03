@@ -109,7 +109,6 @@ jobs:
         run: |
           jq --arg image '${{ steps.repo_name.outputs.lowercase }}:${{ github.sha }}' \
             --arg bot_token '${{ secrets.DISCORD_BOT_TOKEN }}' \
-            --arg api_key '${{ secrets.YOUTUBE_API_KEY }}' \
             '.containers."koala-bot".image = $image
             | .containers."koala-bot".environment.DISCORD_BOT_TOKEN = $bot_token
             | .containers."koala-bot".environment.YOUTUBE_API_KEY = $api_key' \
