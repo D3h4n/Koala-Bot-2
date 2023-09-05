@@ -48,7 +48,7 @@ function findCommandsInDirectory(dir: string): string[] {
       const path = resolve(dirEntry.path, dirEntry.name)
       return !dirEntry.isDirectory() ? path : findCommandsInDirectory(path)
     })
-    .filter((path) => path.endsWith('.ts'))
+    .filter((path) => path.endsWith('.ts') && !path.endsWith('.test.ts'))
 }
 
 if (require.main === module) {

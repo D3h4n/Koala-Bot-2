@@ -23,9 +23,6 @@ COPY ./tsconfig.build.json ./tsconfig.build.json
 RUN apt update && apt install -y ffmpeg
 RUN rm -rf ./node_modules/ffmpeg-static
 
-# FIXME: ts-node doesn't like test files and isn't ignoring them for some reason
-RUN find ./src -type f -name '*.test.ts' -delete
-
 ENTRYPOINT ["npm", "start"]
 # Requires the following ENV VARS
 # - DISCORD_BOT_TOKEN
