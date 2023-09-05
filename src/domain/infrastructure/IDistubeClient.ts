@@ -1,7 +1,7 @@
 import type ILogger from '@domain/ILogger'
-import type EmbeddedMessage from 'embeds/embeddedMessage'
+import type EmbeddedMessage from 'src/embeds/embeddedMessage'
+import type { LoopMode } from '@infrastructure/distubeClient'
 import type { IMusicInteraction } from '@domain/IMusicService'
-import type { LoopMode } from 'infrastructure/distubeClient'
 
 export default interface IDistubeClient {
   registerEventHandlers: (logger?: ILogger) => void
@@ -14,4 +14,5 @@ export default interface IDistubeClient {
   tryStop: (guildId: string) => Promise<boolean>
   remove: (position: number, guildId: string) => Promise<string | null>
   loop: (mode: LoopMode, guildId: string) => Promise<string | null>
+  getNowPlaying: (guildId: string) => EmbeddedMessage
 }

@@ -16,10 +16,10 @@
     "es6": true,
     "node": true
   },
-  "ignorePatterns": ["dist/*"],
+  "ignorePatterns": ["*.js"],
   "overrides": [
     {
-      "files": ["tests/**/*.ts"],
+      "files": ["**/*.test.ts"],
       "parserOptions": {
         "project": "tsconfig.test.json"
       },

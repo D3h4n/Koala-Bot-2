@@ -1,9 +1,9 @@
-import IMusicService, { IMusicInteraction } from '../domain/services/IMusicService'
-import IDistubeClient from '../domain/infrastructure/IDistubeClient'
-import { LoopMode } from 'infrastructure/distubeClient'
+import IMusicService, { IMusicInteraction } from '@domain/IMusicService'
+import IDistubeClient from '@domain/IDistubeClient'
 
-import EmbeddedMessage from '../embeds/embeddedMessage'
-import QueueMessage from '../embeds/queueMessage'
+import QueueMessage from 'src/embeds/queueMessage'
+import EmbeddedMessage from 'src/embeds/embeddedMessage'
+import { LoopMode } from 'src/infrastructure/distubeClient'
 
 export default class MusicService implements IMusicService {
   private readonly distube: IDistubeClient
@@ -61,5 +61,11 @@ export default class MusicService implements IMusicService {
     return this.interaction.guildId
       ? await this.distube.loop(target, this.interaction.guildId)
       : null
+  }
+
+  getNowPlaying(): EmbeddedMessage {
+    return this.interaction.guildId
+      ? this.distube.getNowPlaying(this.interaction.guildId)
+      : QueueMessage.EmptyQueue
   }
 }

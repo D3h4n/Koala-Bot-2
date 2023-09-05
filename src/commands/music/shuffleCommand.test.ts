@@ -1,7 +1,11 @@
-import { mockMessageService, mockMusicService, mockVoiceService } from '../mocks'
+import {
+  mockMessageService,
+  mockMusicService,
+  mockVoiceService,
+} from '../../testFixtures/mocks.test'
 
-import ServiceProvider from '../../src/services/serviceProvider'
-import ShuffleCommand from '../../src/commands/shuffleCommand'
+import ServiceProvider from '@services/serviceProvider'
+import ShuffleCommand from './shuffleCommand'
 
 describe('The shuffle command', () => {
   it('can shuffle a song', async () => {

@@ -1,4 +1,4 @@
-import Command from 'command'
+import Command from 'src/command'
 import type IServiceProvider from '@domain/IServiceProvider'
 
 export default class SkipCommand extends Command {

@@ -1,7 +1,7 @@
-import IDistubeClient from '../src/domain/infrastructure/IDistubeClient'
-import IMessageService from '../src/domain/services/IMessageService'
-import IMusicService from '../src/domain/services/IMusicService'
-import IVoiceService from '../src/domain/services/IVoiceService'
+import IDistubeClient from '@domain/IDistubeClient'
+import IMessageService from '@domain/IMessageService'
+import IMusicService from '@domain/IMusicService'
+import IVoiceService from '@domain/IVoiceService'
 
 export const mockMusicService: () => IMusicService = () => ({
   play: jest.fn(),
@@ -13,6 +13,7 @@ export const mockMusicService: () => IMusicService = () => ({
   tryStop: jest.fn(),
   remove: jest.fn(),
   loop: jest.fn(),
+  getNowPlaying: jest.fn(),
 })
 
 export const mockMessageService: () => IMessageService = () => ({
@@ -36,4 +37,5 @@ export const mockDistubeClient: () => IDistubeClient = () => ({
   tryStop: jest.fn(),
   remove: jest.fn(),
   loop: jest.fn(),
+  getNowPlaying: jest.fn(),
 })

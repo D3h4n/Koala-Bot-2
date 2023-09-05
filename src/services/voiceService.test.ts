@@ -1,8 +1,8 @@
 import * as fc from 'fast-check'
 import { PermissionsBitField } from 'discord.js'
 
-import { VoiceInteraction, VoiceMember } from '../../src/domain/VoiceInteraction'
-import VoiceService from '../../src/services/voiceService'
+import { VoiceInteraction, VoiceMember } from '@domain/VoiceInteraction'
+import VoiceService from '@services/voiceService'
 
 describe('The Voice Service', () => {
   it('can move members between voice channels', () => {

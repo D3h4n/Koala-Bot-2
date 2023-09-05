@@ -1,10 +1,10 @@
 import dotenv from 'dotenv'
-import { readCommands } from 'register'
-import CommandHandler from 'commandHandler'
+import { readCommands } from './register'
+import CommandHandler from './commandHandler'
 
-import MyLogger from 'infrastructure/myLogger'
-import DiscordClient from 'infrastructure/discordClient'
-import DistubeClient from 'infrastructure/distubeClient'
+import MyLogger from '@infrastructure/myLogger'
+import DiscordClient from '@infrastructure/discordClient'
+import DistubeClient from '@infrastructure/distubeClient'
 
 async function main() {
   dotenv.config()

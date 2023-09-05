@@ -4,8 +4,8 @@ import { resolve } from 'node:path'
 import dotenv from 'dotenv'
 import { Client } from 'discord.js'
 
-import type Command from 'command'
-import MyLogger from 'infrastructure/myLogger'
+import type Command from 'src/command'
+import MyLogger from '@infrastructure/myLogger'
 
 async function main() {
   dotenv.config()

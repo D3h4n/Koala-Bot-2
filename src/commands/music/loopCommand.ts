@@ -1,5 +1,5 @@
 import assert from 'assert'
-import Command from 'command'
+import Command from 'src/command'
 import type CommandOption from '@domain/CommandOption'
 import type IServiceProvider from '@domain/IServiceProvider'
 

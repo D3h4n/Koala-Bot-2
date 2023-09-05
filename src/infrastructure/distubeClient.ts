@@ -8,11 +8,12 @@ import type IClientProvider from '@domain/IClientProvider'
 import type IDistubeClient from '@domain/IDistubeClient'
 import type ILogger from '@domain/ILogger'
 
-import QueueMessage from 'embeds/queueMessage'
-import AddSongMessage from 'embeds/addSongMessage'
-import EmbeddedMessage from 'embeds/embeddedMessage'
-import PlaySongMessage from 'embeds/playSongMessage'
-import AddPlaylistMessage from 'embeds/addPlaylistMessage'
+import QueueMessage from 'src/embeds/queueMessage'
+import AddSongMessage from 'src/embeds/addSongMessage'
+import EmbeddedMessage from 'src/embeds/embeddedMessage'
+import PlaySongMessage from 'src/embeds/playSongMessage'
+import AddPlaylistMessage from 'src/embeds/addPlaylistMessage'
+import NowPlayingMessage from 'src/embeds/nowPlayingMessage'
 
 export type LoopMode = 'queue' | 'song' | 'off'
 
@@ -174,5 +175,15 @@ export default class DistubeClient implements IDistubeClient {
       default:
         throw new Error('Unhandled loop mode')
     }
+  }
+
+  getNowPlaying(guildId: string): EmbeddedMessage {
+    const queue = this.client.getQueue(guildId)
+
+    if (!queue || queue.songs.length < 1) {
+      return QueueMessage.EmptyQueue
+    }
+
+    return new NowPlayingMessage(queue)
   }
 }

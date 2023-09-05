@@ -1,8 +1,8 @@
-import { mockMessageService, mockMusicService, mockVoiceService } from './mocks'
+import { mockMessageService, mockMusicService, mockVoiceService } from './testFixtures/mocks.test'
 
-import Command from '../src/command'
-import CommandHandler from '../src/commandHandler'
-import ServiceProvider from '../src/services/serviceProvider'
+import Command from './command'
+import CommandHandler from './commandHandler'
+import ServiceProvider from './services/serviceProvider'
 
 describe('The command handler after receiving a command', () => {
   describe('that exists', () => {

@@ -1,7 +1,10 @@
-import { mockMessageService, mockMusicService, mockVoiceService } from '../mocks'
-
-import ServiceProvider from '../../src/services/serviceProvider'
-import StopCommand from '../../src/commands/stopCommand'
+import {
+  mockMessageService,
+  mockMusicService,
+  mockVoiceService,
+} from '../../testFixtures/mocks.test'
+import ServiceProvider from '@services/serviceProvider'
+import StopCommand from './stopCommand'
 
 describe('The stop command', () => {
   it('can stop playing a song', async () => {

@@ -1,10 +1,10 @@
 import * as fc from 'fast-check'
-import { mockDistubeClient } from '../mocks'
-import { IMusicInteraction } from '../../src/domain/services/IMusicService'
+import { mockDistubeClient } from 'src/testFixtures/mocks.test'
+import { IMusicInteraction } from '@domain/IMusicService'
 
-import EmbeddedMessage from '../../src/embeds/embeddedMessage'
-import MusicService from '../../src/services/musicService'
-import QueueMessage from '../../src/embeds/queueMessage'
+import EmbeddedMessage from 'src/embeds/embeddedMessage'
+import QueueMessage from 'src/embeds/queueMessage'
+import MusicService from './musicService'
 
 describe('The Music Service', () => {
   describe('can play music', () => {
@@ -66,7 +66,7 @@ describe('The Music Service', () => {
       const interaction: IMusicInteraction = {
         member: null,
         channel: null,
-        guildId: guildId,
+        guildId,
       }
 
       const distubeClient = mockDistubeClient()
@@ -88,7 +88,7 @@ describe('The Music Service', () => {
       const interaction: IMusicInteraction = {
         member: null,
         channel: null,
-        guildId: guildId,
+        guildId,
       }
 
       const distubeClient = mockDistubeClient()
@@ -131,7 +131,7 @@ describe('The Music Service', () => {
       const interaction: IMusicInteraction = {
         member: null,
         channel: null,
-        guildId: guildId,
+        guildId,
       }
 
       const distubeClient = mockDistubeClient()
@@ -153,7 +153,7 @@ describe('The Music Service', () => {
       const interaction: IMusicInteraction = {
         member: null,
         channel: null,
-        guildId: guildId,
+        guildId,
       }
 
       const distubeClient = mockDistubeClient()
@@ -198,7 +198,7 @@ describe('The Music Service', () => {
         const interaction: IMusicInteraction = {
           member: null,
           channel: null,
-          guildId: guildId,
+          guildId,
         }
 
         const embed = new EmbeddedMessage({})
@@ -225,7 +225,7 @@ describe('The Music Service', () => {
           const interaction: IMusicInteraction = {
             member: null,
             channel: null,
-            guildId: guildId,
+            guildId,
           }
 
           const embed = new EmbeddedMessage({})
@@ -272,7 +272,7 @@ describe('The Music Service', () => {
       const interaction: IMusicInteraction = {
         member: null,
         channel: null,
-        guildId: guildId,
+        guildId,
       }
 
       const distubeClient = mockDistubeClient()
@@ -294,7 +294,7 @@ describe('The Music Service', () => {
       const interaction: IMusicInteraction = {
         member: null,
         channel: null,
-        guildId: guildId,
+        guildId,
       }
 
       const distubeClient = mockDistubeClient()
@@ -337,7 +337,7 @@ describe('The Music Service', () => {
       const interaction: IMusicInteraction = {
         member: null,
         channel: null,
-        guildId: guildId,
+        guildId,
       }
 
       const distubeClient = mockDistubeClient()
@@ -359,7 +359,7 @@ describe('The Music Service', () => {
       const interaction: IMusicInteraction = {
         member: null,
         channel: null,
-        guildId: guildId,
+        guildId,
       }
 
       const distubeClient = mockDistubeClient()
@@ -402,7 +402,7 @@ describe('The Music Service', () => {
       const interaction: IMusicInteraction = {
         member: null,
         channel: null,
-        guildId: guildId,
+        guildId,
       }
 
       const distubeClient = mockDistubeClient()
@@ -424,7 +424,7 @@ describe('The Music Service', () => {
       const interaction: IMusicInteraction = {
         member: null,
         channel: null,
-        guildId: guildId,
+        guildId,
       }
 
       const distubeClient = mockDistubeClient()
@@ -470,7 +470,7 @@ describe('The Music Service', () => {
       const interaction: IMusicInteraction = {
         member: null,
         channel: null,
-        guildId: guildId,
+        guildId,
       }
 
       const songName = 'A song name'
@@ -496,7 +496,7 @@ describe('The Music Service', () => {
         const interaction: IMusicInteraction = {
           member: null,
           channel: null,
-          guildId: guildId,
+          guildId,
         }
 
         const distubeClient = mockDistubeClient()
@@ -543,7 +543,7 @@ describe('The Music Service', () => {
           const interaction: IMusicInteraction = {
             member: null,
             channel: null,
-            guildId: guildId,
+            guildId,
           }
 
           const distubeClient = mockDistubeClient()
@@ -569,7 +569,7 @@ describe('The Music Service', () => {
           const interaction: IMusicInteraction = {
             member: null,
             channel: null,
-            guildId: guildId,
+            guildId,
           }
 
           const distubeClient = mockDistubeClient()
@@ -616,7 +616,7 @@ describe('The Music Service', () => {
           const interaction: IMusicInteraction = {
             member: null,
             channel: null,
-            guildId: guildId,
+            guildId,
           }
 
           const distubeClient = mockDistubeClient()
@@ -642,7 +642,7 @@ describe('The Music Service', () => {
           const interaction: IMusicInteraction = {
             member: null,
             channel: null,
-            guildId: guildId,
+            guildId,
           }
 
           const distubeClient = mockDistubeClient()
@@ -689,7 +689,7 @@ describe('The Music Service', () => {
           const interaction: IMusicInteraction = {
             member: null,
             channel: null,
-            guildId: guildId,
+            guildId,
           }
 
           const distubeClient = mockDistubeClient()
@@ -715,7 +715,7 @@ describe('The Music Service', () => {
           const interaction: IMusicInteraction = {
             member: null,
             channel: null,
-            guildId: guildId,
+            guildId,
           }
 
           const distubeClient = mockDistubeClient()
@@ -753,6 +753,53 @@ describe('The Music Service', () => {
         expect(distubeClient.loop).not.toHaveBeenCalled()
         expect(result).toBe(null)
       })
+    })
+  })
+
+  describe('can generate the correct message for the currently playing song', () => {
+    it.each(['1234123412343241231', '13423423412341234'])(
+      'when the guildId is defined',
+      (guildId) => {
+        const interaction: IMusicInteraction = {
+          member: null,
+          channel: null,
+          guildId,
+        }
+
+        const embed = new EmbeddedMessage({})
+        const distubeClient = mockDistubeClient()
+
+        distubeClient.getNowPlaying = jest.fn(() => embed)
+
+        // Arrange
+        const musicService = new MusicService(interaction, distubeClient)
+
+        // Act
+        const result = musicService.getNowPlaying()
+
+        // Assert
+        expect(result).toBe(embed)
+      }
+    )
+
+    it('when the guildId is not defined', () => {
+      const interaction: IMusicInteraction = {
+        member: null,
+        channel: null,
+        guildId: null,
+      }
+
+      const distubeClient = mockDistubeClient()
+
+      // Arrange
+      const musicService = new MusicService(interaction, distubeClient)
+
+      // Act
+      const result = musicService.getNowPlaying()
+
+      // Assert
+      expect(distubeClient.getNowPlaying).not.toHaveBeenCalled()
+      expect(result).toEqual(QueueMessage.EmptyQueue)
     })
   })
 })

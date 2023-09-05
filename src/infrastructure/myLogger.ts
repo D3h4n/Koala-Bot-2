@@ -1,4 +1,4 @@
-import ILogger from '../domain/infrastructure/ILogger'
+import ILogger from '@domain/ILogger'
 
 export enum LogLevel {
   DEBUG = 0,

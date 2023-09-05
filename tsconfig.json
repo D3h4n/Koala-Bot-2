@@ -4,7 +4,7 @@
     "module": "CommonJS",
     "moduleResolution": "Node",
     "lib": ["ES2022"],
-    "types": ["node"],
+    "types": ["node", "jest"],
     "rootDir": "src",
     "strict": true,
     "removeComments": true,
@@ -19,10 +19,13 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "resolveJsonModule": true,
-    "baseUrl": "src",
+    "baseUrl": ".",
     "paths": {
-      "@domain/*": ["domain/*", "domain/services/*", "domain/infrastructure/*"]
+      "@domain/*": ["src/domain/*", "src/domain/services/*", "src/domain/infrastructure/*"],
+      "@services/*": ["src/services/*"],
+      "@infrastructure/*": ["src/infrastructure/*"]
     }
   },
-  "include": ["src"]
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"]
 }

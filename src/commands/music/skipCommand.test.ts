@@ -1,7 +1,10 @@
-import { mockMessageService, mockMusicService, mockVoiceService } from '../mocks'
-
-import ServiceProvider from '../../src/services/serviceProvider'
-import SkipCommand from '../../src/commands/skipCommand'
+import {
+  mockMessageService,
+  mockMusicService,
+  mockVoiceService,
+} from '../../testFixtures/mocks.test'
+import ServiceProvider from '@services/serviceProvider'
+import SkipCommand from './skipCommand'
 
 describe('The skip command', () => {
   it('can skip a song', async () => {

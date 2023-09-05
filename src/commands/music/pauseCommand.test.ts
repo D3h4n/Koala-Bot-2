@@ -1,7 +1,7 @@
-import { mockMessageService, mockMusicService, mockVoiceService } from '../mocks'
+import { mockMessageService, mockMusicService, mockVoiceService } from 'src/testFixtures/mocks.test'
 
-import ServiceProvider from '../../src/services/serviceProvider'
-import PauseCommand from '../../src/commands/pauseCommand'
+import ServiceProvider from '@services/serviceProvider'
+import PauseCommand from './pauseCommand'
 
 describe('The pause command', () => {
   it('pauses the currently playing song', async () => {

@@ -1,6 +1,6 @@
-import LoopCommand from '../../src/commands/loopCommand'
-import ServiceProvider from '../../src/services/serviceProvider'
-import { mockMessageService, mockMusicService, mockVoiceService } from '../mocks'
+import LoopCommand from './loopCommand'
+import ServiceProvider from '@services/serviceProvider'
+import { mockMessageService, mockMusicService, mockVoiceService } from 'src/testFixtures/mocks.test'
 
 describe('The Loop Command', () => {
   describe('can try to loop a song', () => {

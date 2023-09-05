@@ -1,13 +1,13 @@
 import type { ChatInputCommandInteraction, TextChannel } from 'discord.js'
 
-import type IDistubeClient from './domain/infrastructure/IDistubeClient'
-import IServiceProvider from './domain/services/IServiceProvider'
-import type ILogger from './domain/infrastructure/ILogger'
+import IInteractionProducer from '@domain/IInteractionProducter'
+import type IDistubeClient from '@domain/IDistubeClient'
+import IServiceProvider from '@domain/IServiceProvider'
+import CommandOption from '@domain/CommandOption'
+import type ILogger from '@domain/ILogger'
 
-import Command from 'command'
-import ServiceProvider from 'services/serviceProvider'
-import CommandOption from 'domain/CommandOption'
-import IInteractionProducer from 'domain/infrastructure/IInteractionProducter'
+import Command from 'src/command'
+import ServiceProvider from '@services/serviceProvider'
 
 export default class CommandHandler {
   private readonly commands: Map<string, Command>

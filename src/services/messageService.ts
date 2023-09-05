@@ -1,4 +1,4 @@
-import type EmbeddedMessage from 'embeds/embeddedMessage'
+import type EmbeddedMessage from 'src/embeds/embeddedMessage'
 import IRepliable, { ReplyMessage } from '@domain/IRepliable'
 import type IMessageService from '@domain/services/IMessageService'
 

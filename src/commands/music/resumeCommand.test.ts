@@ -1,7 +1,10 @@
-import { mockMessageService, mockMusicService, mockVoiceService } from '../mocks'
-
-import ServiceProvider from '../../src/services/serviceProvider'
-import ResumeCommand from '../../src/commands/resumeCommand'
+import {
+  mockMessageService,
+  mockMusicService,
+  mockVoiceService,
+} from '../../testFixtures/mocks.test'
+import ServiceProvider from '@services/serviceProvider'
+import ResumeCommand from './resumeCommand'
 
 describe('The resume command', () => {
   it('resumes the currently playing song', async () => {

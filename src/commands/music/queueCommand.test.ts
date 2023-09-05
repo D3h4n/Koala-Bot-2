@@ -1,9 +1,13 @@
 import * as fc from 'fast-check'
-import { mockMessageService, mockMusicService, mockVoiceService } from '../mocks'
 
-import ServiceProvider from '../../src/services/serviceProvider'
-import EmbeddedMessage from '../../src/embeds/embeddedMessage'
-import QueueCommand from '../../src/commands/queueCommand'
+import {
+  mockMessageService,
+  mockMusicService,
+  mockVoiceService,
+} from '../../testFixtures/mocks.test'
+import EmbeddedMessage from 'src/embeds/embeddedMessage'
+import ServiceProvider from '@services/serviceProvider'
+import QueueCommand from './queueCommand'
 
 describe('The queue command', () => {
   it('can display the queue', () => {

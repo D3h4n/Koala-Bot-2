@@ -1,8 +1,8 @@
 import * as fc from 'fast-check'
-import { mockMessageService, mockMusicService, mockVoiceService } from '../mocks'
+import { mockMessageService, mockMusicService, mockVoiceService } from 'src/testFixtures/mocks.test'
 
-import ServiceProvider from '../../src/services/serviceProvider'
-import PlayCommand from '../../src/commands/playCommand'
+import ServiceProvider from '@services/serviceProvider'
+import PlayCommand from './playCommand'
 
 describe('The play command', () => {
   it('can play a song', () => {

@@ -1,8 +1,12 @@
 import * as fc from 'fast-check'
-import { mockMessageService, mockMusicService, mockVoiceService } from '../mocks'
 
-import ServiceProvider from '../../src/services/serviceProvider'
-import RemoveCommand from '../../src/commands/removeCommand'
+import {
+  mockMessageService,
+  mockMusicService,
+  mockVoiceService,
+} from '../../testFixtures/mocks.test'
+import ServiceProvider from '@services/serviceProvider'
+import RemoveCommand from './removeCommand'
 
 describe('The remove command', () => {
   it('can remove a song', () => {
