@@ -1,6 +1,6 @@
 import * as fc from 'fast-check'
+import IMusicInteraction from '@domain/IMusicInteraction'
 import { mockDistubeClient } from 'src/testFixtures/mocks.test'
-import { IMusicInteraction } from '@domain/IMusicService'
 
 import EmbeddedMessage from 'src/embeds/embeddedMessage'
 import QueueMessage from 'src/embeds/queueMessage'

@@ -15,7 +15,7 @@ export default class MessageService implements IMessageService {
       return
     }
 
-    await this.sendReply({ embeds: [message.embed] })
+    await this.sendReply(message.embed)
   }
 
   private async sendReply(options: ReplyMessage) {

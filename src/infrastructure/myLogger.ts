@@ -17,7 +17,6 @@ export default class MyLogger implements ILogger {
 
   debug(msg: string) {
     if (this.logLevel > LogLevel.DEBUG) return
-
     console.log('[DEBUG] ' + msg)
   }
 
@@ -28,16 +27,20 @@ export default class MyLogger implements ILogger {
 
   warn(warn: string | Error) {
     if (this.logLevel > LogLevel.WARN) return
+
     if (warn instanceof Error) {
       warn = warn.message
     }
+
     console.log('[WARN] ' + warn)
   }
 
   error(error: string | Error) {
     if (this.logLevel > LogLevel.ERROR) return
+
     if (typeof error === 'string') {
-      return console.error('[ERROR] ' + error)
+      console.error('[ERROR] ' + error)
+      return
     }
 
     console.error(error)

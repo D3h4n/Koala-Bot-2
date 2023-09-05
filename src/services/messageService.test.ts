@@ -52,7 +52,7 @@ describe('The Message Service', () => {
         await messageService.reply(embed)
 
         // Assert
-        expect(interaction.reply).toHaveBeenCalledWith({ embeds: [embed.embed] })
+        expect(interaction.reply).toHaveBeenCalledWith(embed.embed)
       })
     })
 
@@ -104,7 +104,7 @@ describe('The Message Service', () => {
         await messageService.reply(embed)
 
         // Assert
-        expect(interaction.editReply).toHaveBeenCalledWith({ embeds: [embed.embed] })
+        expect(interaction.editReply).toHaveBeenCalledWith(embed.embed)
       })
     })
 
@@ -152,7 +152,7 @@ describe('The Message Service', () => {
 
         await messageService.reply(embed)
 
-        expect(interaction.editReply).toHaveBeenCalledWith({ embeds: [embed.embed] })
+        expect(interaction.editReply).toHaveBeenCalledWith(embed.embed)
       })
     })
   })

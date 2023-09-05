@@ -1,14 +1,17 @@
-import { ActivityType, ChatInputCommandInteraction, Client, IntentsBitField } from 'discord.js'
+import { ActivityType, Client, IntentsBitField } from 'discord.js'
 
 import type ILogger from '@domain/ILogger'
 import type IClientProvider from '@domain/IClientProvider'
+import { InteractionHandler } from '@domain/IInteractionProducter'
 import type IInteractionProducer from '@domain/IInteractionProducter'
 
 export default class DiscordClient implements IInteractionProducer, IClientProvider {
-  private readonly discordClient: Client<boolean>
+  private readonly client: Client<boolean>
+  private readonly handlers: Set<InteractionHandler>
+  private readonly logger?: ILogger
 
-  constructor() {
-    this.discordClient = new Client({
+  constructor(logger?: ILogger) {
+    this.client = new Client({
       intents: [
         IntentsBitField.Flags.Guilds,
         IntentsBitField.Flags.GuildMessages,
@@ -25,26 +28,29 @@ export default class DiscordClient implements IInteractionProducer, IClientProvi
         ],
       },
     })
-  }
 
-  get client() {
-    return this.discordClient
-  }
+    this.handlers = new Set()
 
-  registerCommandHandler(
-    handler: (interaction: ChatInputCommandInteraction) => void,
-    logger?: ILogger
-  ) {
     this.client
       .on('ready', () => logger?.info('Running'))
       .on('interactionCreate', (interaction) => {
         logger?.debug(`Received interaction ${interaction.id}`)
         if (!interaction.isChatInputCommand() || !interaction.guildId) return
-        handler(interaction)
+        this.handlers.forEach((handler) => handler(interaction))
       })
   }
 
-  async login(token: string) {
-    this.client.login(token)
+  getClient() {
+    return this.client
+  }
+
+  subscribe(handler: InteractionHandler) {
+    this.logger?.debug('Adding new handler')
+    this.handlers.add(handler)
+  }
+
+  login(token: string) {
+    this.logger?.debug(`Logging in with token ${token}`)
+    return this.client.login(token)
   }
 }

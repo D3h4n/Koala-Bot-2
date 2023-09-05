@@ -1,9 +1,9 @@
-import IMusicService, { IMusicInteraction } from '@domain/IMusicService'
-import IDistubeClient from '@domain/IDistubeClient'
+import IMusicService from '@domain/IMusicService'
+import IMusicInteraction from '@domain/IMusicInteraction'
+import IDistubeClient, { LoopMode } from '@domain/IDistubeClient'
 
 import QueueMessage from 'src/embeds/queueMessage'
 import EmbeddedMessage from 'src/embeds/embeddedMessage'
-import { LoopMode } from 'src/infrastructure/distubeClient'
 
 export default class MusicService implements IMusicService {
   private readonly distube: IDistubeClient

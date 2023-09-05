@@ -1,10 +1,9 @@
-import type ILogger from '@domain/ILogger'
 import type EmbeddedMessage from 'src/embeds/embeddedMessage'
-import type { LoopMode } from '@infrastructure/distubeClient'
-import type { IMusicInteraction } from '@domain/IMusicService'
+import IMusicInteraction from '@domain/IMusicInteraction'
+
+export type LoopMode = 'queue' | 'song' | 'off'
 
 export default interface IDistubeClient {
-  registerEventHandlers: (logger?: ILogger) => void
   play: (query: string, interaction: IMusicInteraction) => Promise<string | null>
   tryPause: (guildId: string) => Promise<boolean>
   tryResume: (guildId: string) => Promise<boolean>

@@ -12,31 +12,31 @@ interface IEmbedOptions {
 }
 
 export default class EmbeddedMessage {
-  readonly options: IEmbedOptions
+  private readonly message: EmbedBuilder
 
   constructor(options: IEmbedOptions) {
-    this.options = options
-  }
-
-  get embed() {
-    return new EmbedBuilder()
+    this.message = new EmbedBuilder()
       .setAuthor(
-        this.options.author
+        options.author
           ? {
-              name: this.options.author,
-              iconURL: this.options.icon,
+              name: options.author,
+              iconURL: options.icon,
             }
           : null
       )
-      .setTitle(this.options.title || null)
-      .setURL(this.options.url || null)
+      .setTitle(options.title || null)
+      .setURL(options.url || null)
       .setDescription(
-        this.options.description instanceof Array
-          ? this.options.description.join('\n')
-          : this.options.description || null
+        options.description instanceof Array
+          ? options.description.join('\n')
+          : options.description || null
       )
-      .setThumbnail(this.options.thumbnail || null)
-      .setImage(this.options.image || null)
-      .setFooter(!this.options.footer ? null : { text: this.options.footer })
+      .setThumbnail(options.thumbnail || null)
+      .setImage(options.image || null)
+      .setFooter(!options.footer ? null : { text: options.footer })
+  }
+
+  get embed() {
+    return { embeds: [this.message] }
   }
 }

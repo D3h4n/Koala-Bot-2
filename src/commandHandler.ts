@@ -1,10 +1,9 @@
 import type { ChatInputCommandInteraction, TextChannel } from 'discord.js'
 
 import IInteractionProducer from '@domain/IInteractionProducter'
-import type IDistubeClient from '@domain/IDistubeClient'
 import IServiceProvider from '@domain/IServiceProvider'
 import CommandOption from '@domain/CommandOption'
-import type ILogger from '@domain/ILogger'
+import ILogger from '@domain/ILogger'
 
 import Command from 'src/command'
 import ServiceProvider from '@services/serviceProvider'
@@ -12,39 +11,26 @@ import ServiceProvider from '@services/serviceProvider'
 export default class CommandHandler {
   private readonly commands: Map<string, Command>
 
-  constructor(
-    commands: Command[],
-    interactionProvider?: IInteractionProducer,
-    distubeClient?: IDistubeClient,
-    logger?: ILogger
-  ) {
+  constructor(commands: Command[], interactionProducer?: IInteractionProducer, logger?: ILogger) {
     this.commands = new Map(
       commands.map((command) => {
         return [command.name, command]
       })
     )
 
-    distubeClient?.registerEventHandlers(logger)
-    interactionProvider?.registerCommandHandler(
-      async (interaction: ChatInputCommandInteraction) => {
-        if (!distubeClient) {
-          logger?.error('Cannot handle interaction without distube client set')
-          return
-        }
+    interactionProducer?.subscribe(async (interaction: ChatInputCommandInteraction) => {
+      logger?.info(
+        `User '${interaction.user.tag}' used command '${interaction.commandName}' ` +
+          `in channel '${(<TextChannel | null>interaction.channel)?.name}'`
+      )
 
-        logger?.info(
-          `User '${interaction.user.tag}' used command '${interaction.commandName}' ` +
-            `in channel '${(<TextChannel | null>interaction.channel)?.name}'`
-        )
-
-        await this.handle(
-          interaction.commandName,
-          new Map(interaction.options.data.map((option) => [option.name, option.value])),
-          ServiceProvider.fromInteraction(interaction, distubeClient)
-        )
-      },
-      logger
-    )
+      await this.handle(
+        interaction.commandName,
+        new Map(interaction.options.data.map((option) => [option.name, option.value])),
+        ServiceProvider.fromInteraction(interaction)
+      )
+      logger?.debug(`Handled command '${interaction.commandName}'`)
+    })
   }
 
   public async handle(

@@ -14,6 +14,7 @@ export default class ServiceProvider implements IServiceProvider {
   readonly message: IMessageService
   readonly music: IMusicService
   readonly voice: IVoiceService
+  private static _distubeClient: IDistubeClient
 
   constructor(
     messageService: IMessageService,
@@ -25,13 +26,18 @@ export default class ServiceProvider implements IServiceProvider {
     this.voice = voiceService
   }
 
-  public static fromInteraction(
-    interaction: ChatInputCommandInteraction,
-    distubeClient: IDistubeClient
-  ) {
+  static set distubeClient(distubeClient: IDistubeClient) {
+    ServiceProvider._distubeClient = distubeClient
+  }
+
+  public static fromInteraction(interaction: ChatInputCommandInteraction) {
+    if (!ServiceProvider._distubeClient) {
+      throw new Error('Distube Client not initialized')
+    }
+
     return new ServiceProvider(
       new MessageService(interaction),
-      new MusicService(interaction, distubeClient),
+      new MusicService(interaction, ServiceProvider._distubeClient),
       new VoiceService(interaction)
     )
   }
