@@ -148,24 +148,42 @@ export default class DistubeClient implements IDistubeClient {
 
   async loop(mode: LoopMode, guildId: string): Promise<Result<string, string>> {
     const queue = this.client.getQueue(guildId)
+    return queue ? ok(DistubeClient.setLoopMode(mode, queue)) : err('No songs in queue')
+  }
 
-    if (!queue) return err('No songs in queue')
+  private static setLoopMode(mode: LoopMode, queue: Queue): string {
+    let newMode: RepeatMode
 
     switch (mode) {
       case 'song':
-        queue.setRepeatMode(RepeatMode.SONG)
-        return ok(`Looping \`${queue.songs[0].name}\`.`)
+        newMode = queue.setRepeatMode(RepeatMode.SONG)
+        break
 
       case 'queue':
-        queue.setRepeatMode(RepeatMode.QUEUE)
-        return ok('Looping queue.')
+        newMode = queue.setRepeatMode(RepeatMode.QUEUE)
+        break
 
       case 'off':
-        queue.setRepeatMode(RepeatMode.DISABLED)
-        return ok('Stopped looping')
+        newMode = queue.setRepeatMode(RepeatMode.DISABLED)
+        break
 
       default:
         throw new Error('Unhandled loop mode')
+    }
+
+    return DistubeClient.repeatModeToString(newMode, queue)
+  }
+
+  private static repeatModeToString(newMode: RepeatMode, queue: Queue) {
+    switch (newMode) {
+      case RepeatMode.SONG:
+        return `Looping \`${queue.songs[0].name}\`.`
+
+      case RepeatMode.QUEUE:
+        return 'Looping queue.'
+
+      case RepeatMode.DISABLED:
+        return 'Stopped looping'
     }
   }
 

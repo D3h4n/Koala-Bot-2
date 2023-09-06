@@ -11,8 +11,8 @@ export default class NowPlayingMessage extends EmbeddedMessage {
       url: song.url,
       image: song.thumbnail,
       description: [
-        `\`${queue.formattedCurrentTime} / ${song.formattedDuration}\``,
         `By: [${song.uploader.name}](${song.uploader.url})`,
+        `\`${queue.formattedCurrentTime} / ${song.formattedDuration}\``,
       ],
     })
   }
