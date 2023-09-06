@@ -9,7 +9,7 @@ export default interface IDistubeClient {
   tryPause: (guildId: string) => Promise<Result<string, string>>
   tryResume: (guildId: string) => Promise<Result<string, string>>
   tryShuffle: (guildId: string) => Promise<Result<string, string>>
-  trySkip: (guildId: string) => Promise<boolean>
+  trySkip: (guildId: string) => Promise<Result<void, string>>
   tryStop: (guildId: string) => Promise<boolean>
   remove: (position: number, guildId: string) => Promise<string | null>
   loop: (mode: LoopMode, guildId: string) => Promise<string | null>

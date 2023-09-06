@@ -11,9 +11,9 @@ export default class ResumeCommand extends Command {
     const result = await serviceProvider.music.tryResume()
 
     if (isOk(result)) {
-      serviceProvider.message.reply(result.data)
-    } else {
-      serviceProvider.message.reply(result.err)
+      return await serviceProvider.message.reply(result.data)
     }
+
+    await serviceProvider.message.reply(result.err)
   }
 }

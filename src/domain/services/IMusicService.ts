@@ -7,7 +7,7 @@ export default interface IMusicService {
   tryPause: () => Promise<Result<string, string>>
   tryResume: () => Promise<Result<string, string>>
   tryShuffle: () => Promise<Result<string, string>>
-  trySkip: () => Promise<boolean>
+  trySkip: () => Promise<Result<void, string>>
   tryStop: () => Promise<boolean>
   remove: (position: number) => Promise<string | null>
   loop: (target: LoopMode) => Promise<string | null>

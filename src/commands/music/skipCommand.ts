@@ -1,5 +1,6 @@
 import Command from 'src/command'
 import type IServiceProvider from '@domain/IServiceProvider'
+import { isErr } from '@domain/monads/Result'
 
 export default class SkipCommand extends Command {
   constructor() {
@@ -7,7 +8,12 @@ export default class SkipCommand extends Command {
   }
 
   async run(serviceProvider: IServiceProvider) {
-    await serviceProvider.music.trySkip()
+    const result = await serviceProvider.music.trySkip()
+
+    if (isErr(result)) {
+      return await serviceProvider.message.reply(result.err)
+    }
+
     await serviceProvider.message.noReply()
   }
 }

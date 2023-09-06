@@ -37,8 +37,10 @@ export default class MusicService implements IMusicService {
       : err('This command should only be used in a guild')
   }
 
-  async trySkip(): Promise<boolean> {
-    return this.interaction.guildId ? await this.distube.trySkip(this.interaction.guildId) : false
+  async trySkip(): Promise<Result<void, string>> {
+    return this.interaction.guildId
+      ? await this.distube.trySkip(this.interaction.guildId)
+      : err('This command should only be used in a guild')
   }
 
   async tryStop(): Promise<boolean> {

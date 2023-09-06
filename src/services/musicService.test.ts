@@ -276,7 +276,7 @@ describe('The Music Service', () => {
       }
 
       const distubeClient = mockDistubeClient()
-      distubeClient.trySkip = jest.fn(async () => true)
+      distubeClient.trySkip = jest.fn(async () => ok())
 
       // Arrange
       const musicService = new MusicService(interaction, distubeClient)
@@ -286,30 +286,33 @@ describe('The Music Service', () => {
 
       // Assert
       expect(distubeClient.trySkip).toHaveBeenCalledWith(guildId)
-      expect(result).toBe(true)
+      expect(isOk(result)).toBeTruthy()
     })
 
-    it.each([true, false])('and return the correct result', async (expectedResult) => {
-      const guildId = '12312423412342134'
-      const interaction: IMusicInteraction = {
-        member: null,
-        channel: null,
-        guildId,
+    it.each([ok(), err('Failed to skip song')])(
+      'and return the correct result',
+      async (expectedResult) => {
+        const guildId = '12312423412342134'
+        const interaction: IMusicInteraction = {
+          member: null,
+          channel: null,
+          guildId,
+        }
+
+        const distubeClient = mockDistubeClient()
+        distubeClient.trySkip = jest.fn(async () => expectedResult)
+
+        // Arrange
+        const musicService = new MusicService(interaction, distubeClient)
+
+        // Act
+        const result = await musicService.trySkip()
+
+        // Assert
+        expect(distubeClient.trySkip).toHaveBeenCalledWith(guildId)
+        expect(result).toBe(expectedResult)
       }
-
-      const distubeClient = mockDistubeClient()
-      distubeClient.trySkip = jest.fn(async () => expectedResult)
-
-      // Arrange
-      const musicService = new MusicService(interaction, distubeClient)
-
-      // Act
-      const result = await musicService.trySkip()
-
-      // Assert
-      expect(distubeClient.trySkip).toHaveBeenCalledWith(guildId)
-      expect(result).toBe(expectedResult)
-    })
+    )
 
     it('returns false when guildId not specified', async () => {
       const interaction: IMusicInteraction = {
@@ -328,7 +331,7 @@ describe('The Music Service', () => {
 
       // Assert
       expect(distubeClient.trySkip).not.toHaveBeenCalled()
-      expect(result).toBe(false)
+      expect(isErr(result)).toBeTruthy()
     })
   })
 

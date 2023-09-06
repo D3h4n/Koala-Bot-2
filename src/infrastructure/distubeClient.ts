@@ -115,9 +115,9 @@ export default class DistubeClient implements IDistubeClient {
     return ok('Shuffled queue')
   }
 
-  async trySkip(guildId: string): Promise<boolean> {
+  async trySkip(guildId: string): Promise<Result<void, string>> {
     const queue = this.client.getQueue(guildId)
-    if (!queue) return false
+    if (!queue) return err('No songs in queue')
 
     if (queue.songs.length > 1) {
       await queue.skip()
@@ -125,7 +125,7 @@ export default class DistubeClient implements IDistubeClient {
       await queue.stop()
     }
 
-    return true
+    return ok()
   }
 
   async tryStop(guildId: string): Promise<boolean> {

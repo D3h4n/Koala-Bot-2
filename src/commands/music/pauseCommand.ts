@@ -11,9 +11,9 @@ export default class PauseCommand extends Command {
     const result = await serviceProvider.music.tryPause()
 
     if (isErr(result)) {
-      await serviceProvider.message.reply(result.err)
-    } else {
-      await serviceProvider.message.reply(result.data)
+      return await serviceProvider.message.reply(result.err)
     }
+
+    await serviceProvider.message.reply(result.data)
   }
 }
