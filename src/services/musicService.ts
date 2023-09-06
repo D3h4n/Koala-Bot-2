@@ -4,7 +4,7 @@ import IDistubeClient, { LoopMode } from '@domain/IDistubeClient'
 
 import QueueMessage from 'src/embeds/queueMessage'
 import EmbeddedMessage from 'src/embeds/embeddedMessage'
-import Result from '@domain/monads/Result'
+import Result, { err } from '@domain/monads/Result'
 
 export default class MusicService implements IMusicService {
   private readonly distube: IDistubeClient
@@ -19,8 +19,8 @@ export default class MusicService implements IMusicService {
     return this.distube.play(query, this.interaction)
   }
 
-  async tryPause(): Promise<boolean> {
-    if (!this.interaction.guildId) return false
+  async tryPause(): Promise<Result<string, string>> {
+    if (!this.interaction.guildId) return err('This command should only be used in a guild')
     return await this.distube.tryPause(this.interaction.guildId)
   }
 

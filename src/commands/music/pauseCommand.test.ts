@@ -2,40 +2,47 @@ import { mockMessageService, mockMusicService, mockVoiceService } from 'src/test
 
 import ServiceProvider from '@services/serviceProvider'
 import PauseCommand from './pauseCommand'
+import { err, ok } from '@domain/monads/Result'
 
 describe('The pause command', () => {
   it('pauses the currently playing song', async () => {
-    const pause = new PauseCommand()
+    const successMessage = 'Paused song'
     const serviceProvider = new ServiceProvider(
       mockMessageService(),
       mockMusicService(),
       mockVoiceService()
     )
+    serviceProvider.music.tryPause = jest.fn(async () => ok(successMessage))
 
-    serviceProvider.music.tryPause = jest.fn(async () => true)
-
-    await pause.run(serviceProvider)
-    expect(serviceProvider.music.tryPause).toHaveBeenCalled()
-    expect(serviceProvider.message.noReply).toHaveBeenCalled()
-  })
-
-  it('replies with a message if pausing fails', async () => {
     // Arrange
     const pause = new PauseCommand()
-    const serviceProvider = new ServiceProvider(
-      mockMessageService(),
-      mockMusicService(),
-      mockVoiceService()
-    )
-
-    serviceProvider.music.tryPause = jest.fn(async () => false)
 
     // Act
     await pause.run(serviceProvider)
 
     // Assert
     expect(serviceProvider.music.tryPause).toHaveBeenCalled()
-    expect(serviceProvider.message.reply).toHaveBeenCalled()
-    expect(typeof (<jest.Mock>serviceProvider.message.reply).mock.lastCall?.[0]).toBe('string')
+    expect(serviceProvider.message.reply).toHaveBeenCalledWith(successMessage)
+  })
+
+  it('replies with a message if pausing fails', async () => {
+    const errorMessage = 'Failed to pause song'
+    const serviceProvider = new ServiceProvider(
+      mockMessageService(),
+      mockMusicService(),
+      mockVoiceService()
+    )
+
+    serviceProvider.music.tryPause = jest.fn(async () => err(errorMessage))
+
+    // Arrange
+    const pause = new PauseCommand()
+
+    // Act
+    await pause.run(serviceProvider)
+
+    // Assert
+    expect(serviceProvider.music.tryPause).toHaveBeenCalled()
+    expect(serviceProvider.message.reply).toHaveBeenCalledWith(errorMessage)
   })
 })

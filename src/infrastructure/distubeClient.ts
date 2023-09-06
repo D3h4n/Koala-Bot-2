@@ -88,11 +88,12 @@ export default class DistubeClient implements IDistubeClient {
     return ok()
   }
 
-  async tryPause(guildId: string): Promise<boolean> {
+  async tryPause(guildId: string): Promise<Result<string, string>> {
     const queue = this.client.getQueue(guildId)
-    if (!queue?.playing) return false
+    if (!queue) return err('No queue')
+    if (!queue.playing) return ok('Queue is already paused')
     queue.pause()
-    return true
+    return ok('Paused queue')
   }
 
   async tryResume(guildId: string): Promise<boolean> {

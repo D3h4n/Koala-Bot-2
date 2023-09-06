@@ -1,5 +1,6 @@
 import Command from 'src/command'
-import type IServiceProvider from '@domain/IServiceProvider'
+import { isErr } from '@domain/monads/Result'
+import IServiceProvider from '@domain/IServiceProvider'
 
 export default class PauseCommand extends Command {
   constructor() {
@@ -7,11 +8,12 @@ export default class PauseCommand extends Command {
   }
 
   async run(serviceProvider: IServiceProvider) {
-    if (!(await serviceProvider.music.tryPause())) {
-      await serviceProvider.message.reply('Failed to pause the queue')
-      return
-    }
+    const result = await serviceProvider.music.tryPause()
 
-    await serviceProvider.message.noReply()
+    if (isErr(result)) {
+      await serviceProvider.message.reply(result.err)
+    } else {
+      await serviceProvider.message.reply(result.data)
+    }
   }
 }

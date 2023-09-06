@@ -5,7 +5,7 @@ import { mockDistubeClient } from 'src/testFixtures/mocks.test'
 import EmbeddedMessage from 'src/embeds/embeddedMessage'
 import QueueMessage from 'src/embeds/queueMessage'
 import MusicService from './musicService'
-import { ok, isOk, err } from '@domain/monads/Result'
+import { ok, isOk, err, isErr } from '@domain/monads/Result'
 
 describe('The Music Service', () => {
   describe('can play music', () => {
@@ -72,7 +72,7 @@ describe('The Music Service', () => {
       }
 
       const distubeClient = mockDistubeClient()
-      distubeClient.tryPause = jest.fn(async () => true)
+      distubeClient.tryPause = jest.fn(async () => ok('Paused queue'))
 
       // Arrange
       const musicService = new MusicService(interaction, distubeClient)
@@ -82,30 +82,33 @@ describe('The Music Service', () => {
 
       // Assert
       expect(distubeClient.tryPause).toHaveBeenCalledWith(guildId)
-      expect(result).toBe(true)
+      expect(isOk(result)).toBeTruthy()
     })
 
-    it.each([true, false])('and return the correct result', async (expectedResult) => {
-      const guildId = '12312423412342134'
-      const interaction: IMusicInteraction = {
-        member: null,
-        channel: null,
-        guildId,
+    it.each([ok('Paused the queue'), ok('The queue is already paused'), err('No queue was found')])(
+      'and return the correct result',
+      async (expectedResult) => {
+        const guildId = '12312423412342134'
+        const interaction: IMusicInteraction = {
+          member: null,
+          channel: null,
+          guildId,
+        }
+
+        const distubeClient = mockDistubeClient()
+        distubeClient.tryPause = jest.fn(async () => expectedResult)
+
+        // Arrange
+        const musicService = new MusicService(interaction, distubeClient)
+
+        // Act
+        const result = await musicService.tryPause()
+
+        // Assert
+        expect(distubeClient.tryPause).toHaveBeenCalledWith(guildId)
+        expect(result).toBe(expectedResult)
       }
-
-      const distubeClient = mockDistubeClient()
-      distubeClient.tryPause = jest.fn(async () => expectedResult)
-
-      // Arrange
-      const musicService = new MusicService(interaction, distubeClient)
-
-      // Act
-      const result = await musicService.tryPause()
-
-      // Assert
-      expect(distubeClient.tryPause).toHaveBeenCalledWith(guildId)
-      expect(result).toBe(expectedResult)
-    })
+    )
 
     it('returns false when guildId not specified', async () => {
       const interaction: IMusicInteraction = {
@@ -124,7 +127,7 @@ describe('The Music Service', () => {
 
       // Assert
       expect(distubeClient.tryPause).not.toHaveBeenCalled()
-      expect(result).toBe(false)
+      expect(isErr(result)).toBeTruthy()
     })
   })
 
