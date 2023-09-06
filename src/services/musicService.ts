@@ -20,24 +20,21 @@ export default class MusicService implements IMusicService {
   }
 
   async tryPause(): Promise<Result<string, string>> {
-    if (!this.interaction.guildId) return err('This command should only be used in a guild')
-    return await this.distube.tryPause(this.interaction.guildId)
-  }
-
-  async tryResume(): Promise<boolean> {
-    return this.interaction.guildId ? await this.distube.tryResume(this.interaction.guildId) : false
-  }
-
-  getQueue(page: number = 1): EmbeddedMessage {
     return this.interaction.guildId
-      ? this.distube.getQueue(page, this.interaction.guildId)
-      : QueueMessage.EmptyQueue
+      ? await this.distube.tryPause(this.interaction.guildId)
+      : err('This command should only be used in a guild')
   }
 
-  async tryShuffle(): Promise<boolean> {
+  async tryResume(): Promise<Result<string, string>> {
+    return this.interaction.guildId
+      ? await this.distube.tryResume(this.interaction.guildId)
+      : err('This command should only be used in a guild')
+  }
+
+  async tryShuffle(): Promise<Result<string, string>> {
     return this.interaction.guildId
       ? await this.distube.tryShuffle(this.interaction.guildId)
-      : false
+      : err('This command should only be used in a guild')
   }
 
   async trySkip(): Promise<boolean> {
@@ -62,6 +59,12 @@ export default class MusicService implements IMusicService {
     return this.interaction.guildId
       ? await this.distube.loop(target, this.interaction.guildId)
       : null
+  }
+
+  getQueue(page: number = 1): EmbeddedMessage {
+    return this.interaction.guildId
+      ? this.distube.getQueue(page, this.interaction.guildId)
+      : QueueMessage.EmptyQueue
   }
 
   getNowPlaying(): EmbeddedMessage {

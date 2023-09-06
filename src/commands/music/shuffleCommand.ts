@@ -1,5 +1,6 @@
 import Command from 'src/command'
 import type IServiceProvider from '@domain/IServiceProvider'
+import { isErr } from '@domain/monads/Result'
 
 export default class ShuffleCommand extends Command {
   constructor() {
@@ -7,7 +8,12 @@ export default class ShuffleCommand extends Command {
   }
 
   async run(serviceProvider: IServiceProvider) {
-    await serviceProvider.music.tryShuffle()
-    await serviceProvider.message.reply('Shuffled Queue')
+    const result = await serviceProvider.music.tryShuffle()
+
+    if (isErr(result)) {
+      await serviceProvider.message.reply(result.err)
+    } else {
+      await serviceProvider.message.reply(result.data)
+    }
   }
 }

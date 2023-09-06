@@ -5,8 +5,8 @@ import Result from '@domain/monads/Result'
 export default interface IMusicService {
   play: (query: string) => Promise<Result<void, string>>
   tryPause: () => Promise<Result<string, string>>
-  tryResume: () => Promise<boolean>
-  tryShuffle: () => Promise<boolean>
+  tryResume: () => Promise<Result<string, string>>
+  tryShuffle: () => Promise<Result<string, string>>
   trySkip: () => Promise<boolean>
   tryStop: () => Promise<boolean>
   remove: (position: number) => Promise<string | null>

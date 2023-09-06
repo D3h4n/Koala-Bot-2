@@ -90,33 +90,29 @@ export default class DistubeClient implements IDistubeClient {
 
   async tryPause(guildId: string): Promise<Result<string, string>> {
     const queue = this.client.getQueue(guildId)
-    if (!queue) return err('No queue')
-    if (!queue.playing) return ok('Queue is already paused')
+    if (!queue) return err('No songs in queue')
+    if (!queue.playing) return ok('Song is already paused')
     queue.pause()
-    return ok('Paused queue')
+    return ok('Pausing song')
   }
 
-  async tryResume(guildId: string): Promise<boolean> {
+  async tryResume(guildId: string): Promise<Result<string, string>> {
     const queue = this.client.getQueue(guildId)
-    if (!queue?.paused) return false
+    if (!queue) return err('No songs in queue')
+    if (queue.playing) return ok('Song is already resumed')
     queue.resume()
-    return true
+    return ok('Resuming song')
   }
 
-  getQueue(page: number, guildId: string): EmbeddedMessage {
-    const queue = this.client.getQueue(guildId)
-    return queue ? new QueueMessage(queue, page) : QueueMessage.EmptyQueue
-  }
-
-  async tryShuffle(guildId: string): Promise<boolean> {
+  async tryShuffle(guildId: string): Promise<Result<string, string>> {
     const queue = this.client.getQueue(guildId)
 
     if (!queue) {
-      return false
+      return err('No songs in queue')
     }
 
     await queue.shuffle()
-    return true
+    return ok('Shuffled queue')
   }
 
   async trySkip(guildId: string): Promise<boolean> {
@@ -173,6 +169,11 @@ export default class DistubeClient implements IDistubeClient {
       default:
         throw new Error('Unhandled loop mode')
     }
+  }
+
+  getQueue(page: number, guildId: string): EmbeddedMessage {
+    const queue = this.client.getQueue(guildId)
+    return queue ? new QueueMessage(queue, page) : QueueMessage.EmptyQueue
   }
 
   getNowPlaying(guildId: string): EmbeddedMessage {
