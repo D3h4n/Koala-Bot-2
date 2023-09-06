@@ -53,10 +53,10 @@ export default class MusicService implements IMusicService {
   //        and a failed result returns null. Whereas returning a string is usually an error message.
   //        Might be useful to replace string | null with a Result type in the entire codebase, to avoid
   //        this confusion.
-  async remove(position: number): Promise<string | null> {
+  async remove(position: number): Promise<Result<string, string>> {
     return this.interaction.guildId
       ? await this.distube.remove(position, this.interaction.guildId)
-      : null
+      : err('This command should only be used in a guild')
   }
 
   async loop(target: LoopMode): Promise<string | null> {

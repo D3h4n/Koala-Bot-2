@@ -9,7 +9,7 @@ export default interface IMusicService {
   tryShuffle: () => Promise<Result<string, string>>
   trySkip: () => Promise<Result<void, string>>
   tryStop: () => Promise<Result<void, string>>
-  remove: (position: number) => Promise<string | null>
+  remove: (position: number) => Promise<Result<string, string>>
   loop: (target: LoopMode) => Promise<string | null>
   getQueue: (page?: number) => EmbeddedMessage
   getNowPlaying: () => EmbeddedMessage

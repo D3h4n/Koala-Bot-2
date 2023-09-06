@@ -12,21 +12,17 @@ describe('The play command', () => {
       mockMusicService(),
       mockVoiceService()
     )
-    const options = new Map()
     serviceProvider.music.play = jest.fn(async () => ok())
 
     fc.assert(
       fc.property(fc.string({ minLength: 1 }), (song) => {
-        options.set('song', song)
-        ;(<jest.Mock>serviceProvider.music.play).mockClear()
-
         // Arrange
         const play = new PlayCommand()
 
         // Act
         // Note: for consistency, need to wait on async command to run completely before
         // assertions but can't use async await with fast-check
-        play.run(serviceProvider, options).then(() => {
+        play.run(serviceProvider, new Map([['song', song]])).then(() => {
           // Assert
           expect(serviceProvider.message.defer).toHaveBeenCalled()
           expect(serviceProvider.music.play).toHaveBeenCalledWith(song)
@@ -40,6 +36,7 @@ describe('The play command', () => {
     const song = 'A song'
     const errorMsg = 'Some error message'
     const options = new Map([['song', song]])
+
     const serviceProvider = new ServiceProvider(
       mockMessageService(),
       mockMusicService(),

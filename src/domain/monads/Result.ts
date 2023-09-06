@@ -38,4 +38,4 @@ function isErr<T, TError>(r: Result<T, TError>): r is Err<TError> {
 }
 
 export default Result
-export { ok, err, isOk, isErr }
+export { Ok, ok, isOk, Err, err, isErr }

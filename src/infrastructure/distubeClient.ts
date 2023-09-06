@@ -5,8 +5,8 @@ import DisTube, { Playlist, Queue, RepeatMode, Song } from 'distube'
 
 import ILogger from '@domain/ILogger'
 import IClientProvider from '@domain/IClientProvider'
-import Result, { err, ok } from '@domain/monads/Result'
 import IMusicInteraction from '@domain/IMusicInteraction'
+import Result, { err, isOk, ok } from '@domain/monads/Result'
 import IDistubeClient, { LoopMode } from '@domain/infrastructure/IDistubeClient'
 
 import QueueMessage from 'src/embeds/queueMessage'
@@ -116,16 +116,8 @@ export default class DistubeClient implements IDistubeClient {
   }
 
   async trySkip(guildId: string): Promise<Result<void, string>> {
-    const queue = this.client.getQueue(guildId)
-    if (!queue) return err('No songs in queue')
-
-    if (queue.songs.length > 1) {
-      await queue.skip()
-    } else {
-      await queue.stop()
-    }
-
-    return ok()
+    const result = await this.remove(0, guildId)
+    return isOk(result) ? ok() : result
   }
 
   async tryStop(guildId: string): Promise<Result<void, string>> {
@@ -136,14 +128,22 @@ export default class DistubeClient implements IDistubeClient {
     return ok()
   }
 
-  async remove(position: number, guildId: string): Promise<string | null> {
+  async remove(position: number, guildId: string): Promise<Result<string, string>> {
     const queue = this.client.getQueue(guildId)
-    if (queue && queue.songs.length > position) {
-      const [song] = queue.songs.splice(position, 1)
-      return song.name || 'Unnamed Song'
+    if (!queue) return err('No songs in queue')
+    if (queue.songs.length <= position) return err('No song at that position')
+
+    const song = queue.songs[position]
+
+    if (queue.songs.length === 1) {
+      await queue.stop()
+    } else if (position === 0) {
+      await queue.skip()
+    } else {
+      queue.songs.splice(position, 1)
     }
 
-    return null
+    return ok(`Removed \`${song.name}\` at position ${position}`)
   }
 
   async loop(mode: LoopMode, guildId: string): Promise<string | null> {
@@ -173,16 +173,13 @@ export default class DistubeClient implements IDistubeClient {
 
   getQueue(page: number, guildId: string): EmbeddedMessage {
     const queue = this.client.getQueue(guildId)
-    return queue ? new QueueMessage(queue, page) : QueueMessage.EmptyQueue
+    return queue && queue.songs.length >= 1
+      ? new QueueMessage(queue, page)
+      : QueueMessage.EmptyQueue
   }
 
   getNowPlaying(guildId: string): EmbeddedMessage {
     const queue = this.client.getQueue(guildId)
-
-    if (!queue || queue.songs.length < 1) {
-      return QueueMessage.EmptyQueue
-    }
-
-    return new NowPlayingMessage(queue)
+    return queue && queue.songs.length >= 1 ? new NowPlayingMessage(queue) : QueueMessage.EmptyQueue
   }
 }

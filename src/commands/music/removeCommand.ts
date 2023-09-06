@@ -2,6 +2,7 @@ import assert from 'assert'
 import Command from 'src/command'
 import type CommandOption from '@domain/CommandOption'
 import type IServiceProvider from '@domain/IServiceProvider'
+import { isErr } from '@domain/monads/Result'
 
 export default class RemoveCommand extends Command {
   constructor() {
@@ -12,12 +13,12 @@ export default class RemoveCommand extends Command {
   async run(serviceProvider: IServiceProvider, options: Map<string, CommandOption>) {
     const position = options.get('position')
     assert(typeof position === 'number', 'position should always be a number')
-    const song = await serviceProvider.music.remove(position)
+    const result = await serviceProvider.music.remove(position)
 
-    if (song) {
-      serviceProvider.message.reply(`Removed \`${song}\` at position ${position}`)
-    } else {
-      serviceProvider.message.reply(`Failed to remove song at position ${position}`)
+    if (isErr(result)) {
+      return await serviceProvider.message.reply(result.err)
     }
+
+    await serviceProvider.message.reply(result.data)
   }
 }

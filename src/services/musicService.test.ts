@@ -417,7 +417,7 @@ describe('The Music Service', () => {
       const songName = 'A song name'
 
       const distubeClient = mockDistubeClient()
-      distubeClient.remove = jest.fn(async () => songName)
+      distubeClient.remove = jest.fn(async () => ok(songName))
 
       // Arrange
       const musicService = new MusicService(interaction, distubeClient)
@@ -427,10 +427,10 @@ describe('The Music Service', () => {
 
       // Assert
       expect(distubeClient.remove).toHaveBeenCalledWith(position, guildId)
-      expect(result).toBe(songName)
+      expect(isOk(result)).toBeTruthy()
     })
 
-    it.each([null, 'A song name', 'Another song name'])(
+    it.each([err('Failed to remove song'), ok('A song name'), ok('Another song name')])(
       'returns the correct result',
       async (expectedResult) => {
         const guildId = '12341341231231'
@@ -472,7 +472,7 @@ describe('The Music Service', () => {
 
       // Assert
       expect(distubeClient.remove).not.toHaveBeenCalled()
-      expect(result).toBe(null)
+      expect(isErr(result)).toBeTruthy()
     })
   })
 
