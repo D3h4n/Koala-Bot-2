@@ -10,7 +10,7 @@ export default interface IDistubeClient {
   tryResume: (guildId: string) => Promise<Result<string, string>>
   tryShuffle: (guildId: string) => Promise<Result<string, string>>
   trySkip: (guildId: string) => Promise<Result<void, string>>
-  tryStop: (guildId: string) => Promise<boolean>
+  tryStop: (guildId: string) => Promise<Result<void, string>>
   remove: (position: number, guildId: string) => Promise<string | null>
   loop: (mode: LoopMode, guildId: string) => Promise<string | null>
   getQueue(page: number, guildId: string): EmbeddedMessage

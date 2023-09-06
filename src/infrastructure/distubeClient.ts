@@ -128,12 +128,12 @@ export default class DistubeClient implements IDistubeClient {
     return ok()
   }
 
-  async tryStop(guildId: string): Promise<boolean> {
+  async tryStop(guildId: string): Promise<Result<void, string>> {
     const queue = this.client.getQueue(guildId)
-    if (!queue) return false
+    if (!queue) return err('No songs in queue')
 
     await queue.stop()
-    return true
+    return ok()
   }
 
   async remove(position: number, guildId: string): Promise<string | null> {

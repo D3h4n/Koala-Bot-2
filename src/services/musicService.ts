@@ -43,8 +43,10 @@ export default class MusicService implements IMusicService {
       : err('This command should only be used in a guild')
   }
 
-  async tryStop(): Promise<boolean> {
-    return this.interaction.guildId ? await this.distube.tryStop(this.interaction.guildId) : false
+  async tryStop(): Promise<Result<void, string>> {
+    return this.interaction.guildId
+      ? await this.distube.tryStop(this.interaction.guildId)
+      : err('This command should only be used in a guild')
   }
 
   // FIXME: This is the reverse of other functions. A successful result returns a string
