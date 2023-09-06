@@ -2,6 +2,7 @@ import assert from 'assert'
 import Command from 'src/command'
 import type CommandOption from '@domain/CommandOption'
 import type IServiceProvider from '@domain/IServiceProvider'
+import { isErr } from '@domain/monads/Result'
 
 export default class PlayCommand extends Command {
   constructor() {
@@ -17,8 +18,8 @@ export default class PlayCommand extends Command {
 
     const result = await serviceProvider.music.play(song)
 
-    if (result) {
-      serviceProvider.message.reply(result)
+    if (isErr(result)) {
+      serviceProvider.message.reply(result.err)
     } else {
       serviceProvider.message.noReply()
     }

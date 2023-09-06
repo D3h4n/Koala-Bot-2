@@ -4,6 +4,7 @@ import IDistubeClient, { LoopMode } from '@domain/IDistubeClient'
 
 import QueueMessage from 'src/embeds/queueMessage'
 import EmbeddedMessage from 'src/embeds/embeddedMessage'
+import Result from '@domain/monads/Result'
 
 export default class MusicService implements IMusicService {
   private readonly distube: IDistubeClient
@@ -14,7 +15,7 @@ export default class MusicService implements IMusicService {
     this.interaction = interaction
   }
 
-  play(query: string): Promise<string | null> {
+  play(query: string): Promise<Result<void, string>> {
     return this.distube.play(query, this.interaction)
   }
 

@@ -5,6 +5,7 @@ import { mockDistubeClient } from 'src/testFixtures/mocks.test'
 import EmbeddedMessage from 'src/embeds/embeddedMessage'
 import QueueMessage from 'src/embeds/queueMessage'
 import MusicService from './musicService'
+import { ok, isOk, err } from '@domain/monads/Result'
 
 describe('The Music Service', () => {
   describe('can play music', () => {
@@ -21,7 +22,7 @@ describe('The Music Service', () => {
       }
 
       const distubeClient = mockDistubeClient()
-      distubeClient.play = jest.fn(async () => null)
+      distubeClient.play = jest.fn(async () => ok())
 
       // Arrange
       const musicService = new MusicService(interaction, distubeClient)
@@ -31,34 +32,35 @@ describe('The Music Service', () => {
 
       // Assert
       expect(distubeClient.play).toHaveBeenCalledWith(query, interaction)
-      expect(result).toBe(null)
+      expect(isOk(result)).toBeTruthy()
     })
 
-    it.each(['An error message', 'A longer error message that is very descriptive', null])(
-      'and return the correct result',
-      async (expectedResult) => {
-        const interaction: IMusicInteraction = {
-          member: null,
-          channel: null,
-          guildId: 'A valid guildId',
-        }
-
-        const distubeClient = mockDistubeClient()
-        distubeClient.play = jest.fn(async () => expectedResult)
-
-        const query = 'A cool song'
-
-        // Arrange
-        const musicService = new MusicService(interaction, distubeClient)
-
-        // Act
-        const result = await musicService.play(query)
-
-        // Assert
-        expect(distubeClient.play).toHaveBeenCalledWith(query, interaction)
-        expect(result).toBe(expectedResult)
+    it.each([
+      err('An error message'),
+      err('A longer error message that is very descriptive'),
+      ok(),
+    ])('and return the correct result', async (expectedResult) => {
+      const interaction: IMusicInteraction = {
+        member: null,
+        channel: null,
+        guildId: 'A valid guildId',
       }
-    )
+
+      const distubeClient = mockDistubeClient()
+      distubeClient.play = jest.fn(async () => expectedResult)
+
+      const query = 'A cool song'
+
+      // Arrange
+      const musicService = new MusicService(interaction, distubeClient)
+
+      // Act
+      const result = await musicService.play(query)
+
+      // Assert
+      expect(distubeClient.play).toHaveBeenCalledWith(query, interaction)
+      expect(result).toBe(expectedResult)
+    })
   })
 
   describe('can try to pause a song', () => {

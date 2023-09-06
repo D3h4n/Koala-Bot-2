@@ -3,17 +3,22 @@ import { mockMessageService, mockMusicService, mockVoiceService } from 'src/test
 
 import ServiceProvider from '@services/serviceProvider'
 import PlayCommand from './playCommand'
+import { err, ok } from '@domain/monads/Result'
 
 describe('The play command', () => {
   it('can play a song', () => {
+    const serviceProvider = new ServiceProvider(
+      mockMessageService(),
+      mockMusicService(),
+      mockVoiceService()
+    )
+    const options = new Map()
+    serviceProvider.music.play = jest.fn(async () => ok())
+
     fc.assert(
       fc.property(fc.string({ minLength: 1 }), (song) => {
-        const options = new Map([['song', song]])
-        const serviceProvider = new ServiceProvider(
-          mockMessageService(),
-          mockMusicService(),
-          mockVoiceService()
-        )
+        options.set('song', song)
+        ;(<jest.Mock>serviceProvider.music.play).mockClear()
 
         // Arrange
         const play = new PlayCommand()
@@ -31,7 +36,7 @@ describe('The play command', () => {
     )
   })
 
-  it('replies with an error message', async () => {
+  it('replies with an error', async () => {
     const song = 'A song'
     const errorMsg = 'Some error message'
     const options = new Map([['song', song]])
@@ -40,7 +45,7 @@ describe('The play command', () => {
       mockMusicService(),
       mockVoiceService()
     )
-    serviceProvider.music.play = jest.fn(async () => errorMsg)
+    serviceProvider.music.play = jest.fn(async () => err(errorMsg))
 
     // Arrange
     const play = new PlayCommand()

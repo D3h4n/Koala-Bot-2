@@ -1,11 +1,12 @@
 import SpotifyPlugin from '@distube/spotify'
 import SoundCloudPlugin from '@distube/soundcloud'
+import { GuildMember, GuildTextBasedChannel } from 'discord.js'
 import DisTube, { Playlist, Queue, RepeatMode, Song } from 'distube'
-import type { GuildMember, GuildTextBasedChannel } from 'discord.js'
 
-import type ILogger from '@domain/ILogger'
-import type IClientProvider from '@domain/IClientProvider'
-import type IMusicInteraction from '@domain/IMusicInteraction'
+import ILogger from '@domain/ILogger'
+import IClientProvider from '@domain/IClientProvider'
+import Result, { err, ok } from '@domain/monads/Result'
+import IMusicInteraction from '@domain/IMusicInteraction'
 import IDistubeClient, { LoopMode } from '@domain/infrastructure/IDistubeClient'
 
 import QueueMessage from 'src/embeds/queueMessage'
@@ -73,18 +74,18 @@ export default class DistubeClient implements IDistubeClient {
     }
   }
 
-  async play(query: string, interaction: IMusicInteraction): Promise<string | null> {
+  async play(query: string, interaction: IMusicInteraction): Promise<Result<void, string>> {
     const member = <GuildMember | null>interaction.member
     const voiceChannel = member?.voice.channel
 
-    if (!voiceChannel) return 'Member not in voice channel'
-    if (!interaction.channel) return 'Invalid text channel'
+    if (!voiceChannel) return err('Member not in voice channel')
+    if (!interaction.channel) return err('Invalid text channel')
 
     await this.client.play(voiceChannel, query, {
       member,
       textChannel: <GuildTextBasedChannel>interaction.channel,
     })
-    return null
+    return ok()
   }
 
   async tryPause(guildId: string): Promise<boolean> {

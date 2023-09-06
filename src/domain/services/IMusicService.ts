@@ -1,8 +1,9 @@
 import type EmbeddedMessage from 'src/embeds/embeddedMessage'
 import type { LoopMode } from '@domain/infrastructure/IDistubeClient'
+import Result from '@domain/monads/Result'
 
 export default interface IMusicService {
-  play: (query: string) => Promise<string | null>
+  play: (query: string) => Promise<Result<void, string>>
   tryPause: () => Promise<boolean>
   tryResume: () => Promise<boolean>
   tryShuffle: () => Promise<boolean>
