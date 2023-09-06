@@ -1,4 +1,6 @@
-type Result<T, TError> = Ok<T> | Err<TError>
+type ErrorResolvable = Error | string
+
+type Result<T, TError extends ErrorResolvable> = Ok<T> | Err<TError>
 
 type Ok<T> = {
   __result: 'OK'
@@ -6,7 +8,7 @@ type Ok<T> = {
   unwrap(): T
 }
 
-type Err<TError> = {
+type Err<TError extends ErrorResolvable> = {
   __result: 'ERR'
   err: TError
   unwrap(): never
@@ -18,22 +20,22 @@ function ok<T>(data: T | void): Ok<T | void> {
   return { __result: 'OK', data, unwrap: () => data }
 }
 
-function err<TError>(err: TError): Err<TError> {
+function err<TError extends ErrorResolvable>(err: TError): Err<TError> {
   return {
     __result: 'ERR',
     err,
     unwrap: () => {
-      if (err instanceof Error) throw err
-      else throw new Error(String(err))
+      if (typeof err === 'string') throw new Error(err)
+      throw err
     },
   }
 }
 
-function isOk<T, TError>(r: Result<T, TError>): r is Ok<T> {
+function isOk<T, TError extends ErrorResolvable>(r: Result<T, TError>): r is Ok<T> {
   return r.__result === 'OK'
 }
 
-function isErr<T, TError>(r: Result<T, TError>): r is Err<TError> {
+function isErr<T, TError extends ErrorResolvable>(r: Result<T, TError>): r is Err<TError> {
   return r.__result === 'ERR'
 }
 
