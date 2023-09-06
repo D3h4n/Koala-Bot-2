@@ -479,8 +479,10 @@ describe('The Music Service', () => {
   describe('can handle looping', () => {
     describe('a song', () => {
       it.each(['1234123412343241231', '13423423412341234'])(
-        'and returning a success message',
+        'and returning a successful result',
         async (guildId) => {
+          const successResult = ok('Looping song')
+
           const interaction: IMusicInteraction = {
             member: null,
             channel: null,
@@ -488,9 +490,7 @@ describe('The Music Service', () => {
           }
 
           const distubeClient = mockDistubeClient()
-
-          const successfulResult = 'Looping song'
-          distubeClient.loop = jest.fn(async () => successfulResult)
+          distubeClient.loop = jest.fn(async () => successResult)
 
           // Arrange
           const musicService = new MusicService(interaction, distubeClient)
@@ -500,13 +500,15 @@ describe('The Music Service', () => {
 
           // Assert
           expect(distubeClient.loop).toHaveBeenCalledWith('song', guildId)
-          expect(result).toEqual(successfulResult)
+          expect(result).toEqual(successResult)
         }
       )
 
       it.each(['1234123412343241231', '13423423412341234'])(
-        'and returning null if failed',
+        'and returning an error result',
         async (guildId) => {
+          const errorResult = err('Failed to loop song')
+
           const interaction: IMusicInteraction = {
             member: null,
             channel: null,
@@ -515,7 +517,7 @@ describe('The Music Service', () => {
 
           const distubeClient = mockDistubeClient()
 
-          distubeClient.loop = jest.fn(async () => null)
+          distubeClient.loop = jest.fn(async () => errorResult)
 
           // Arrange
           const musicService = new MusicService(interaction, distubeClient)
@@ -525,11 +527,11 @@ describe('The Music Service', () => {
 
           // Assert
           expect(distubeClient.loop).toHaveBeenCalledWith('song', guildId)
-          expect(result).toBe(null)
+          expect(result).toBe(errorResult)
         }
       )
 
-      it('and returning null if no guildId', async () => {
+      it('and returning an error result if no guildId', async () => {
         const interaction: IMusicInteraction = {
           member: null,
           channel: null,
@@ -546,14 +548,16 @@ describe('The Music Service', () => {
 
         // Assert
         expect(distubeClient.loop).not.toHaveBeenCalled()
-        expect(result).toBe(null)
+        expect(isErr(result)).toBeTruthy()
       })
     })
 
     describe('a queue', () => {
       it.each(['1234123412343241231', '13423423412341234'])(
-        'and returning a success message',
+        'and returning a success result',
         async (guildId) => {
+          const successResult = ok('Looping queue')
+
           const interaction: IMusicInteraction = {
             member: null,
             channel: null,
@@ -561,9 +565,7 @@ describe('The Music Service', () => {
           }
 
           const distubeClient = mockDistubeClient()
-
-          const successfulResult = 'Looping queue'
-          distubeClient.loop = jest.fn(async () => successfulResult)
+          distubeClient.loop = jest.fn(async () => successResult)
 
           // Arrange
           const musicService = new MusicService(interaction, distubeClient)
@@ -573,13 +575,15 @@ describe('The Music Service', () => {
 
           // Assert
           expect(distubeClient.loop).toHaveBeenCalledWith('queue', guildId)
-          expect(result).toEqual(successfulResult)
+          expect(result).toEqual(successResult)
         }
       )
 
       it.each(['1234123412343241231', '13423423412341234'])(
-        'and returning null if failed',
+        'and returning an error result',
         async (guildId) => {
+          const errorResult = err('Failed to loop queue')
+
           const interaction: IMusicInteraction = {
             member: null,
             channel: null,
@@ -588,7 +592,7 @@ describe('The Music Service', () => {
 
           const distubeClient = mockDistubeClient()
 
-          distubeClient.loop = jest.fn(async () => null)
+          distubeClient.loop = jest.fn(async () => errorResult)
 
           // Arrange
           const musicService = new MusicService(interaction, distubeClient)
@@ -598,11 +602,11 @@ describe('The Music Service', () => {
 
           // Assert
           expect(distubeClient.loop).toHaveBeenCalledWith('queue', guildId)
-          expect(result).toBe(null)
+          expect(result).toBe(errorResult)
         }
       )
 
-      it('and returning null if no guildId', async () => {
+      it('and returning an error result if no guildId', async () => {
         const interaction: IMusicInteraction = {
           member: null,
           channel: null,
@@ -619,14 +623,16 @@ describe('The Music Service', () => {
 
         // Assert
         expect(distubeClient.loop).not.toHaveBeenCalled()
-        expect(result).toBe(null)
+        expect(isErr(result)).toBeTruthy()
       })
     })
 
     describe('stopping', () => {
       it.each(['1234123412343241231', '13423423412341234'])(
-        'and returning a success message',
+        'and returning a success result',
         async (guildId) => {
+          const successResult = ok('Stopped looping queue')
+
           const interaction: IMusicInteraction = {
             member: null,
             channel: null,
@@ -634,9 +640,7 @@ describe('The Music Service', () => {
           }
 
           const distubeClient = mockDistubeClient()
-
-          const successfulResult = 'Stopped looping queue'
-          distubeClient.loop = jest.fn(async () => successfulResult)
+          distubeClient.loop = jest.fn(async () => successResult)
 
           // Arrange
           const musicService = new MusicService(interaction, distubeClient)
@@ -646,13 +650,15 @@ describe('The Music Service', () => {
 
           // Assert
           expect(distubeClient.loop).toHaveBeenCalledWith('off', guildId)
-          expect(result).toEqual(successfulResult)
+          expect(result).toEqual(successResult)
         }
       )
 
       it.each(['1234123412343241231', '13423423412341234'])(
-        'and returning null if failed',
+        'and returning an error result',
         async (guildId) => {
+          const errorResult = err('Failed to stop looping queue')
+
           const interaction: IMusicInteraction = {
             member: null,
             channel: null,
@@ -660,8 +666,7 @@ describe('The Music Service', () => {
           }
 
           const distubeClient = mockDistubeClient()
-
-          distubeClient.loop = jest.fn(async () => null)
+          distubeClient.loop = jest.fn(async () => errorResult)
 
           // Arrange
           const musicService = new MusicService(interaction, distubeClient)
@@ -671,11 +676,11 @@ describe('The Music Service', () => {
 
           // Assert
           expect(distubeClient.loop).toHaveBeenCalledWith('off', guildId)
-          expect(result).toBe(null)
+          expect(result).toBe(errorResult)
         }
       )
 
-      it('and returning null if no guildId', async () => {
+      it('and returning an error result if no guildId', async () => {
         const interaction: IMusicInteraction = {
           member: null,
           channel: null,
@@ -692,7 +697,7 @@ describe('The Music Service', () => {
 
         // Assert
         expect(distubeClient.loop).not.toHaveBeenCalled()
-        expect(result).toBe(null)
+        expect(isErr(result)).toBeTruthy()
       })
     })
   })

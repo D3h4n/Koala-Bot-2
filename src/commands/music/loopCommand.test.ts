@@ -1,134 +1,137 @@
 import LoopCommand from './loopCommand'
+import { err, ok } from '@domain/monads/Result'
 import ServiceProvider from '@services/serviceProvider'
 import { mockMessageService, mockMusicService, mockVoiceService } from 'src/testFixtures/mocks.test'
 
 describe('The Loop Command', () => {
   describe('can try to loop a song', () => {
     it('and reply with a success message', async () => {
-      const options = new Map([['song', 'song']])
+      const successMessage = 'A song name is looping'
+
       const serviceProvider = new ServiceProvider(
         mockMessageService(),
         mockMusicService(),
         mockVoiceService()
       )
-      const successfulResult = 'A song name is looping'
-      serviceProvider.music.loop = jest.fn(async () => successfulResult)
+      serviceProvider.music.loop = jest.fn(async () => ok(successMessage))
 
       // Arrange
       const loopCommand = new LoopCommand()
 
       // Act
-      await loopCommand.run(serviceProvider, options)
+      await loopCommand.run(serviceProvider, new Map([['song', 'song']]))
 
       // Assert
       expect(serviceProvider.music.loop).toHaveBeenCalledWith('song')
-      expect(serviceProvider.message.reply).toHaveBeenCalledWith(successfulResult)
+      expect(serviceProvider.message.reply).toHaveBeenCalledWith(successMessage)
     })
 
     it('and reply with an error message', async () => {
-      const options = new Map([['song', 'song']])
+      const errorMessage = 'Failed to loop song'
       const serviceProvider = new ServiceProvider(
         mockMessageService(),
         mockMusicService(),
         mockVoiceService()
       )
-      serviceProvider.music.loop = jest.fn(async () => null)
+      serviceProvider.music.loop = jest.fn(async () => err(errorMessage))
 
       // Arrange
       const loopCommand = new LoopCommand()
 
       // Act
-      await loopCommand.run(serviceProvider, options)
+      await loopCommand.run(serviceProvider, new Map([['song', 'song']]))
 
       // Assert
       expect(serviceProvider.music.loop).toHaveBeenCalledWith('song')
-      expect(serviceProvider.message.reply).toHaveBeenCalledWith('Failed to loop song')
+      expect(serviceProvider.message.reply).toHaveBeenCalledWith(errorMessage)
     })
   })
 
   describe('can try to loop a queue', () => {
     it('and reply with a success message', async () => {
-      const options = new Map([['queue', 'queue']])
+      const successMessage = 'A queue is looping'
+
       const serviceProvider = new ServiceProvider(
         mockMessageService(),
         mockMusicService(),
         mockVoiceService()
       )
-      const successfulResult = 'A queue is looping'
-      serviceProvider.music.loop = jest.fn(async () => successfulResult)
+      serviceProvider.music.loop = jest.fn(async () => ok(successMessage))
 
       // Arrange
       const loopCommand = new LoopCommand()
 
       // Act
-      await loopCommand.run(serviceProvider, options)
+      await loopCommand.run(serviceProvider, new Map([['queue', 'queue']]))
 
       // Assert
       expect(serviceProvider.music.loop).toHaveBeenCalledWith('queue')
-      expect(serviceProvider.message.reply).toHaveBeenCalledWith(successfulResult)
+      expect(serviceProvider.message.reply).toHaveBeenCalledWith(successMessage)
     })
 
     it('and reply with an error message', async () => {
-      const options = new Map([['queue', 'queue']])
+      const errorMessage = 'Failed to loop queue'
+
       const serviceProvider = new ServiceProvider(
         mockMessageService(),
         mockMusicService(),
         mockVoiceService()
       )
-      serviceProvider.music.loop = jest.fn(async () => null)
+      serviceProvider.music.loop = jest.fn(async () => err(errorMessage))
 
       // Arrange
       const loopCommand = new LoopCommand()
 
       // Act
-      await loopCommand.run(serviceProvider, options)
+      await loopCommand.run(serviceProvider, new Map([['queue', 'queue']]))
 
       // Assert
       expect(serviceProvider.music.loop).toHaveBeenCalledWith('queue')
-      expect(serviceProvider.message.reply).toHaveBeenCalledWith('Failed to loop queue')
+      expect(serviceProvider.message.reply).toHaveBeenCalledWith(errorMessage)
     })
   })
 
   describe('can try to stop looping the queue', () => {
     it('and reply with a success message', async () => {
-      const options = new Map([['off', 'off']])
+      const successMessage = 'stopped looping the queue'
+
       const serviceProvider = new ServiceProvider(
         mockMessageService(),
         mockMusicService(),
         mockVoiceService()
       )
-      const successfulResult = 'stopped looping the queue'
-      serviceProvider.music.loop = jest.fn(async () => successfulResult)
+      serviceProvider.music.loop = jest.fn(async () => ok(successMessage))
 
       // Arrange
       const loopCommand = new LoopCommand()
 
       // Act
-      await loopCommand.run(serviceProvider, options)
+      await loopCommand.run(serviceProvider, new Map([['off', 'off']]))
 
       // Assert
       expect(serviceProvider.music.loop).toHaveBeenCalledWith('off')
-      expect(serviceProvider.message.reply).toHaveBeenCalledWith(successfulResult)
+      expect(serviceProvider.message.reply).toHaveBeenCalledWith(successMessage)
     })
 
     it('and reply with an error message', async () => {
-      const options = new Map([['off', 'off']])
+      const errorMessage = 'Failed to stop looping'
+
       const serviceProvider = new ServiceProvider(
         mockMessageService(),
         mockMusicService(),
         mockVoiceService()
       )
-      serviceProvider.music.loop = jest.fn(async () => null)
+      serviceProvider.music.loop = jest.fn(async () => err(errorMessage))
 
       // Arrange
       const loopCommand = new LoopCommand()
 
       // Act
-      await loopCommand.run(serviceProvider, options)
+      await loopCommand.run(serviceProvider, new Map([['off', 'off']]))
 
       // Assert
       expect(serviceProvider.music.loop).toHaveBeenCalledWith('off')
-      expect(serviceProvider.message.reply).toHaveBeenCalledWith('Failed to stop looping')
+      expect(serviceProvider.message.reply).toHaveBeenCalledWith(errorMessage)
     })
   })
 })

@@ -2,6 +2,7 @@ import assert from 'assert'
 import Command from 'src/command'
 import type CommandOption from '@domain/CommandOption'
 import type IServiceProvider from '@domain/IServiceProvider'
+import { isErr } from '@domain/monads/Result'
 
 export default class LoopCommand extends Command {
   constructor() {
@@ -17,18 +18,15 @@ export default class LoopCommand extends Command {
     const subcommand = Array.from(options.keys())[0]
     assert(
       subcommand === 'queue' || subcommand === 'song' || subcommand === 'off',
-      'The subcommand should always be one of these options'
+      'The subcommand should always be one of "queue", "song" or "off"'
     )
 
     const result = await serviceProvider.music.loop(subcommand)
 
-    if (result === null) {
-      await serviceProvider.message.reply(
-        'Failed to ' + (subcommand === 'off' ? 'stop looping' : `loop ${subcommand}`)
-      )
-      return
+    if (isErr(result)) {
+      return await serviceProvider.message.reply(result.err)
     }
 
-    await serviceProvider.message.reply(result)
+    await serviceProvider.message.reply(result.data)
   }
 }

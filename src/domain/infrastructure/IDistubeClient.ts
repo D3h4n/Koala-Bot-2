@@ -12,7 +12,7 @@ export default interface IDistubeClient {
   trySkip: (guildId: string) => Promise<Result<void, string>>
   tryStop: (guildId: string) => Promise<Result<void, string>>
   remove: (position: number, guildId: string) => Promise<Result<string, string>>
-  loop: (mode: LoopMode, guildId: string) => Promise<string | null>
+  loop: (mode: LoopMode, guildId: string) => Promise<Result<string, string>>
   getQueue(page: number, guildId: string): EmbeddedMessage
   getNowPlaying: (guildId: string) => EmbeddedMessage
 }

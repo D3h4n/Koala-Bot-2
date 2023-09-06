@@ -146,25 +146,23 @@ export default class DistubeClient implements IDistubeClient {
     return ok(`Removed \`${song.name}\` at position ${position}`)
   }
 
-  async loop(mode: LoopMode, guildId: string): Promise<string | null> {
+  async loop(mode: LoopMode, guildId: string): Promise<Result<string, string>> {
     const queue = this.client.getQueue(guildId)
 
-    if (!queue || queue.songs.length < 1) {
-      return null
-    }
+    if (!queue) return err('No songs in queue')
 
     switch (mode) {
       case 'song':
         queue.setRepeatMode(RepeatMode.SONG)
-        return `Looping \`${queue.songs[0].name}\`.`
+        return ok(`Looping \`${queue.songs[0].name}\`.`)
 
       case 'queue':
         queue.setRepeatMode(RepeatMode.QUEUE)
-        return 'Looping queue.'
+        return ok('Looping queue.')
 
       case 'off':
         queue.setRepeatMode(RepeatMode.DISABLED)
-        return 'Stopped looping'
+        return ok('Stopped looping')
 
       default:
         throw new Error('Unhandled loop mode')

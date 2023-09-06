@@ -59,10 +59,10 @@ export default class MusicService implements IMusicService {
       : err('This command should only be used in a guild')
   }
 
-  async loop(target: LoopMode): Promise<string | null> {
+  async loop(target: LoopMode): Promise<Result<string, string>> {
     return this.interaction.guildId
       ? await this.distube.loop(target, this.interaction.guildId)
-      : null
+      : err('This command should only be used in a guild')
   }
 
   getQueue(page: number = 1): EmbeddedMessage {
