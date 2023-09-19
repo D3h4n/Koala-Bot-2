@@ -1,7 +1,7 @@
 import { mockMessageService, mockMusicService, mockVoiceService } from 'src/testFixtures/mocks.test'
 
 import ServiceProvider from '@services/serviceProvider'
-import PauseCommand from './pauseCommand'
+import PauseCommand from './pause.command'
 import { err, ok } from '@domain/monads/Result'
 
 describe('The pause command', () => {

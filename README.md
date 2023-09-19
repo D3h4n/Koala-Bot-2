@@ -57,7 +57,7 @@ the software design aspects of the project.
 - [x] Queue
 - [x] Loop
 - [x] Stop
-- [ ] NowPlaying
+- [x] NowPlaying
 - [ ] Seek
 
 ## TODO

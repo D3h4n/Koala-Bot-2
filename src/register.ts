@@ -1,11 +1,8 @@
-import fs from 'node:fs'
-import { resolve } from 'node:path'
-
 import dotenv from 'dotenv'
 import { Client } from 'discord.js'
 
-import type Command from 'src/command'
 import MyLogger from '@infrastructure/myLogger'
+import commands from './commands'
 
 async function main() {
   dotenv.config()
@@ -13,8 +10,6 @@ async function main() {
   const logger = new MyLogger()
 
   if (!token) throw new Error('Missing Registration Credentials')
-
-  const commands = readCommands('./src/commands')
 
   const client = new Client({ intents: [] })
   client
@@ -34,21 +29,6 @@ async function main() {
       process.exit(0)
     })
     .login(token)
-}
-
-export function readCommands(dir: string): Command[] {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  return findCommandsInDirectory(dir).map((path) => new (require(path).default)())
-}
-
-function findCommandsInDirectory(dir: string): string[] {
-  return fs
-    .readdirSync(dir, { withFileTypes: true })
-    .flatMap((dirEntry) => {
-      const path = resolve(dirEntry.path, dirEntry.name)
-      return !dirEntry.isDirectory() ? path : findCommandsInDirectory(path)
-    })
-    .filter((path) => path.endsWith('.ts') && !path.endsWith('.test.ts'))
 }
 
 if (require.main === module) {

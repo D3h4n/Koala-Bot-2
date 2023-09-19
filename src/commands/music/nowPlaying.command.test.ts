@@ -1,7 +1,7 @@
 import { mockMessageService, mockMusicService, mockVoiceService } from 'src/testFixtures/mocks.test'
 import EmbeddedMessage from 'src/embeds/embeddedMessage'
 import ServiceProvider from '@services/serviceProvider'
-import NowPlayingCommand from './nowPlayingCommand'
+import NowPlayingCommand from './nowPlaying.command'
 
 describe('The now playing command', () => {
   it('replies with the correct message', async () => {

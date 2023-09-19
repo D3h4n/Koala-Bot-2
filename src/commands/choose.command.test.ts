@@ -1,8 +1,8 @@
 import * as fc from 'fast-check'
 
-import { mockMessageService, mockMusicService, mockVoiceService } from '../testFixtures/mocks.test'
+import { mockMessageService, mockMusicService, mockVoiceService } from 'src/testFixtures/mocks.test'
 import ServiceProvider from '@services/serviceProvider'
-import ChooseCommand from './chooseCommand'
+import ChooseCommand from './choose.command'
 
 describe('The choose command', () => {
   it.each([

@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'
-import { readCommands } from './register'
+import commands from './commands'
 import CommandHandler from './commandHandler'
 
 import MyLogger, { LogLevel } from '@infrastructure/myLogger'
@@ -16,7 +16,7 @@ async function main() {
   const discordClient = new DiscordClient(logger)
   ServiceProvider.distubeClient = new DistubeClient(discordClient, logger)
 
-  new CommandHandler(readCommands('./src/commands'), discordClient, logger)
+  new CommandHandler(commands, discordClient, logger)
   await discordClient.login(discordToken)
 }
 

@@ -7,7 +7,7 @@ import {
 } from '../../testFixtures/mocks.test'
 import EmbeddedMessage from 'src/embeds/embeddedMessage'
 import ServiceProvider from '@services/serviceProvider'
-import QueueCommand from './queueCommand'
+import QueueCommand from './queue.command'
 
 describe('The queue command', () => {
   it('can display the queue', () => {

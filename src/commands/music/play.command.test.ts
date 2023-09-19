@@ -2,7 +2,7 @@ import * as fc from 'fast-check'
 import { mockMessageService, mockMusicService, mockVoiceService } from 'src/testFixtures/mocks.test'
 
 import ServiceProvider from '@services/serviceProvider'
-import PlayCommand from './playCommand'
+import PlayCommand from './play.command'
 import { err, ok } from '@domain/monads/Result'
 
 describe('The play command', () => {

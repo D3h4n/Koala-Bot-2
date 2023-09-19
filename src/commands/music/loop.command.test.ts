@@ -1,4 +1,4 @@
-import LoopCommand from './loopCommand'
+import LoopCommand from './loop.command'
 import { err, ok } from '@domain/monads/Result'
 import ServiceProvider from '@services/serviceProvider'
 import { mockMessageService, mockMusicService, mockVoiceService } from 'src/testFixtures/mocks.test'

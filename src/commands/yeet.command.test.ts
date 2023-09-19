@@ -2,7 +2,7 @@ import * as fc from 'fast-check'
 
 import { mockMessageService, mockMusicService, mockVoiceService } from 'src/testFixtures/mocks.test'
 import ServiceProvider from '@services/serviceProvider'
-import YeetCommand from './yeetCommand'
+import YeetCommand from './yeet.command'
 
 describe('The yeet command', () => {
   it('can move all users to a voice channel', async () => {

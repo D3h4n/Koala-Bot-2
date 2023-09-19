@@ -1,12 +1,8 @@
 import * as fc from 'fast-check'
 
-import {
-  mockMessageService,
-  mockMusicService,
-  mockVoiceService,
-} from '../../testFixtures/mocks.test'
+import { mockMessageService, mockMusicService, mockVoiceService } from 'src/testFixtures/mocks.test'
 import ServiceProvider from '@services/serviceProvider'
-import RemoveCommand from './removeCommand'
+import RemoveCommand from './remove.command'
 import { err, ok } from '@domain/monads/Result'
 
 describe('The remove command', () => {

@@ -1,7 +1,7 @@
 import assert from 'assert'
 import Command from 'src/command'
-import type CommandOption from '@domain/CommandOption'
-import type IServiceProvider from '@domain/IServiceProvider'
+import CommandOption from '@domain/CommandOption'
+import IServiceProvider from '@domain/IServiceProvider'
 import { isErr } from '@domain/monads/Result'
 
 export default class RemoveCommand extends Command {

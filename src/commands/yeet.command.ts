@@ -1,5 +1,5 @@
-import Command from '../command'
 import assert from 'assert'
+import Command from 'src/command'
 import { ChannelType } from 'discord.js'
 import type CommandOption from '@domain/CommandOption'
 import type IServiceProvider from '@domain/IServiceProvider'

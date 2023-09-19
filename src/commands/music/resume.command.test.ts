@@ -1,10 +1,6 @@
-import {
-  mockMessageService,
-  mockMusicService,
-  mockVoiceService,
-} from '../../testFixtures/mocks.test'
+import { mockMessageService, mockMusicService, mockVoiceService } from 'src/testFixtures/mocks.test'
 import ServiceProvider from '@services/serviceProvider'
-import ResumeCommand from './resumeCommand'
+import ResumeCommand from './resume.command'
 import { err, ok } from '@domain/monads/Result'
 
 describe('The resume command', () => {

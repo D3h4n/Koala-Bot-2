@@ -20,8 +20,10 @@
   "homepage": "https://github.com/D3h4n/Koala-Bot-2#readme",
   "devDependencies": {
     "@types/jest": "^29.5.4",
+    "@types/tough-cookie": "^4.0.3",
     "@typescript-eslint/eslint-plugin": "^6.5.0",
     "@typescript-eslint/parser": "^6.5.0",
+    "esbuild": "^0.19.3",
     "eslint": "^8.48.0",
     "eslint-plugin-jest": "^27.2.3",
     "fast-check": "^3.12.0",
@@ -29,8 +31,11 @@
     "jest-junit": "^16.0.0",
     "nodemon": "^3.0.1",
     "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.1",
     "tsc-watch": "^6.0.4",
-    "tsconfig-paths-jest": "^0.0.1"
+    "tsconfig-paths": "^4.2.0",
+    "tsconfig-paths-jest": "^0.0.1",
+    "typescript": "^5.2.2"
   },
   "dependencies": {
     "@discordjs/opus": "^0.9.0",
@@ -39,20 +44,22 @@
     "discord.js": "^14.13.0",
     "distube": "^4.1.0",
     "dotenv": "^16.3.1",
-    "sodium": "^3.0.2",
-    "ts-node": "^10.9.1",
-    "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.2.2"
+    "sodium": "^3.0.2"
   },
   "scripts": {
     "lint": "eslint . --ext .ts",
     "test": "jest --ci --reporters=default --reporters=jest-junit",
     "coverage": "npm test -- --collectCoverage --",
+    "prebuild": "ts-node --project tsconfig.build.json -r tsconfig-paths/register src/generateCommandImports.ts --",
+    "build": "tsc --project tsconfig.build.json",
+    "postbuild": "esbuild dist/index.js --outfile=index.js --minify --bundle --platform=node --packages=external",
+    "preregister": "npm run prebuild",
     "register": "ts-node  --transpile-only -r tsconfig-paths/register src/register.ts --",
-    "watch": "nodemon -e ts -w src -x \"npm run start:dev\"",
+    "prestart:dev": "npm run prebuild",
     "start:dev": "ts-node --project tsconfig.build.json -r tsconfig-paths/register src/index.ts",
-    "start": "npm run start:dev -- --transpile-only",
-    "clean": "rm -rf reports coverage"
+    "watch": "nodemon -e ts -w src -x \"npm run start:dev\"",
+    "start": "node index.js",
+    "clean": "rm -rf reports coverage index.js dist"
   },
   "jest-junit": {
     "outputDirectory": "reports",

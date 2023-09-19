@@ -2,7 +2,7 @@ import * as fc from 'fast-check'
 
 import { mockMessageService, mockMusicService, mockVoiceService } from 'src/testFixtures/mocks.test'
 import ServiceProvider from '@services/serviceProvider'
-import EchoCommand from './echoCommand'
+import EchoCommand from './echo.command'
 
 describe('The echo command', () => {
   it('can reply with the correct message', () => {

@@ -3,8 +3,8 @@ FROM node:lts as Builder
 WORKDIR /tmp
 COPY . .
 
-ENV NODE_ENV=production
-RUN npm ci
+RUN npm ci && \
+   npm run build
 
 FROM node:lts-slim as Runtime
 
@@ -12,10 +12,9 @@ ENV NODE_ENV=production
 
 WORKDIR /app
 COPY --from=Builder /tmp/node_modules ./node_modules
-COPY ./src ./src
-COPY ./package.json ./package.json
-COPY ./tsconfig.json ./tsconfig.json
-COPY ./tsconfig.build.json ./tsconfig.build.json
+COPY --from=Builder /tmp/index.js ./index.js
+
+RUN npm prune
 
 # FIXME: Temporary work around
 #  ffmpeg-static doesn't like streaming links while running in a docker container
@@ -23,6 +22,6 @@ COPY ./tsconfig.build.json ./tsconfig.build.json
 RUN apt update && apt install -y ffmpeg
 RUN rm -rf ./node_modules/ffmpeg-static
 
-ENTRYPOINT ["npm", "start"]
+ENTRYPOINT ["node", "index.js"]
 # Requires the following ENV VARS
 # - DISCORD_BOT_TOKEN

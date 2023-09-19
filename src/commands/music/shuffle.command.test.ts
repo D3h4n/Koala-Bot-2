@@ -1,11 +1,7 @@
-import {
-  mockMessageService,
-  mockMusicService,
-  mockVoiceService,
-} from '../../testFixtures/mocks.test'
+import { mockMessageService, mockMusicService, mockVoiceService } from 'src/testFixtures/mocks.test'
 
 import ServiceProvider from '@services/serviceProvider'
-import ShuffleCommand from './shuffleCommand'
+import ShuffleCommand from './shuffle.command'
 import { err, ok } from '@domain/monads/Result'
 
 describe('The shuffle command', () => {
