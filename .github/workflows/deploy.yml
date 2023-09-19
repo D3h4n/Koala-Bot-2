@@ -14,7 +14,7 @@ env:
 jobs:
   register-commands:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    environment: SUPER_SECRET_SECRETS
+    environment: Production
     runs-on: ubuntu-latest
     env:
       DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
@@ -72,7 +72,7 @@ jobs:
   deploy:
     needs: [build, register-commands]
     runs-on: ubuntu-latest
-    environment: SUPER_SECRET_SECRETS
+    environment: Production
     steps:
       - name: Get Repo Name
         id: repo_name
