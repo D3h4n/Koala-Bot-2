@@ -32,7 +32,7 @@ function generateImportFilePath(path: string, name: string): string {
 function filenameToCommandName(filename: string) {
   const result = filename.match(commandFileRegEx)
 
-  if (!result) throw new Error('Invalid ')
+  if (!result) throw new Error('Invalid Command Filename')
 
   const name = result[1]
 
