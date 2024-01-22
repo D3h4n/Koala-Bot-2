@@ -15,4 +15,5 @@ export default interface IDistubeClient {
   loop: (mode: LoopMode, guildId: string) => Promise<Result<string, string>>
   getQueue(page: number, guildId: string): EmbeddedMessage
   getNowPlaying: (guildId: string) => EmbeddedMessage
+  seek: (time: number, guildId: string) => Promise<Result<void, string>>
 }

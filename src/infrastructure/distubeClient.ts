@@ -198,4 +198,15 @@ export default class DistubeClient implements IDistubeClient {
     const queue = this.client.getQueue(guildId)
     return queue && queue.songs.length >= 1 ? new NowPlayingMessage(queue) : QueueMessage.EmptyQueue
   }
+
+  async seek(time: number, guildId: string): Promise<Result<void, string>> {
+    const queue = this.client.getQueue(guildId)
+
+    if (!queue) {
+      return err('No songs in queue')
+    }
+
+    queue.seek(time)
+    return ok()
+  }
 }

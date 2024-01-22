@@ -47,18 +47,20 @@ the software design aspects of the project.
 
 ## Completed Commands
 
-- [x] Echo
 - [x] Choose
-- [x] Yeet
-- [x] Play
-- [x] Pause
-- [x] Resume
-- [x] Skip
-- [x] Queue
+- [x] Echo
 - [x] Loop
-- [x] Stop
 - [x] NowPlaying
-- [ ] Seek
+- [x] Pause
+- [x] Play
+- [x] Queue
+- [x] Remove
+- [x] Resume
+- [x] Seek
+- [x] Shuffle
+- [x] Skip
+- [x] Stop
+- [x] Yeet
 
 ## TODO
 

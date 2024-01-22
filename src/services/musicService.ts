@@ -4,11 +4,12 @@ import IDistubeClient, { LoopMode } from '@domain/IDistubeClient'
 
 import QueueMessage from 'src/embeds/queueMessage'
 import EmbeddedMessage from 'src/embeds/embeddedMessage'
-import Result, { err } from '@domain/monads/Result'
+import Result, { err, isErr, ok } from '@domain/monads/Result'
 
 export default class MusicService implements IMusicService {
   private readonly distube: IDistubeClient
   private readonly interaction: IMusicInteraction
+  private static readonly TIMESTAMP_PATTERN = /(\d{1,2})(:\d{2})?(:\d{2})?/ // Matches timestamps (HH:MM:SS) eg: 1:01:1, 12:00, 5
 
   constructor(interaction: IMusicInteraction, distubeClient: IDistubeClient) {
     this.distube = distubeClient
@@ -49,10 +50,6 @@ export default class MusicService implements IMusicService {
       : err('This command should only be used in a guild')
   }
 
-  // FIXME: This is the reverse of other functions. A successful result returns a string
-  //        and a failed result returns null. Whereas returning a string is usually an error message.
-  //        Might be useful to replace string | null with a Result type in the entire codebase, to avoid
-  //        this confusion.
   async remove(position: number): Promise<Result<string, string>> {
     return this.interaction.guildId
       ? await this.distube.remove(position, this.interaction.guildId)
@@ -75,5 +72,31 @@ export default class MusicService implements IMusicService {
     return this.interaction.guildId
       ? this.distube.getNowPlaying(this.interaction.guildId)
       : QueueMessage.EmptyQueue
+  }
+
+  async seek(timestamp: string): Promise<Result<string, string>> {
+    const timeResult = MusicService.getTimeInSeconds(timestamp)
+
+    if (isErr(timeResult)) return timeResult
+
+    if (!this.interaction.guildId) return err('This command should only be used in a guild')
+
+    const result = await this.distube.seek(timeResult.data, this.interaction.guildId)
+    return isErr(result) ? result : ok(`Skipped to \`${timestamp}\``)
+  }
+
+  static getTimeInSeconds(timestamp: string): Result<number, string> {
+    const result = timestamp.match(MusicService.TIMESTAMP_PATTERN)
+
+    if (!result || result[0] !== timestamp) {
+      return err(`Invalid timestamp "${timestamp}"`)
+    }
+
+    return ok(
+      result
+        .slice(1) // start at the first group
+        .filter((r) => r) // remove undefined groups
+        .reduce((prev, curr) => prev * 60 + Number(curr.replace(':', '')), 0)
+    )
   }
 }

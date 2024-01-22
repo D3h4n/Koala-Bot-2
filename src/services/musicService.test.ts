@@ -1,6 +1,7 @@
 import * as fc from 'fast-check'
 import IMusicInteraction from '@domain/IMusicInteraction'
 import { mockDistubeClient } from 'src/testFixtures/mocks.test'
+import assert from 'assert'
 
 import EmbeddedMessage from 'src/embeds/embeddedMessage'
 import QueueMessage from 'src/embeds/queueMessage'
@@ -822,6 +823,56 @@ describe('The Music Service', () => {
       // Assert
       expect(distubeClient.getNowPlaying).not.toHaveBeenCalled()
       expect(result).toEqual(QueueMessage.EmptyQueue)
+    })
+  })
+
+  describe('can seek a timestamp', () => {
+    it.each([
+      ['123412341234123421', '25', 25],
+      ['1234123412343241231', '10:00', 600],
+      ['13423423412341234', '1:00:00', 3600],
+    ])('with a valid timestamp', async (guildId, timestamp, time) => {
+      const interaction: IMusicInteraction = {
+        member: null,
+        channel: null,
+        guildId,
+      }
+
+      const distubeClient = mockDistubeClient()
+      distubeClient.seek = jest.fn(async () => ok())
+
+      // Arrange
+      const musicService = new MusicService(interaction, distubeClient)
+
+      // Act
+      const result = await musicService.seek(timestamp)
+
+      // Assert
+      expect(distubeClient.seek).toHaveBeenCalledWith(time, guildId)
+      assert(isOk(result))
+    })
+
+    it.each([
+      ['1234123412343241231', 'asfsdafasd'],
+      ['13423423412341234', '1:0:12'],
+    ])('and return an err result for invalid timestamps', async (guildId, timestamp) => {
+      const interaction: IMusicInteraction = {
+        member: null,
+        channel: null,
+        guildId,
+      }
+
+      const distubeClient = mockDistubeClient()
+
+      // Arrange
+      const musicService = new MusicService(interaction, distubeClient)
+
+      // Act
+      const result = await musicService.seek(timestamp)
+
+      // Assert
+      expect(distubeClient.seek).not.toHaveBeenCalled()
+      assert(isErr(result))
     })
   })
 })

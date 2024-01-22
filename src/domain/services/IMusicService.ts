@@ -13,4 +13,5 @@ export default interface IMusicService {
   loop: (target: LoopMode) => Promise<Result<string, string>>
   getQueue: (page?: number) => EmbeddedMessage
   getNowPlaying: () => EmbeddedMessage
+  seek: (timestamp: string) => Promise<Result<string, string>>
 }

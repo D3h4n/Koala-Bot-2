@@ -14,6 +14,7 @@ export const mockMusicService: () => IMusicService = () => ({
   remove: jest.fn(),
   loop: jest.fn(),
   getNowPlaying: jest.fn(),
+  seek: jest.fn(),
 })
 
 export const mockMessageService: () => IMessageService = () => ({
@@ -38,4 +39,5 @@ export const mockDistubeClient: () => IDistubeClient = () => ({
   remove: jest.fn(),
   loop: jest.fn(),
   getNowPlaying: jest.fn(),
+  seek: jest.fn(),
 })
