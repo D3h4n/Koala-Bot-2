@@ -19,7 +19,7 @@ export default class PlayCommand extends Command {
     const result = await serviceProvider.music.play(song)
 
     if (isErr(result)) {
-      return await serviceProvider.message.reply(result.err)
+      return await serviceProvider.message.reply(result.value())
     }
 
     await serviceProvider.message.noReply()

@@ -6,7 +6,7 @@ import DisTube, { Playlist, Queue, RepeatMode, Song } from 'distube'
 import ILogger from '@domain/ILogger'
 import IClientProvider from '@domain/IClientProvider'
 import IMusicInteraction from '@domain/IMusicInteraction'
-import Result, { err, isOk, ok } from '@domain/monads/Result'
+import Result, { err, isErr, ok } from '@domain/monads/Result'
 import IDistubeClient, { LoopMode } from '@domain/infrastructure/IDistubeClient'
 
 import QueueMessage from 'src/embeds/queueMessage'
@@ -18,6 +18,7 @@ import NowPlayingMessage from 'src/embeds/nowPlayingMessage'
 
 export default class DistubeClient implements IDistubeClient {
   private readonly client: DisTube
+  private static readonly TIMESTAMP_PATTERN = /(\d{1,2})(:\d{2})?(:\d{2})?/ // Matches timestamps (HH:MM:SS) eg: 1:01:1, 12:00, 5
 
   constructor(client: IClientProvider, logger?: ILogger) {
     this.client = new DisTube(client.getClient(), {
@@ -115,9 +116,8 @@ export default class DistubeClient implements IDistubeClient {
     return ok('Shuffled queue')
   }
 
-  async trySkip(guildId: string): Promise<Result<void, string>> {
-    const result = await this.remove(0, guildId)
-    return isOk(result) ? ok() : result
+  async trySkip(guildId: string): Promise<Result<string, string>> {
+    return await this.remove(guildId, 0)
   }
 
   async tryStop(guildId: string): Promise<Result<void, string>> {
@@ -128,7 +128,7 @@ export default class DistubeClient implements IDistubeClient {
     return ok()
   }
 
-  async remove(position: number, guildId: string): Promise<Result<string, string>> {
+  async remove(guildId: string, position: number): Promise<Result<string, string>> {
     const queue = this.client.getQueue(guildId)
     if (!queue) return err('No songs in queue')
     if (queue.songs.length <= position) return err('No song at that position')
@@ -146,7 +146,7 @@ export default class DistubeClient implements IDistubeClient {
     return ok(`Removed \`${song.name}\` at position ${position}`)
   }
 
-  async loop(mode: LoopMode, guildId: string): Promise<Result<string, string>> {
+  async loop(guildId: string, mode: LoopMode): Promise<Result<string, string>> {
     const queue = this.client.getQueue(guildId)
     return queue ? ok(DistubeClient.setLoopMode(mode, queue)) : err('No songs in queue')
   }
@@ -187,26 +187,44 @@ export default class DistubeClient implements IDistubeClient {
     }
   }
 
-  getQueue(page: number, guildId: string): EmbeddedMessage {
+  getQueue(guildId: string, page: number): Result<EmbeddedMessage, string> {
     const queue = this.client.getQueue(guildId)
-    return queue && queue.songs.length >= 1
-      ? new QueueMessage(queue, page)
-      : QueueMessage.EmptyQueue
+    return ok(
+      queue && queue.songs.length >= 1 ? new QueueMessage(queue, page) : QueueMessage.EmptyQueue
+    )
   }
 
-  getNowPlaying(guildId: string): EmbeddedMessage {
+  getNowPlaying(guildId: string): Result<EmbeddedMessage, string> {
     const queue = this.client.getQueue(guildId)
-    return queue && queue.songs.length >= 1 ? new NowPlayingMessage(queue) : QueueMessage.EmptyQueue
+    return ok(
+      queue && queue.songs.length >= 1 ? new NowPlayingMessage(queue) : QueueMessage.EmptyQueue
+    )
   }
 
-  async seek(time: number, guildId: string): Promise<Result<void, string>> {
+  async seek(guildId: string, timestamp: string): Promise<Result<string, string>> {
     const queue = this.client.getQueue(guildId)
 
     if (!queue) {
       return err('No songs in queue')
     }
 
-    queue.seek(time)
-    return ok()
+    const timeResult = DistubeClient.getTimeInSeconds(timestamp);
+    if (isErr(timeResult)) return timeResult;
+
+    queue.seek(timeResult.unwrap())
+    return ok(`Skipped to \`${timestamp}\``);
+  }
+
+  static getTimeInSeconds(timestamp: string): Result<number, string> {
+    const result = timestamp.match(DistubeClient.TIMESTAMP_PATTERN)
+
+    if (!result || result[0] !== timestamp) return err(`Invalid timestamp "${timestamp}"`)
+
+    return ok(
+      result
+        .slice(1) // start at the first group
+        .filter((r) => r) // remove undefined groups
+        .reduce((prev, curr) => prev * 60 + Number(curr.replace(':', '')), 0)
+    )
   }
 }

@@ -17,6 +17,6 @@ export default class QueueCommand extends Command {
       'if page is defined it should be a number'
     )
 
-    await serviceProvider.message.reply(serviceProvider.music.getQueue(page))
+    await serviceProvider.message.reply(await serviceProvider.music.getQueue(page))
   }
 }

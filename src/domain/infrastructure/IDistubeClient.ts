@@ -9,11 +9,11 @@ export default interface IDistubeClient {
   tryPause: (guildId: string) => Promise<Result<string, string>>
   tryResume: (guildId: string) => Promise<Result<string, string>>
   tryShuffle: (guildId: string) => Promise<Result<string, string>>
-  trySkip: (guildId: string) => Promise<Result<void, string>>
+  trySkip: (guildId: string) => Promise<Result<string, string>>
   tryStop: (guildId: string) => Promise<Result<void, string>>
-  remove: (position: number, guildId: string) => Promise<Result<string, string>>
-  loop: (mode: LoopMode, guildId: string) => Promise<Result<string, string>>
-  getQueue(page: number, guildId: string): EmbeddedMessage
-  getNowPlaying: (guildId: string) => EmbeddedMessage
-  seek: (time: number, guildId: string) => Promise<Result<void, string>>
+  remove: (guildId: string, position: number) => Promise<Result<string, string>>
+  loop: (guildId: string, mode: LoopMode) => Promise<Result<string, string>>
+  getQueue: (guildId: string, page: number) => Result<EmbeddedMessage, string>
+  getNowPlaying: (guildId: string) => Result<EmbeddedMessage, string>
+  seek: (guildId: string, timestamp: string) => Promise<Result<string, string>>
 }

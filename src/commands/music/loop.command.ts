@@ -2,7 +2,6 @@ import assert from 'assert'
 import Command from 'src/command'
 import type CommandOption from '@domain/CommandOption'
 import type IServiceProvider from '@domain/IServiceProvider'
-import { isErr } from '@domain/monads/Result'
 
 export default class LoopCommand extends Command {
   constructor() {
@@ -22,11 +21,6 @@ export default class LoopCommand extends Command {
     )
 
     const result = await serviceProvider.music.loop(subcommand)
-
-    if (isErr(result)) {
-      return await serviceProvider.message.reply(result.err)
-    }
-
-    await serviceProvider.message.reply(result.data)
+    await serviceProvider.message.reply(result.value())
   }
 }

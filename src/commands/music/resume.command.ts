@@ -1,6 +1,5 @@
 import Command from 'src/command'
 import type IServiceProvider from '@domain/IServiceProvider'
-import { isOk } from '@domain/monads/Result'
 
 export default class ResumeCommand extends Command {
   constructor() {
@@ -9,11 +8,6 @@ export default class ResumeCommand extends Command {
 
   async run(serviceProvider: IServiceProvider) {
     const result = await serviceProvider.music.tryResume()
-
-    if (isOk(result)) {
-      return await serviceProvider.message.reply(result.data)
-    }
-
-    await serviceProvider.message.reply(result.err)
+    await serviceProvider.message.reply(result.value())
   }
 }

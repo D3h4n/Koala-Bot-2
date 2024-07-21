@@ -2,7 +2,6 @@ import assert from 'assert'
 import Command from 'src/command'
 import CommandOption from '@domain/CommandOption'
 import IServiceProvider from '@domain/services/IServiceProvider'
-import { isErr } from '@domain/monads/Result'
 
 export default class SeekCommand extends Command {
   constructor() {
@@ -17,6 +16,6 @@ export default class SeekCommand extends Command {
     await serviceProvider.message.defer()
 
     const result = await serviceProvider.music.seek(timestamp)
-    serviceProvider.message.reply(isErr(result) ? result.err : result.data)
+    serviceProvider.message.reply(result.value())
   }
 }

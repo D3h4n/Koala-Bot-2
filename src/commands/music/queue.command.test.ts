@@ -10,20 +10,20 @@ import ServiceProvider from '@services/serviceProvider'
 import QueueCommand from './queue.command'
 
 describe('The queue command', () => {
-  it('can display the queue', () => {
+  it('can display the queue', async () => {
     const embed = new EmbeddedMessage({})
     const serviceProvider = new ServiceProvider(
       mockMessageService(),
       mockMusicService(),
       mockVoiceService()
     )
-    serviceProvider.music.getQueue = jest.fn(() => embed)
+    serviceProvider.music.getQueue = jest.fn(async () => embed)
 
     // Assemble
     const queue = new QueueCommand()
 
     // Act
-    queue.run(serviceProvider, new Map())
+    await queue.run(serviceProvider, new Map())
 
     // Assert
     expect(serviceProvider.music.getQueue).toHaveBeenCalled()
@@ -40,7 +40,7 @@ describe('The queue command', () => {
           mockVoiceService()
         )
         const embed = new EmbeddedMessage({})
-        serviceProvider.music.getQueue = jest.fn(() => embed)
+        serviceProvider.music.getQueue = jest.fn(async () => embed)
 
         // Arrange
         const queue = new QueueCommand()

@@ -11,7 +11,7 @@ describe('The now playing command', () => {
       mockVoiceService()
     )
     const embed = new EmbeddedMessage({})
-    serviceProvider.music.getNowPlaying = jest.fn(() => embed)
+    serviceProvider.music.getNowPlaying = jest.fn(async () => embed)
 
     // Arrange
     const nowPlayingCommand = new NowPlayingCommand()

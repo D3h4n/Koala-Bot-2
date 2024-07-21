@@ -11,7 +11,7 @@ export default class StopCommand extends Command {
     const result = await serviceProvider.music.tryStop()
 
     if (isErr(result)) {
-      return await serviceProvider.message.reply(result.err)
+      return await serviceProvider.message.reply(result.value())
     }
 
     await serviceProvider.message.noReply()

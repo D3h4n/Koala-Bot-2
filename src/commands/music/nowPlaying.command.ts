@@ -7,6 +7,6 @@ export default class nowPlayingCommand extends Command {
   }
 
   async run(serviceProvider: IServiceProvider): Promise<void> {
-    await serviceProvider.message.reply(serviceProvider.music.getNowPlaying())
+    await serviceProvider.message.reply(await serviceProvider.music.getNowPlaying())
   }
 }

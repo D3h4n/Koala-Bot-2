@@ -10,7 +10,7 @@ describe('The skip command', () => {
       mockMusicService(),
       mockVoiceService()
     )
-    serviceProvider.music.trySkip = jest.fn(async () => ok())
+    serviceProvider.music.trySkip = jest.fn(async () => ok(''))
 
     // Arrange
     const skip = new SkipCommand()
