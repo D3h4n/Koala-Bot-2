@@ -6,14 +6,14 @@ export type LoopMode = 'queue' | 'song' | 'off'
 
 export default interface IDistubeClient {
   play: (query: string, interaction: IMusicInteraction) => Promise<Result<void, string>>
-  tryPause: (guildId: string) => Promise<Result<string, string>>
-  tryResume: (guildId: string) => Promise<Result<string, string>>
-  tryShuffle: (guildId: string) => Promise<Result<string, string>>
-  trySkip: (guildId: string) => Promise<Result<string, string>>
-  tryStop: (guildId: string) => Promise<Result<void, string>>
-  remove: (guildId: string, position: number) => Promise<Result<string, string>>
-  loop: (guildId: string, mode: LoopMode) => Promise<Result<string, string>>
-  getQueue: (guildId: string, page: number) => Result<EmbeddedMessage, string>
-  getNowPlaying: (guildId: string) => Result<EmbeddedMessage, string>
-  seek: (guildId: string, timestamp: string) => Promise<Result<string, string>>
+  tryPause: (interaction: IMusicInteraction) => Promise<Result<string, string>>
+  tryResume: (interaction: IMusicInteraction) => Promise<Result<string, string>>
+  tryShuffle: (interaction: IMusicInteraction) => Promise<Result<string, string>>
+  trySkip: (interaction: IMusicInteraction) => Promise<Result<string, string>>
+  tryStop: (interaction: IMusicInteraction) => Promise<Result<void, string>>
+  remove: (interaction: IMusicInteraction, position: number) => Promise<Result<string, string>>
+  loop: (interaction: IMusicInteraction, mode: LoopMode) => Promise<Result<string, string>>
+  getQueue: (interaction: IMusicInteraction, page: number) => Result<EmbeddedMessage, string>
+  getNowPlaying: (interaction: IMusicInteraction) => Result<EmbeddedMessage, string>
+  seek: (interaction: IMusicInteraction, timestamp: string) => Promise<Result<string, string>>
 }

@@ -1,7 +1,7 @@
 import SpotifyPlugin from '@distube/spotify'
 import SoundCloudPlugin from '@distube/soundcloud'
 import { GuildMember, GuildTextBasedChannel } from 'discord.js'
-import DisTube, { Playlist, Queue, RepeatMode, Song } from 'distube'
+import DisTube, { Playlist, Queue, RepeatMode, Song, Events } from 'distube'
 
 import ILogger from '@domain/ILogger'
 import IClientProvider from '@domain/IClientProvider'
@@ -23,19 +23,24 @@ export default class DistubeClient implements IDistubeClient {
   constructor(client: IClientProvider, logger?: ILogger) {
     this.client = new DisTube(client.getClient(), {
       nsfw: true,
-      leaveOnStop: true,
-      leaveOnEmpty: true,
-      leaveOnFinish: true,
+      ffmpeg: { path: "node_modules/ffmpeg-static/ffmpeg" },
       emitNewSongOnly: true,
       emitAddSongWhenCreatingQueue: false,
       plugins: [new SpotifyPlugin(), new SoundCloudPlugin()],
     })
 
     this.client
-      .on('playSong', DistubeClient.handlePlaySongEvent(logger))
-      .on('addSong', DistubeClient.handleAddSongEvent(logger))
-      .on('addList', DistubeClient.handleAddPlaylistEvent(logger))
-      .on('error', (_, error) => logger?.error(error))
+      .on(Events.PLAY_SONG, DistubeClient.handlePlaySongEvent(logger))
+      .on(Events.ADD_SONG, DistubeClient.handleAddSongEvent(logger))
+      .on(Events.ADD_LIST, DistubeClient.handleAddPlaylistEvent(logger))
+      .on(Events.DELETE_QUEUE, (queue) => {
+        try{
+          this.client.voices.leave(queue)
+        } catch (e) {
+          logger?.error(e as Error)
+        }
+      })
+      .on(Events.ERROR, (error) => logger?.error(error))
   }
 
   private static handlePlaySongEvent(logger?: ILogger) {
@@ -82,72 +87,130 @@ export default class DistubeClient implements IDistubeClient {
     if (!voiceChannel) return err('Member not in voice channel')
     if (!interaction.channel) return err('Invalid text channel')
 
-    await this.client.play(voiceChannel, query, {
-      member,
-      textChannel: <GuildTextBasedChannel>interaction.channel,
-    })
-    return ok()
+    try {
+      await this.client.play(voiceChannel, query, {
+        member,
+        textChannel: <GuildTextBasedChannel>interaction.channel,
+      })
+
+      return ok()
+    } catch (e) {
+      return err((e as Error).message)
+    }
   }
 
-  async tryPause(guildId: string): Promise<Result<string, string>> {
-    const queue = this.client.getQueue(guildId)
+  private getInternalQueue(interaction: IMusicInteraction): Result<Queue, string>{
+    if (interaction.guildId == null) {
+      return err("No Guild ID!")
+    }
+
+    const queue = this.client.getQueue(interaction.guildId)
     if (!queue) return err('No songs in queue')
+    return ok(queue)
+  }
+
+  async tryPause(interaction: IMusicInteraction): Promise<Result<string, string>> {
+    const result = this.getInternalQueue(interaction)
+    if (isErr(result)) {
+      return result
+    }
+
+    const queue = result.value()
+
     if (!queue.playing) return ok('Song is already paused')
     queue.pause()
     return ok('Pausing song')
   }
 
-  async tryResume(guildId: string): Promise<Result<string, string>> {
-    const queue = this.client.getQueue(guildId)
-    if (!queue) return err('No songs in queue')
-    if (queue.playing) return ok('Song is already resumed')
-    queue.resume()
-    return ok('Resuming song')
-  }
-
-  async tryShuffle(guildId: string): Promise<Result<string, string>> {
-    const queue = this.client.getQueue(guildId)
-
-    if (!queue) {
-      return err('No songs in queue')
+  async tryResume(interaction: IMusicInteraction): Promise<Result<string, string>> {
+    const result = this.getInternalQueue(interaction)
+    if (isErr(result)) {
+      return result
     }
 
-    await queue.shuffle()
-    return ok('Shuffled queue')
+    const queue = result.value()
+    if (queue.playing) return ok('Song is already resumed')
+
+    try {
+      queue.resume()
+      return ok('Resuming song')
+    } catch (e) {
+      return err((e as Error).message)
+    }
   }
 
-  async trySkip(guildId: string): Promise<Result<string, string>> {
-    return await this.remove(guildId, 0)
+  async tryShuffle(interaction: IMusicInteraction): Promise<Result<string, string>> {
+    const result = this.getInternalQueue(interaction)
+
+    if (isErr(result)) {
+      return result
+    }
+
+    const queue = result.value()
+    
+    try {
+      await queue.shuffle()
+      return ok('Shuffled queue')
+    } catch (e) {
+      return err((e as Error).message)
+    }
   }
 
-  async tryStop(guildId: string): Promise<Result<void, string>> {
-    const queue = this.client.getQueue(guildId)
-    if (!queue) return err('No songs in queue')
-
-    await queue.stop()
-    return ok()
+  async trySkip(interaction: IMusicInteraction): Promise<Result<string, string>> {
+    return await this.remove(interaction, 0)
   }
 
-  async remove(guildId: string, position: number): Promise<Result<string, string>> {
-    const queue = this.client.getQueue(guildId)
-    if (!queue) return err('No songs in queue')
+  async tryStop(interaction: IMusicInteraction): Promise<Result<void, string>> {
+    const result = this.getInternalQueue(interaction)
+    if (isErr(result)) {
+      return result
+    }
+
+    const queue = result.value()
+
+    try {
+      await queue.stop()
+      return ok()
+    } catch (e) {
+      return err((e as Error).message)
+    }
+  }
+
+  async remove(interaction: IMusicInteraction, position: number): Promise<Result<string, string>> {
+    const result = this.getInternalQueue(interaction)
+    if (isErr(result)) {
+      return result
+    }
+
+    const queue = result.value()
+
     if (queue.songs.length <= position) return err('No song at that position')
 
     const song = queue.songs[position]
 
-    if (queue.songs.length === 1) {
-      await queue.stop()
-    } else if (position === 0) {
-      await queue.skip()
-    } else {
-      queue.songs.splice(position, 1)
+    try {
+      if (queue.songs.length === 1) {
+        await queue.stop()
+      } else if (position === 0) {
+        await queue.skip()
+      } else {
+        queue.songs.splice(position, 1)
+      }
+  
+      return ok(`Removed \`${song.name}\` at position ${position}`)
+    } catch (e) {
+      return err((e as Error).message)
     }
-
-    return ok(`Removed \`${song.name}\` at position ${position}`)
   }
 
-  async loop(guildId: string, mode: LoopMode): Promise<Result<string, string>> {
-    const queue = this.client.getQueue(guildId)
+  async loop(interaction: IMusicInteraction, mode: LoopMode): Promise<Result<string, string>> {
+    const result = this.getInternalQueue(interaction)
+    if (isErr(result)) {
+      return result
+    }
+
+    const queue = result.value()
+
     return queue ? ok(DistubeClient.setLoopMode(mode, queue)) : err('No songs in queue')
   }
 
@@ -187,31 +250,45 @@ export default class DistubeClient implements IDistubeClient {
     }
   }
 
-  getQueue(guildId: string, page: number): Result<EmbeddedMessage, string> {
-    const queue = this.client.getQueue(guildId)
+  getQueue(interaction: IMusicInteraction, page: number): Result<EmbeddedMessage, string> {
+    const result = this.getInternalQueue(interaction)
+    if (isErr(result)) {
+      return result
+    }
+
+    const queue = result.value()
+
     return ok(
       queue && queue.songs.length >= 1 ? new QueueMessage(queue, page) : QueueMessage.EmptyQueue
     )
   }
 
-  getNowPlaying(guildId: string): Result<EmbeddedMessage, string> {
-    const queue = this.client.getQueue(guildId)
+  getNowPlaying(interaction: IMusicInteraction): Result<EmbeddedMessage, string> {
+    const result = this.getInternalQueue(interaction)
+    if (isErr(result)) {
+      return result
+    }
+
+    const queue = result.value()
+
     return ok(
       queue && queue.songs.length >= 1 ? new NowPlayingMessage(queue) : QueueMessage.EmptyQueue
     )
   }
 
-  async seek(guildId: string, timestamp: string): Promise<Result<string, string>> {
-    const queue = this.client.getQueue(guildId)
-
-    if (!queue) {
-      return err('No songs in queue')
+  async seek(interaction: IMusicInteraction, timestamp: string): Promise<Result<string, string>> {
+    const result = this.getInternalQueue(interaction)
+    if (isErr(result)) {
+      return result
     }
+
+    const queue = result.value()
+
 
     const timeResult = DistubeClient.getTimeInSeconds(timestamp);
     if (isErr(timeResult)) return timeResult;
 
-    queue.seek(timeResult.unwrap())
+    queue.seek(timeResult.value())
     return ok(`Skipped to \`${timestamp}\``);
   }
 

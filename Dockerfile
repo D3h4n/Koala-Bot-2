@@ -12,7 +12,7 @@ ENV NODE_ENV=production
 
 WORKDIR /app
 COPY --from=Builder /tmp/node_modules ./node_modules
-COPY --from=Builder /tmp/index.js ./index.js
+COPY --from=Builder /tmp/bin/ ./bin
 
 RUN npm prune
 
@@ -22,6 +22,6 @@ RUN npm prune
 RUN apt update && apt install -y ffmpeg
 RUN rm -rf ./node_modules/ffmpeg-static
 
-ENTRYPOINT ["node", "index.js"]
+ENTRYPOINT ["node", "bin/index.js"]
 # Requires the following ENV VARS
 # - DISCORD_BOT_TOKEN
