@@ -22,6 +22,6 @@ RUN npm prune
 RUN apt update && apt install -y ffmpeg
 RUN rm -rf ./node_modules/ffmpeg-static
 
-ENTRYPOINT ["node", "bin/index.js"]
+ENTRYPOINT ["npm", "start"]
 # Requires the following ENV VARS
 # - DISCORD_BOT_TOKEN

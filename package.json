@@ -59,7 +59,7 @@
     "prestart:dev": "npm run prebuild",
     "start:dev": "ts-node --project tsconfig.build.json -r tsconfig-paths/register src/index.ts",
     "watch": "nodemon -e ts -w src --ignore src/commands.ts -x \"npm run start:dev\"",
-    "start": "node index.js",
+    "start": "node bin/index.js",
     "clean": "rm -rf reports coverage index.js dist"
   },
   "jest-junit": {
