@@ -1,5 +1,6 @@
 import SpotifyPlugin from '@distube/spotify'
 import SoundCloudPlugin from '@distube/soundcloud'
+import { YouTubePlugin } from '@distube/youtube'
 import { GuildMember, GuildTextBasedChannel } from 'discord.js'
 import DisTube, { Playlist, Queue, RepeatMode, Song, Events } from 'distube'
 
@@ -26,7 +27,7 @@ export default class DistubeClient implements IDistubeClient {
       ffmpeg: { path: "node_modules/ffmpeg-static/ffmpeg" },
       emitNewSongOnly: true,
       emitAddSongWhenCreatingQueue: false,
-      plugins: [new SpotifyPlugin(), new SoundCloudPlugin()],
+      plugins: [new SpotifyPlugin(), new YouTubePlugin(), new SoundCloudPlugin()],
     })
 
     this.client

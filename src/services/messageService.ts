@@ -34,7 +34,7 @@ export default class MessageService implements IMessageService {
   }
 
   async noReply() {
-    this.defer()
+    await this.defer()
     await this.interaction.deleteReply()
   }
 }
