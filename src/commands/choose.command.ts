@@ -25,7 +25,6 @@ export default class ChooseCommand extends Command {
     return (
       Array.from(options.entries())
         .filter(([name, value]) => name.match(/choice[1-9]/) && typeof value === 'string')
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         .map(([_, value]) => value as string)
     )
   }

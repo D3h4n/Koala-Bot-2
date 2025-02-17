@@ -5,9 +5,9 @@ const commandFileRegEx = /^(\w.*)(.command.ts)$/
 
 async function main() {
   const commands = findCommandsInDirectory(join(__dirname, 'commands'))
-  const imports = commands.map(({ path, name }) => ({
+  const imports = commands.map(({ parentPath, name }) => ({
     name: filenameToCommandName(name),
-    path: generateImportFilePath(path, name),
+    path: generateImportFilePath(parentPath, name),
   }))
 
   const output =
@@ -43,7 +43,7 @@ function findCommandsInDirectory(dir: string): Dirent[] {
   return fs
     .readdirSync(dir, { withFileTypes: true })
     .flatMap((dirEntry) => {
-      const path = resolve(dirEntry.path, dirEntry.name)
+      const path = resolve(dirEntry.parentPath, dirEntry.name)
       return !dirEntry.isDirectory() ? dirEntry : findCommandsInDirectory(path)
     })
     .filter(({ name }) => commandFileRegEx.test(name))
